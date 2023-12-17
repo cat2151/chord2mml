@@ -4,15 +4,15 @@ A library transpiles Chord notation into Music Macro Language.
 # demo
 https://cat2151.github.io/dist/chord2mml/
 
-# ó‹µ
-- ‚Ü‚¾TDDŠJn’¼Œã‚Å‚·Bo—Í‚Íƒ_ƒ~[‚É‹ß‚¢ó‘Ô‚Å‚·B
-## ‹ß‚¢ƒS[ƒ‹
-- [MML-chord-generator](https://github.com/cat2151/MML-chord-generator)‚ÌƒTƒuƒZƒbƒg‚Ì‚æ‚¤‚ÈÅ’áŒÀ‚Ì‹@”\‚ğÀŒ»‚·‚é‚±‚Æ
-## ‰“‚¢ƒS[ƒ‹
-- [MML-chord-generator](https://github.com/cat2151/MML-chord-generator)‚Ì‚¢‚­‚Â‚©‚ÌŠÖ”‚ğ‘ã‘Ö‚Å‚«‚éƒŒƒxƒ‹‚Ì‹@”\‚ğÀŒ»‚·‚é‚±‚Æ
+# çŠ¶æ³
+- ã¾ã TDDé–‹å§‹ç›´å¾Œã§ã™ã€‚å‡ºåŠ›ã¯ãƒ€ãƒŸãƒ¼ã«è¿‘ã„çŠ¶æ…‹ã§ã™ã€‚
+## è¿‘ã„ã‚´ãƒ¼ãƒ«
+- [MML-chord-generator](https://github.com/cat2151/MML-chord-generator)ã®ã‚µãƒ–ã‚»ãƒƒãƒˆã®ã‚ˆã†ãªæœ€ä½é™ã®æ©Ÿèƒ½ã‚’å®Ÿç¾ã™ã‚‹ã“ã¨
+## é ã„ã‚´ãƒ¼ãƒ«
+- [MML-chord-generator](https://github.com/cat2151/MML-chord-generator)ã®ã„ãã¤ã‹ã®é–¢æ•°ã‚’ä»£æ›¿ã§ãã‚‹ãƒ¬ãƒ™ãƒ«ã®æ©Ÿèƒ½ã‚’å®Ÿç¾ã™ã‚‹ã“ã¨
 
-# •ª’S
-- `chord2mml.pegjs ‚ğì‚é‚±‚Æ`
-  - ‚ªA‚±‚ÌƒŠƒ|ƒWƒgƒŠ‚Ì’S“–‚Å‚·B
-- `easy‚Échord2mml‚ğg‚¦‚éd‘g‚İ ‚ğì‚é‚±‚Æ`
-  - ‚ÍA[easychord2mml](https://github.com/cat2151/easychord2mml/)‚Å’S“–‚µ‚Ü‚·B
+# åˆ†æ‹…
+- `chord2mml.pegjs ã‚’ä½œã‚‹ã“ã¨`
+  - ãŒã€ã“ã®ãƒªãƒã‚¸ãƒˆãƒªã®æ‹…å½“ã§ã™ã€‚
+- `easyã«chord2mmlã‚’ä½¿ãˆã‚‹ä»•çµ„ã¿ ã‚’ä½œã‚‹ã“ã¨`
+  - ã¯ã€[easychord2mml](https://github.com/cat2151/easychord2mml/)ã§æ‹…å½“ã—ã¾ã™ã€‚
