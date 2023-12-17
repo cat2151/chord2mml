@@ -1,6 +1,9 @@
 # chord2mml
 A library transpiles Chord notation into Music Macro Language.
 
+# demo
+https://cat2151.github.io/dist/chord2mml/
+
 # 分担
 - `chord2mml.pegjs を作ること`
   - が、このリポジトリの担当です。
