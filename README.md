@@ -16,3 +16,6 @@ https://cat2151.github.io/dist/chord2mml/
   - が、このリポジトリの担当です。
 - `easyにchord2mmlを使える仕組み を作ること`
   - は、[easychord2mml](https://github.com/cat2151/easychord2mml/)で担当します。
+
+# このprojectが優先すること
+- 関数に`Chord notation文字列`を与えて、`MML文字列`を取得できること。
