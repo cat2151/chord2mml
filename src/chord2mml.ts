@@ -13,12 +13,6 @@ chord2mml.parse = function(chord) {
   return mml;
 };
 
-// ブラウザ用
-if (typeof window !== undefined) {
-  (window as any).chord2mml = chord2mml;
-}
-
-// jest用
 export {
   chord2mml
 };

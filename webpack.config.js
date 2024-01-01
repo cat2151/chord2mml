@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/chord2mml.ts',
   output: {
     filename: 'chord2mml.js',
-//    libraryTarget: 'umd'
+    libraryTarget: 'umd',
   },
   module: {
     rules: [
