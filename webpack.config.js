@@ -1,7 +1,12 @@
 const path = require('path');
 module.exports = {
-  mode: 'development',
-  entry: './src/main.ts',
+//  mode: 'development',
+  mode: 'production',
+  entry: './src/chord2mml.ts',
+  output: {
+    filename: 'chord2mml.js',
+//    libraryTarget: 'umd'
+  },
   module: {
     rules: [
       {
