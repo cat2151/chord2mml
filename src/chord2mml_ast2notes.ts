@@ -20,6 +20,9 @@ function astToNotes(asts) {
         notes = getUpperStructureNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
         result.push(notes);
         break;
+      case "inline mml":
+        result.push(ast);
+        break;
     } // switch
   }
   return result;

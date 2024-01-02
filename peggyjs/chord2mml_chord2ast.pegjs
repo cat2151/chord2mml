@@ -1,5 +1,6 @@
 CHORDS=EVENT*
-EVENT=COMPOUND_CHORD_MODE
+EVENT=INLINE_MML
+    / COMPOUND_CHORD_MODE
     / UPPER_STRUCTURE_MODE
     / INVERSION_MODE
     / SLASH_CHORD
@@ -13,6 +14,7 @@ COMPOUND_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT l
 COMPOUND_CHORD_MODE=_ "compound chord"i _ { return { event: "compound chord" }; }
 INVERSION_MODE=_ "inversion"i _ { return { event: "inversion" }; }
 UPPER_STRUCTURE_MODE=_ ("upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) _ { return { event: "upper structure" }; }
+INLINE_MML= "/*" mml:[^*/]+ "*/" { return { event: "inline mml", mml: mml.join("") }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {

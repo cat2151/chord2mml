@@ -50,6 +50,9 @@ describe("chord2ast", () => {
     test("upper structure mode", () => {
         expect(parse("UST")).toEqual([{event: "upper structure"}]);
     });
+    test("inline mml", () => {
+        expect(parse("/*@48*/")).toEqual([{event: "inline mml", mml: "@48"}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -121,5 +124,8 @@ describe("chord2mml", () => {
     });
     test("オンコード", () => {
         expect(chord2mml.parse("EonC")).toEqual("'ceg+b'");
+    });
+    test("inline mml", () => {
+        expect(chord2mml.parse("/*@48*/")).toEqual("@48");
     });
 });

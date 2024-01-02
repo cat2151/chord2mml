@@ -2,6 +2,10 @@ function notesToMml(noteses) {
   let mml = "";
   for (let i = 0; i < noteses.length; i++) {
     let notes = noteses[i];
+    if (notes.event == "inline mml") {
+      mml += notes.mml;
+      continue;
+    }
     let lastOctaveOffset = 0;
     if (notes.length) mml += "'";
     for (let iNotes = 0; iNotes < notes.length; iNotes++) {
