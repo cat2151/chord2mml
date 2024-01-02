@@ -41,6 +41,9 @@ describe("chord2ast", () => {
     test("inversion mode", () => {
         expect(parse("inversion")).toEqual([{event: "inversion"}]);
     });
+    test("inversion mode", () => {
+        expect(parse("inv")).toEqual([{event: "inversion"}]);
+    });
     test("upper structure mode", () => {
         expect(parse("upper structure")).toEqual([{event: "upper structure"}]);
     });
