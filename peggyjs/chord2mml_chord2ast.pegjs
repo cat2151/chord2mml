@@ -1,5 +1,8 @@
-CHORDS=CHORD*
-CHORD=_ root:ROOT chordType:CHORD_TYPE _ { return { root, chordType }; }
+CHORDS=EVENT*
+EVENT=SLASH_CHORD
+    / CHORD
+CHORD=_ root:ROOT quality:CHORD_QUALITY _ { return { event: "chord", root, quality }; }
+SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ { return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {
@@ -17,7 +20,7 @@ ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
     return offset; }
 SHARP=[#＃♯] { return "#"; }
 FLAT=[b♭] { return "b"; }
-CHORD_TYPE=chordType:(MAJ7 / MAJ) { return chordType; }
+CHORD_QUALITY=quality:(MAJ7 / MAJ) { return quality; }
 MAJ=("maj"i / "M" / "") { return "maj"; }
 MAJ7=("maj7"i / "△") { return "maj7"; }
 _ "whitespace"= [ \t\n\r]*
