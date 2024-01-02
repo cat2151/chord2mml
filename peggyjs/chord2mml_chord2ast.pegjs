@@ -1,8 +1,15 @@
 CHORDS=EVENT*
-EVENT=SLASH_CHORD
+EVENT=COMPOUND_CHORD_MODE
+    / UPPER_STRUCTURE_MODE
+    / INVERSION_MODE
+    / SLASH_CHORD
     / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY _ { return { event: "chord", root, quality }; }
-SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ { return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
+SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
+    return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
+COMPOUND_CHORD_MODE=_ "compound chord"i _ { return { event: "compound chord" }; }
+INVERSION_MODE=_ "inversion"i _ { return { event: "inversion" }; }
+UPPER_STRUCTURE_MODE=_ "upper structure"i _ { return { event: "upper structure" }; }
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {

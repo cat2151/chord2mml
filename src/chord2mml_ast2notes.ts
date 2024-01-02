@@ -12,7 +12,11 @@ function astToNotes(asts) {
         notes = getCompoundChordNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
         result.push(notes);
         break;
-    } // switch
+      case "inversion":
+        notes = getInversionNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
+        result.push(notes);
+        break;
+      } // switch
   }
   return result;
 }
@@ -54,6 +58,37 @@ function getUpperNotes(upperRoot, upperQuality, lowerRoot) {
     upperNotes = shiftNotes(upperNotes, 12);
   }
   return upperNotes;
+}
+
+function getInversionNotes(upperRoot, upperQuality, lowerRoot) {
+  let notes = getNotes(upperRoot, upperQuality);
+  notes = rotateNotes(notes, lowerRoot);
+  // octave
+  notes = adjustNotesOctave(notes);
+  return notes;
+}
+
+function rotateNotes(notes, targetNote) {
+  for (let i = 0; i < notes.length; i++) {
+    if (notes[0] == targetNote) break;
+    notes.push(notes.shift());
+  }
+  return notes;
+}
+
+function adjustNotesOctave(notes) {
+  // example: [7,0,4] to [7,12,16]
+  let noteOffset = 0;
+  let oldNote = 0;
+  for (let i = 0; i < notes.length; i++) {
+    notes[i] += noteOffset;
+    if (notes[i] < oldNote) {
+      noteOffset += 12;
+      notes[i] += noteOffset;
+    }
+    oldNote = notes[i];
+  }
+  return notes;
 }
 
 export {

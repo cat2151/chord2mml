@@ -35,6 +35,15 @@ describe("chord2ast", () => {
     test("slash chord", () => {
         expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
     });
+    test("compound chord mode", () => {
+        expect(parse("compound chord")).toEqual([{event: "compound chord"}]);
+    });
+    test("inversion mode", () => {
+        expect(parse("inversion")).toEqual([{event: "inversion"}]);
+    });
+    test("upper structure mode", () => {
+        expect(parse("upper structure")).toEqual([{event: "upper structure"}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -42,6 +51,12 @@ describe("ast2ast", () => {
     });
     test("compound chord", () => {
         expect(a2a([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{event: "compound chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
+    });
+    test("inversion", () => {
+        expect(a2a([{event: "inversion"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "inversion"}, {event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
+    });
+    test("upper structure", () => {
+        expect(a2a([{event: "upper structure"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "upper structure"}, {event: "upper structure", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
     });
 });
 describe("astToNotes", () => {
@@ -59,6 +74,9 @@ describe("astToNotes", () => {
     });
     test("compound chord F/C", () => {
         expect(toNotes([{event: "compound chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,5,9,12]]);
+    });
+    test("inversion C/G", () => {
+        expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([[7,12,16]]);
     });
 });
 describe("notesToMml", () => {

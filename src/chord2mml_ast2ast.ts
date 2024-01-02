@@ -1,10 +1,16 @@
 function astToAst(asts) {
+  let slashMode = "compound chord";
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
-    // slash chordを読み解く
-    if (ast.event == "slash chord") {
-      // 今後、事前設定されたslashModeによって、eventを変更させる
-      ast.event = "compound chord";
+    switch (ast.event) {
+      case "compound chord":
+      case "inversion":
+      case "upper structure":
+        slashMode = ast.event;
+        break;
+      case "slash chord":
+        ast.event = slashMode;
+        break;
     }
   }
   return asts;
