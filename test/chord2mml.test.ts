@@ -113,4 +113,10 @@ describe("chord2mml", () => {
     test("upper structure", () => {
         expect(chord2mml.parse("US C/G")).toEqual("'gb<d<ceg'");
     });
+    test("polychord", () => {
+        expect(chord2mml.parse("polychord C/G")).toEqual("'gb<d<ceg'");
+    });
+    test("polychord", () => {
+        expect(chord2mml.parse("poly C/G")).toEqual("'gb<d<ceg'");
+    });
 });
