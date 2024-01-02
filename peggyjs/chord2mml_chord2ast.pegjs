@@ -3,10 +3,13 @@ EVENT=COMPOUND_CHORD_MODE
     / UPPER_STRUCTURE_MODE
     / INVERSION_MODE
     / SLASH_CHORD
+    / COMPOUND_CHORD
     / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY _ { return { event: "chord", root, quality }; }
 SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
     return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
+COMPOUND_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
+    return { event: "compound chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; } // ON_CHORDと書かないのは「オンコード」は日本固有の表記らしいため
 COMPOUND_CHORD_MODE=_ "compound chord"i _ { return { event: "compound chord" }; }
 INVERSION_MODE=_ "inversion"i _ { return { event: "inversion" }; }
 UPPER_STRUCTURE_MODE=_ ("upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) _ { return { event: "upper structure" }; }

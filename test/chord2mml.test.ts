@@ -119,4 +119,7 @@ describe("chord2mml", () => {
     test("polychord", () => {
         expect(chord2mml.parse("poly C/G")).toEqual("'gb<d<ceg'");
     });
+    test("オンコード", () => {
+        expect(chord2mml.parse("EonC")).toEqual("'ceg+b'");
+    });
 });
