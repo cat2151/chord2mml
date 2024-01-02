@@ -44,6 +44,12 @@ describe("chord2ast", () => {
     test("upper structure mode", () => {
         expect(parse("upper structure")).toEqual([{event: "upper structure"}]);
     });
+    test("upper structure mode", () => {
+        expect(parse("US")).toEqual([{event: "upper structure"}]);
+    });
+    test("upper structure mode", () => {
+        expect(parse("UST")).toEqual([{event: "upper structure"}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -77,6 +83,9 @@ describe("astToNotes", () => {
     });
     test("inversion C/G", () => {
         expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([[7,12,16]]);
+    });
+    test("upper structure D/C", () => {
+        expect(toNotes([{event: "upper structure", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,4,7,14,18,21]]);
     });
 });
 describe("notesToMml", () => {

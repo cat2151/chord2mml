@@ -9,7 +9,7 @@ SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lower
     return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
 COMPOUND_CHORD_MODE=_ "compound chord"i _ { return { event: "compound chord" }; }
 INVERSION_MODE=_ "inversion"i _ { return { event: "inversion" }; }
-UPPER_STRUCTURE_MODE=_ "upper structure"i _ { return { event: "upper structure" }; }
+UPPER_STRUCTURE_MODE=_ ("upper structure"i / "UST"i / "US"i) _ { return { event: "upper structure" }; }
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {

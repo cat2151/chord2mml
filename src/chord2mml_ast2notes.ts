@@ -16,7 +16,11 @@ function astToNotes(asts) {
         notes = getInversionNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
         result.push(notes);
         break;
-      } // switch
+      case "upper structure":
+        notes = getUpperStructureNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
+        result.push(notes);
+        break;
+    } // switch
   }
   return result;
 }
@@ -88,6 +92,15 @@ function adjustNotesOctave(notes) {
     }
     oldNote = notes[i];
   }
+  return notes;
+}
+
+function getUpperStructureNotes(upperRoot, upperQuality, lowerRoot, lowerQuality) {
+  const lowerNotes = getNotes(lowerRoot, lowerQuality);
+  const upperNotes = getNotes(upperRoot, upperQuality);
+  let notes = [...lowerNotes, ...upperNotes];
+  // octave
+  notes = adjustNotesOctave(notes);
   return notes;
 }
 
