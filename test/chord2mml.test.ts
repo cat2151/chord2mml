@@ -110,4 +110,7 @@ describe("chord2mml", () => {
     test("Bmaj7", () => {
         expect(chord2mml.parse("Bmaj7")).toEqual("'b<d+f+a+'");
     });
+    test("upper structure", () => {
+        expect(chord2mml.parse("US C/G")).toEqual("'gb<d<ceg'");
+    });
 });

@@ -82,13 +82,11 @@ function rotateNotes(notes, targetNote) {
 
 function adjustNotesOctave(notes) {
   // example: [7,0,4] to [7,12,16]
-  let noteOffset = 0;
-  let oldNote = 0;
+  let oldNote = -1;
   for (let i = 0; i < notes.length; i++) {
-    notes[i] += noteOffset;
-    if (notes[i] < oldNote) {
-      noteOffset += 12;
-      notes[i] += noteOffset;
+    for (let iNote = 0; iNote < 128; iNote +=12) {
+      if (notes[i] > oldNote) break;
+      notes[i] += 12;
     }
     oldNote = notes[i];
   }
