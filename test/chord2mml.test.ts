@@ -167,6 +167,9 @@ describe("chord2mml", () => {
     test("drop2", () => {
         expect(chord2mml.parse("drop2 C")).toEqual("'>e<cg'");
     });
+    test("open triad", () => {
+        expect(chord2mml.parse("open triad C")).toEqual("'>e<cg'");
+    });
     test("2nd inv drop2", () => {
         expect(chord2mml.parse("2nd inv drop2 Cmaj7")).toEqual("'cgb<e'");
     });
