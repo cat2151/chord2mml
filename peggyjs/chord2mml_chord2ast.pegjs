@@ -5,6 +5,10 @@ EVENT=INLINE_MML
     / SLASH_CHORD_MODE_INVERSION
     / SLASH_CHORD
     / ON_CHORD
+    / INVERSION_MODE_ROOT_INV
+    / INVERSION_MODE_1ST_INV
+    / INVERSION_MODE_2ND_INV
+    / INVERSION_MODE_3RD_INV
     / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY _ { return { event: "chord", root, quality }; }
 SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
@@ -15,6 +19,10 @@ SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i _ { return { eve
 SLASH_CHORD_MODE_INVERSION=_ ("inversion"i / "inv"i) _ { return { event: "change slash chord mode to inversion" }; }
 SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) _ { return { event: "change slash chord mode to polychord" }; }
 INLINE_MML= "/*" mml:[^*/]+ "*/" { return { event: "inline mml", mml: mml.join("") }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
+INVERSION_MODE_ROOT_INV=_ ("root inv") _ { return { event: "change inversion mode to root inv" }; }
+INVERSION_MODE_1ST_INV=_ ("1st inv") _ { return { event: "change inversion mode to 1st inv" }; }
+INVERSION_MODE_2ND_INV=_ ("2nd inv") _ { return { event: "change inversion mode to 2nd inv" }; }
+INVERSION_MODE_3RD_INV=_ ("3rd inv") _ { return { event: "change inversion mode to 3rd inv" }; } // 4和音用
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {

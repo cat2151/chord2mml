@@ -1,11 +1,12 @@
 function astToNotes(asts) {
   let result = [];
+  let inversionMode = "root inv";
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
     let notes;
     switch (ast.event) {
       case "chord":
-        notes = getNotes(ast.root, ast.quality);
+        notes = getNotes(ast.root, ast.quality, inversionMode);
         result.push(notes);
         break;
       case "chord over bass note":
@@ -23,19 +24,46 @@ function astToNotes(asts) {
       case "inline mml":
         result.push(ast);
         break;
+      case "change inversion mode to root inv":
+        inversionMode = "root inv";
+        break;
+      case "change inversion mode to 1st inv":
+        inversionMode = "1st inv";
+        break;
+      case "change inversion mode to 2nd inv":
+        inversionMode = "2nd inv";
+        break;
+      case "change inversion mode to 3rd inv":
+        inversionMode = "3rd inv";
+        break;
     } // switch
   }
   return result;
 }
 
-function getNotes(root, quality) {
+function getNotes(root, quality, inversionMode = "root inv") {
   let notes = [];
   switch (quality) {
     case "maj": notes = [0,4,7]; break;
     case "maj7": notes = [0,4,7,11]; break;
   }
+
   // root
+  //  chordのrootにあわせ、半音単位でshiftする
   notes = shiftNotes(notes, root);
+
+  // inversion
+  {
+    switch (inversionMode) {
+      case "1st inv": notes = rotateNotesByCount(notes, 1); break;
+      case "2nd inv": notes = rotateNotesByCount(notes, 2); break;
+      case "3rd inv": notes = rotateNotesByCount(notes, 3); break;
+    }
+  }
+
+  // octave
+  notes = adjustNotesOctave(notes);
+
   return notes;
 }
 
@@ -69,15 +97,22 @@ function getUpperNotes(upperRoot, upperQuality, lowerRoot) {
 
 function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot) {
   let notes = getNotes(upperRoot, upperQuality);
-  notes = rotateNotes(notes, lowerRoot);
+  notes = rotateNotesByTargetNote(notes, lowerRoot);
   // octave
   notes = adjustNotesOctave(notes);
   return notes;
 }
 
-function rotateNotes(notes, targetNote) {
+function rotateNotesByTargetNote(notes, targetNote) {
   for (let i = 0; i < notes.length; i++) {
     if (notes[0] == targetNote) break;
+    notes.push(notes.shift());
+  }
+  return notes;
+}
+
+function rotateNotesByCount(notes, count) {
+  for (let i = 0; i < count; i++) {
     notes.push(notes.shift());
   }
   return notes;

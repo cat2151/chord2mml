@@ -38,10 +38,10 @@ describe("chord2ast", () => {
     test("chord over bass note mode", () => {
         expect(parse("chord over bass note")).toEqual([{event: "change slash chord mode to chord over bass note"}]);
     });
-    test("inversion mode", () => {
+    test("slash chord mode to inversion", () => {
         expect(parse("inversion")).toEqual([{event: "change slash chord mode to inversion"}]);
     });
-    test("inversion mode", () => {
+    test("slash chord mode to inversion", () => {
         expect(parse("inv")).toEqual([{event: "change slash chord mode to inversion"}]);
     });
     test("polychord mode", () => {
@@ -56,6 +56,9 @@ describe("chord2ast", () => {
     test("inline mml", () => {
         expect(parse("/*@48*/")).toEqual([{event: "inline mml", mml: "@48"}]);
     });
+    test("1st inv", () => {
+        expect(parse("1st inv")).toEqual([{event: "change inversion mode to 1st inv"}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -64,7 +67,7 @@ describe("ast2ast", () => {
     test("chord over bass note", () => {
         expect(a2a([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
     });
-    test("inversion", () => {
+    test("slash chord mode to inversion", () => {
         expect(a2a([{event: "change slash chord mode to inversion"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "change slash chord mode to inversion"}, {event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
     });
     test("polychord", () => {
@@ -133,5 +136,14 @@ describe("chord2mml", () => {
     });
     test("inline mml", () => {
         expect(chord2mml.parse("/*@48*/")).toEqual("@48");
+    });
+    test("第1転回形", () => {
+        expect(chord2mml.parse("1st inv C")).toEqual("'eg<c'");
+    });
+    test("第2転回形", () => {
+        expect(chord2mml.parse("2nd inv C")).toEqual("'g<ce'");
+    });
+    test("第3転回形 & 基本形", () => {
+        expect(chord2mml.parse("3rd inv Cmaj7 root inv Cmaj7")).toEqual("'b<ceg''cegb'");
     });
 });
