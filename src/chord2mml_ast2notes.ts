@@ -2,6 +2,7 @@ function astToNotes(asts) {
   let result = [];
   let inversionMode = "root inv";
   let openHarmonyMode = "close";
+  let bassPlayMode = "no bass";
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
     let notes;
@@ -15,7 +16,7 @@ function astToNotes(asts) {
         result.push(notes);
         break;
       case "inversion":
-        notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
+        notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, bassPlayMode);
         result.push(notes);
         break;
       case "polychord":
@@ -48,6 +49,12 @@ function astToNotes(asts) {
         break;
       case "change open harmony mode to drop2and4":
         openHarmonyMode = "drop2and4";
+        break;
+      case "change bass play mode to root":
+        bassPlayMode = "root";
+        break;
+      case "change bass play mode to no bass":
+        bassPlayMode = "no bass";
         break;
     } // switch
   }
@@ -122,16 +129,27 @@ function getUpperNotes(upperRoot, upperQuality, lowerRoot) {
   return upperNotes;
 }
 
-function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot) {
-  let notes = getNotes(upperRoot, upperQuality);
-  notes = inversionByTargetNote(notes, lowerRoot);
+function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot, bassPlayMode) {
+  let notes = [];
+  if (bassPlayMode == "root") {
+    // bass
+    notes.push(upperRoot);
+    // chord inversion
+    let upperNotes = getUpperNotes(upperRoot, upperQuality, upperRoot); // getUpperNotesを使うのは、bassのrootより上のoctaveのnotesを得る用
+    upperNotes = inversionByTargetNote(upperNotes, lowerRoot);
+    notes.push(...upperNotes);
+  } else {
+    notes = getNotes(upperRoot, upperQuality);
+    notes = inversionByTargetNote(notes, lowerRoot);
+  }
+
   return notes;
 }
 
 function inversionByTargetNote(notes, targetNote) {
   // targetNoteが最低音となるよう、inversionする
   for (let i = 0; i < notes.length; i++) {
-    if (notes[0] == targetNote) break;
+    if (((notes[0] % 12) + 12) % 12 == ((targetNote % 12) + 12) % 12) break; // %12は、getUpperNotesで+12されたnotesが来てもmatchする用
     notes.push(notes.shift());
   }
   notes = adjustNotesOctave(notes);
