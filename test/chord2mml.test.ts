@@ -35,23 +35,23 @@ describe("chord2ast", () => {
     test("slash chord", () => {
         expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
     });
-    test("compound chord mode", () => {
-        expect(parse("compound chord")).toEqual([{event: "compound chord"}]);
+    test("chord over bass note mode", () => {
+        expect(parse("chord over bass note")).toEqual([{event: "change slash chord mode to chord over bass note"}]);
     });
     test("inversion mode", () => {
-        expect(parse("inversion")).toEqual([{event: "inversion"}]);
+        expect(parse("inversion")).toEqual([{event: "change slash chord mode to inversion"}]);
     });
     test("inversion mode", () => {
-        expect(parse("inv")).toEqual([{event: "inversion"}]);
+        expect(parse("inv")).toEqual([{event: "change slash chord mode to inversion"}]);
     });
-    test("upper structure mode", () => {
-        expect(parse("upper structure")).toEqual([{event: "upper structure"}]);
+    test("polychord mode", () => {
+        expect(parse("polychord")).toEqual([{event: "change slash chord mode to polychord"}]);
     });
-    test("upper structure mode", () => {
-        expect(parse("US")).toEqual([{event: "upper structure"}]);
+    test("polychord mode", () => {
+        expect(parse("US")).toEqual([{event: "change slash chord mode to polychord"}]);
     });
-    test("upper structure mode", () => {
-        expect(parse("UST")).toEqual([{event: "upper structure"}]);
+    test("polychord mode", () => {
+        expect(parse("UST")).toEqual([{event: "change slash chord mode to polychord"}]);
     });
     test("inline mml", () => {
         expect(parse("/*@48*/")).toEqual([{event: "inline mml", mml: "@48"}]);
@@ -61,14 +61,14 @@ describe("ast2ast", () => {
     test("Cmaj", () => {
         expect(a2a([{event: "chord", quality: "maj", root: 0}])).toEqual([{event: "chord", quality: "maj", root: 0}]);
     });
-    test("compound chord", () => {
-        expect(a2a([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{event: "compound chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
+    test("chord over bass note", () => {
+        expect(a2a([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
     });
     test("inversion", () => {
-        expect(a2a([{event: "inversion"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "inversion"}, {event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
+        expect(a2a([{event: "change slash chord mode to inversion"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "change slash chord mode to inversion"}, {event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
     });
-    test("upper structure", () => {
-        expect(a2a([{event: "upper structure"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "upper structure"}, {event: "upper structure", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
+    test("polychord", () => {
+        expect(a2a([{event: "change slash chord mode to polychord"}, {event: "slash chord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{event: "change slash chord mode to polychord"}, {event: "polychord", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}]);
     });
 });
 describe("astToNotes", () => {
@@ -84,14 +84,14 @@ describe("astToNotes", () => {
     test("Gmaj", () => {
         expect(toNotes([{event: "chord", quality: "maj", root: 7}])).toEqual([[7,11,14]]);
     });
-    test("compound chord F/C", () => {
-        expect(toNotes([{event: "compound chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,5,9,12]]);
+    test("chord over bass note F/C", () => {
+        expect(toNotes([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,5,9,12]]);
     });
     test("inversion C/G", () => {
         expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([[7,12,16]]);
     });
-    test("upper structure D/C", () => {
-        expect(toNotes([{event: "upper structure", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,4,7,14,18,21]]);
+    test("polychord D/C", () => {
+        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,4,7,14,18,21]]);
     });
 });
 describe("notesToMml", () => {

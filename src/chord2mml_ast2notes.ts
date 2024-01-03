@@ -8,16 +8,16 @@ function astToNotes(asts) {
         notes = getNotes(ast.root, ast.quality);
         result.push(notes);
         break;
-      case "compound chord":
-        notes = getCompoundChordNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
+      case "chord over bass note":
+        notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
         result.push(notes);
         break;
       case "inversion":
-        notes = getInversionNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
+        notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
         result.push(notes);
         break;
-      case "upper structure":
-        notes = getUpperStructureNotes(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
+      case "polychord":
+        notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
         result.push(notes);
         break;
       case "inline mml":
@@ -46,7 +46,7 @@ function shiftNotes(notes, v) {
   return notes;
 }
 
-function getCompoundChordNotes(upperRoot, upperQuality, lowerRoot) {
+function getNotesByChordOverBassNote(upperRoot, upperQuality, lowerRoot) {
   // lower
   let notes = [];
   notes.push(lowerRoot);
@@ -67,7 +67,7 @@ function getUpperNotes(upperRoot, upperQuality, lowerRoot) {
   return upperNotes;
 }
 
-function getInversionNotes(upperRoot, upperQuality, lowerRoot) {
+function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot) {
   let notes = getNotes(upperRoot, upperQuality);
   notes = rotateNotes(notes, lowerRoot);
   // octave
@@ -96,7 +96,7 @@ function adjustNotesOctave(notes) {
   return notes;
 }
 
-function getUpperStructureNotes(upperRoot, upperQuality, lowerRoot, lowerQuality) {
+function getNotesByPolychord(upperRoot, upperQuality, lowerRoot, lowerQuality) {
   const lowerNotes = getNotes(lowerRoot, lowerQuality);
   const upperNotes = getNotes(upperRoot, upperQuality);
   let notes = [...lowerNotes, ...upperNotes];

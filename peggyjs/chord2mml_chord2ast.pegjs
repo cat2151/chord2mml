@@ -1,19 +1,19 @@
 CHORDS=EVENT*
 EVENT=INLINE_MML
-    / COMPOUND_CHORD_MODE
-    / UPPER_STRUCTURE_MODE
-    / INVERSION_MODE
+    / SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE
+    / SLASH_CHORD_MODE_POLYCHORD
+    / SLASH_CHORD_MODE_INVERSION
     / SLASH_CHORD
-    / COMPOUND_CHORD
+    / ON_CHORD
     / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY _ { return { event: "chord", root, quality }; }
 SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
     return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
-COMPOUND_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
-    return { event: "compound chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; } // ON_CHORDと書かないのは「オンコード」は日本固有の表記らしいため
-COMPOUND_CHORD_MODE=_ "compound chord"i _ { return { event: "compound chord" }; }
-INVERSION_MODE=_ ("inversion"i / "inv"i) _ { return { event: "inversion" }; }
-UPPER_STRUCTURE_MODE=_ ("upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) _ { return { event: "upper structure" }; }
+ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
+    return { event: "chord over bass note", upperRoot, upperQuality, lowerRoot, lowerQuality }; } // このオンコード表記は日本固有である。見かけるので対象とした。
+SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i _ { return { event: "change slash chord mode to chord over bass note" }; }
+SLASH_CHORD_MODE_INVERSION=_ ("inversion"i / "inv"i) _ { return { event: "change slash chord mode to inversion" }; }
+SLASH_CHORD_MODE_POLYCHORD=_ ("polychord"i / "UST"i / "US"i / "polychord"i / "poly"i) _ { return { event: "change slash chord mode to polychord" }; }
 INLINE_MML= "/*" mml:[^*/]+ "*/" { return { event: "inline mml", mml: mml.join("") }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
