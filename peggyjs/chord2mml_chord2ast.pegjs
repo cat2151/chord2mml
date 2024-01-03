@@ -13,6 +13,8 @@ EVENT=INLINE_MML
     / OPEN_HARMONY_MODE_DROP4
     / OPEN_HARMONY_MODE_DROP2
     / OPEN_HARMONY_MODE_CLOSE
+    / BASS_PLAY_MODE_NO_BASS
+    / BASS_PLAY_MODE_ROOT
     / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY H _ { return { event: "chord", root, quality }; }
 SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H _ {
@@ -31,6 +33,8 @@ OPEN_HARMONY_MODE_CLOSE=_ ("close harmony"i / "close"i) _ { return { event: "cha
 OPEN_HARMONY_MODE_DROP2=_ ("drop2"i / "drop-2"i / "open triad"i) _ { return { event: "change open harmony mode to drop2" }; } // open harmonyは、wikipedia英語版より。open voicingにしないのは、wikipedia英語版でそれが使われていないため。
 OPEN_HARMONY_MODE_DROP4=_ ("drop4"i / "drop-4"i) _ { return { event: "change open harmony mode to drop4" }; } // ハイフンありは、wikipedia英語版より。ハイフン有無どちらもありうるとのこと。
 OPEN_HARMONY_MODE_DROP2AND4=_ ("drop2and4"i / "drop-2-and-4"i) _ { return { event: "change open harmony mode to drop2and4" }; }
+BASS_PLAY_MODE_NO_BASS=_ ("no bass"i) _ { return { event: "change bass play mode to no bass" }; }
+BASS_PLAY_MODE_ROOT=_ ("bass is root"i / "bass plays root"i / "bass play root"i) _ { return { event: "change bass play mode to root" }; }
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {

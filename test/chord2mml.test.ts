@@ -74,6 +74,18 @@ describe("chord2ast", () => {
     test("drop-2-and-4", () => {
         expect(parse("drop-2-and-4")).toEqual([{event: "change open harmony mode to drop2and4"}]);
     });
+    test("bass is root", () => {
+        expect(parse("bass is root")).toEqual([{event: "change bass play mode to root"}]);
+    });
+    test("bass plays root", () => {
+        expect(parse("bass is root")).toEqual([{event: "change bass play mode to root"}]);
+    });
+    test("bass play root", () => {
+        expect(parse("bass is root")).toEqual([{event: "change bass play mode to root"}]);
+    });
+    test("no bass", () => {
+        expect(parse("no bass")).toEqual([{event: "change bass play mode to no bass"}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -214,5 +226,11 @@ describe("chord2mml", () => {
     });
     test("inversion and drop2を、chord over bass note にも適用する", () => {
         expect(chord2mml.parse("1st inv drop2 C/C")).toEqual("'cg<e<c'");
+    });
+    test("bass is root", () => {
+        expect(chord2mml.parse("bass is root C")).toEqual("'c<ceg'");
+    });
+    test("bass is root", () => {
+        expect(chord2mml.parse("bass is root C no bass C")).toEqual("'c<ceg''ceg'");
     });
 });

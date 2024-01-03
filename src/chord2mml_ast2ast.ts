@@ -1,5 +1,6 @@
 function astToAst(asts) {
   let slashMode = "chord over bass note";
+  let bassPlayMode = "no bass";
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
     switch (ast.event) {
@@ -15,7 +16,24 @@ function astToAst(asts) {
       case "slash chord":
         ast.event = slashMode;
         break;
-    }
+      case "change bass play mode to root":
+        bassPlayMode = "root";
+        break;
+      case "change bass play mode to no bass":
+        bassPlayMode = "no bass";
+        break;
+      case "chord":
+        if (bassPlayMode == "root") {
+          ast.event = "chord over bass note";
+          ast.upperRoot = ast.root;
+          ast.upperQuality = ast.quality;
+          ast.lowerRoot = ast.root;
+          ast.lowerQuality = ast.quality;
+          delete ast.root;
+          delete ast.quality;
+        }
+        break;
+      }
   }
   return asts;
 }
