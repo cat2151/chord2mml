@@ -1,12 +1,13 @@
 function astToNotes(asts) {
   let result = [];
   let inversionMode = "root inv";
+  let openHarmonyMode = "close";
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
     let notes;
     switch (ast.event) {
       case "chord":
-        notes = getNotes(ast.root, ast.quality, inversionMode);
+        notes = getNotes(ast.root, ast.quality, inversionMode, openHarmonyMode);
         result.push(notes);
         break;
       case "chord over bass note":
@@ -36,12 +37,24 @@ function astToNotes(asts) {
       case "change inversion mode to 3rd inv":
         inversionMode = "3rd inv";
         break;
+      case "change open harmony mode to close":
+        openHarmonyMode = "close";
+        break;
+      case "change open harmony mode to drop2":
+        openHarmonyMode = "drop2";
+        break;
+      case "change open harmony mode to drop4":
+        openHarmonyMode = "drop4";
+        break;
+      case "change open harmony mode to drop2and4":
+        openHarmonyMode = "drop2and4";
+        break;
     } // switch
   }
   return result;
 }
 
-function getNotes(root, quality, inversionMode = "root inv") {
+function getNotes(root, quality, inversionMode = "root inv", openHarmonyMode = "close") {
   let notes = [];
   switch (quality) {
     case "maj": notes = [0,4,7]; break;
@@ -53,16 +66,18 @@ function getNotes(root, quality, inversionMode = "root inv") {
   notes = shiftNotes(notes, root);
 
   // inversion
-  {
-    switch (inversionMode) {
-      case "1st inv": notes = rotateNotesByCount(notes, 1); break;
-      case "2nd inv": notes = rotateNotesByCount(notes, 2); break;
-      case "3rd inv": notes = rotateNotesByCount(notes, 3); break;
-    }
+  switch (inversionMode) {
+    case "1st inv": notes = inversionByCount(notes, 1); break;
+    case "2nd inv": notes = inversionByCount(notes, 2); break;
+    case "3rd inv": notes = inversionByCount(notes, 3); break;
   }
 
-  // octave
-  notes = adjustNotesOctave(notes);
+  // drop2 etc.
+  switch (openHarmonyMode) {
+    case "drop2": notes = drop2(notes); break;
+    case "drop4": notes = drop4(notes); break;
+    case "drop2and4": notes = drop2and4(notes); break;
+  }
 
   return notes;
 }
@@ -97,28 +112,31 @@ function getUpperNotes(upperRoot, upperQuality, lowerRoot) {
 
 function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot) {
   let notes = getNotes(upperRoot, upperQuality);
-  notes = rotateNotesByTargetNote(notes, lowerRoot);
-  // octave
-  notes = adjustNotesOctave(notes);
+  notes = inversionByTargetNote(notes, lowerRoot);
   return notes;
 }
 
-function rotateNotesByTargetNote(notes, targetNote) {
+function inversionByTargetNote(notes, targetNote) {
+  // targetNoteが最低音となるよう、inversionする
   for (let i = 0; i < notes.length; i++) {
     if (notes[0] == targetNote) break;
     notes.push(notes.shift());
   }
+  notes = adjustNotesOctave(notes);
   return notes;
 }
 
-function rotateNotesByCount(notes, count) {
+function inversionByCount(notes, count) {
+  // count 1 は第1転回形、2,3...も同様
   for (let i = 0; i < count; i++) {
     notes.push(notes.shift());
   }
+  notes = adjustNotesOctave(notes);
   return notes;
 }
 
 function adjustNotesOctave(notes) {
+  // notesについて、一つ前より低い音があればoctave upさせる用
   // example: [7,0,4] to [7,12,16]
   let oldNote = -1;
   for (let i = 0; i < notes.length; i++) {
@@ -135,9 +153,45 @@ function getNotesByPolychord(upperRoot, upperQuality, lowerRoot, lowerQuality) {
   const lowerNotes = getNotes(lowerRoot, lowerQuality);
   const upperNotes = getNotes(upperRoot, upperQuality);
   let notes = [...lowerNotes, ...upperNotes];
-  // octave
+  // lowerNotesの最高音より、upperNotesの最低音のほうが高い音とする用
   notes = adjustNotesOctave(notes);
   return notes;
+}
+
+function drop2(notes: number[]): number[] {
+  if (notes.length < 2) {
+    return notes;
+  } else {
+    const secondLast = notes[notes.length - 2] - 12;
+    notes.splice(notes.length - 2, 1);
+    notes.unshift(secondLast);
+    return notes;
+  }
+}
+
+function drop4(notes: number[]): number[] {
+  if (notes.length < 4) {
+    return notes;
+  } else {
+    const fourthLast = notes[notes.length - 4] - 12;
+    notes.splice(notes.length - 4, 1);
+    notes.unshift(fourthLast);
+    return notes;
+  }
+}
+
+function drop2and4(notes: number[]): number[] {
+  if (notes.length < 4) {
+    return notes;
+  } else {
+    const secondLast = notes[notes.length - 2] - 12;
+    const fourthLast = notes[notes.length - 4] - 12;
+    notes.splice(notes.length - 2    , 1);
+    notes.splice(notes.length - 4 + 1, 1); // drop2したあとなので+1
+    notes.unshift(secondLast);
+    notes.unshift(fourthLast);
+    return notes;
+  }
 }
 
 export {

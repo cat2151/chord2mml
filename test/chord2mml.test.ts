@@ -59,6 +59,24 @@ describe("chord2ast", () => {
     test("1st inv", () => {
         expect(parse("1st inv")).toEqual([{event: "change inversion mode to 1st inv"}]);
     });
+    test("drop2", () => {
+        expect(parse("drop2")).toEqual([{event: "change open harmony mode to drop2"}]);
+    });
+    test("drop-2", () => {
+        expect(parse("drop-2")).toEqual([{event: "change open harmony mode to drop2"}]);
+    });
+    test("drop4", () => {
+        expect(parse("drop4")).toEqual([{event: "change open harmony mode to drop4"}]);
+    });
+    test("drop-4", () => {
+        expect(parse("drop-4")).toEqual([{event: "change open harmony mode to drop4"}]);
+    });
+    test("drop2and4", () => {
+        expect(parse("drop2and4")).toEqual([{event: "change open harmony mode to drop2and4"}]);
+    });
+    test("drop-2-and-4", () => {
+        expect(parse("drop-2-and-4")).toEqual([{event: "change open harmony mode to drop2and4"}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -145,5 +163,23 @@ describe("chord2mml", () => {
     });
     test("第3転回形 & 基本形", () => {
         expect(chord2mml.parse("3rd inv Cmaj7 root inv Cmaj7")).toEqual("'b<ceg''cegb'");
+    });
+    test("drop2", () => {
+        expect(chord2mml.parse("drop2 C")).toEqual("'>e<cg'");
+    });
+    test("2nd inv drop2", () => {
+        expect(chord2mml.parse("2nd inv drop2 Cmaj7")).toEqual("'cgb<e'");
+    });
+    test("1st inv drop2", () => {
+        expect(chord2mml.parse("1st inv drop2 C")).toEqual("'>g<e<c'");
+    });
+    test("drop4", () => {
+        expect(chord2mml.parse("drop4 Cmaj7")).toEqual("'>c<egb'");
+    });
+    test("drop2and4", () => {
+        expect(chord2mml.parse("drop2and4 Cmaj7")).toEqual("'>cg<eb'");
+    });
+    test("drop4 のち close", () => {
+        expect(chord2mml.parse("drop4 Cmaj7 close Cmaj7")).toEqual("'>c<egb''cegb'");
     });
 });

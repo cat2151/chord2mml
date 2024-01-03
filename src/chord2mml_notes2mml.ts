@@ -6,8 +6,18 @@ function notesToMml(noteses) {
       mml += notes.mml;
       continue;
     }
+    // chord
     let lastOctaveOffset = 0;
     if (notes.length) mml += "'";
+
+    let bottomNote = notes[0];
+    // 一番下の音がnote offset 0未満の場合。drop4など用。
+    while (bottomNote < 0) {
+      bottomNote += 12;
+      mml += ">";
+      lastOctaveOffset--;
+    }
+
     for (let iNotes = 0; iNotes < notes.length; iNotes++) {
       let note = notes[iNotes];
 
@@ -18,7 +28,7 @@ function notesToMml(noteses) {
         lastOctaveOffset = octaveOffset;
       }
 
-      switch (note % 12) {
+      switch (((note % 12) + 12) % 12) {
         case  0: mml += "c";  break;
         case  1: mml += "c+"; break;
         case  2: mml += "d";  break;
