@@ -14,10 +14,10 @@ EVENT=INLINE_MML
     / OPEN_HARMONY_MODE_DROP2
     / OPEN_HARMONY_MODE_CLOSE
     / CHORD
-CHORD=_ root:ROOT quality:CHORD_QUALITY _ { return { event: "chord", root, quality }; }
-SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
+CHORD=_ root:ROOT quality:CHORD_QUALITY H _ { return { event: "chord", root, quality }; }
+SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H _ {
     return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
-ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY _ {
+ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H _ {
     return { event: "chord over bass note", upperRoot, upperQuality, lowerRoot, lowerQuality }; } // このオンコード表記は日本固有である。見かけるので対象とした。
 SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i _ { return { event: "change slash chord mode to chord over bass note" }; }
 SLASH_CHORD_MODE_INVERSION=_ ("inversion"i / "inv"i) _ { return { event: "change slash chord mode to inversion" }; }
@@ -48,7 +48,12 @@ ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
     return offset; }
 SHARP=[#＃♯] { return "#"; }
 FLAT=[b♭] { return "b"; }
-CHORD_QUALITY=quality:(MAJ7 / MAJ) { return quality; }
-MAJ=("maj"i / "M" / "") { return "maj"; }
+CHORD_QUALITY=quality:(MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / MIN_SHORT / MAJ_SHORT) { return quality; }
+MAJ_LONG="maj"i { return "maj"; } // LONGとSHORTに分けたのは、文字数の多いものから順に並べ、意図通りにマッチさせる用
+MAJ_SHORT=("M" / "") { return "maj"; }
 MAJ7=("maj7"i / "△") { return "maj7"; }
+MIN_LONG="min"i { return "min"; }
+MIN_SHORT=("m" / "-") { return "min"; }
+MIN7=("min7"i / "m7" / "-7") { return "min7"; }
 _ "whitespace"= [ \t\n\r]*
+H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。

@@ -59,6 +59,8 @@ function getNotes(root, quality, inversionMode = "root inv", openHarmonyMode = "
   switch (quality) {
     case "maj": notes = [0,4,7]; break;
     case "maj7": notes = [0,4,7,11]; break;
+    case "min": notes = [0,3,7]; break;
+    case "min7": notes = [0,3,7,10]; break;
   }
 
   // root

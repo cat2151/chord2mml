@@ -185,4 +185,25 @@ describe("chord2mml", () => {
     test("drop4 のち close", () => {
         expect(chord2mml.parse("drop4 Cmaj7 close Cmaj7")).toEqual("'>c<egb''cegb'");
     });
+    test("min", () => {
+        expect(chord2mml.parse("Cm")).toEqual("'cd+g'");
+    });
+    test("min", () => {
+        expect(chord2mml.parse("Cmin")).toEqual("'cd+g'");
+    });
+    test("min", () => {
+        expect(chord2mml.parse("C- - C-")).toEqual("'cd+g''cd+g'");
+    });
+    test("min7", () => {
+        expect(chord2mml.parse("Cmin7")).toEqual("'cd+ga+'");
+    });
+    test("min7", () => {
+        expect(chord2mml.parse("C-7 - C-7")).toEqual("'cd+ga+''cd+ga+'");
+    });
+    test("hyphen", () => {
+        expect(chord2mml.parse("C - C/C - ConC - C")).toEqual("'ceg''c<ceg''c<ceg''ceg'");
+    });
+    test("hyphen", () => {
+        expect(chord2mml.parse("C→C → C")).toEqual("'ceg''ceg''ceg'");
+    });
 });
