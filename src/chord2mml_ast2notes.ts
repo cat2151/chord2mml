@@ -23,9 +23,6 @@ function astToNotes(asts) {
         notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
         result.push(notes);
         break;
-      case "inline mml":
-        result.push(ast);
-        break;
       case "change inversion mode to root inv":
         inversionMode = "root inv";
         break;
@@ -56,6 +53,8 @@ function astToNotes(asts) {
       case "change bass play mode to no bass":
         bassPlayMode = "no bass";
         break;
+      default:
+        result.push(ast);
     } // switch
   }
   return result;

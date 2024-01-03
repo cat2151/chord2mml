@@ -236,7 +236,7 @@ describe("chord2mml", () => {
     test("bass is root, slash chord inversion において、inversionされつつbassも鳴る", () => {
         expect(chord2mml.parse("bass is root, slash chord inversion C/E")).toEqual("'c<eg<c'");
     });
-    test("bar ひとまずdummy", () => {
-        expect(chord2mml.parse("C | C")).toEqual("'ceg''ceg'");
+    test("bar", () => {
+        expect(chord2mml.parse("C | C")).toEqual("'ceg'/*|*/'ceg'");
     });
 });
