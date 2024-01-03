@@ -11,7 +11,7 @@ function astToNotes(asts) {
         result.push(notes);
         break;
       case "chord over bass note":
-        notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot);
+        notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, inversionMode, openHarmonyMode);
         result.push(notes);
         break;
       case "inversion":
@@ -67,6 +67,13 @@ function getNotes(root, quality, inversionMode = "root inv", openHarmonyMode = "
   //  chordのrootにあわせ、半音単位でshiftする
   notes = shiftNotes(notes, root);
 
+  // 転回形 & drop2等
+  notes = inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode);
+
+  return notes;
+}
+
+function inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode) {
   // inversion
   switch (inversionMode) {
     case "1st inv": notes = inversionByCount(notes, 1); break;
@@ -91,13 +98,16 @@ function shiftNotes(notes, v) {
   return notes;
 }
 
-function getNotesByChordOverBassNote(upperRoot, upperQuality, lowerRoot) {
+function getNotesByChordOverBassNote(upperRoot, upperQuality, lowerRoot, inversionMode, openHarmonyMode) {
   // lower
   let notes = [];
   notes.push(lowerRoot);
 
   // upper
   let upperNotes = getUpperNotes(upperRoot, upperQuality, lowerRoot);
+  // 転回形 & drop2等
+  upperNotes = inversionAndOpenHarmony(upperNotes, inversionMode, openHarmonyMode);
+
   notes.push(...upperNotes);
 
   return notes;

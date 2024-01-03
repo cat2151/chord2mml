@@ -209,4 +209,13 @@ describe("chord2mml", () => {
     test("hyphen", () => {
         expect(chord2mml.parse("C→C → C")).toEqual("'ceg''ceg''ceg'");
     });
+    test("inversionを、chord over bass note にも適用する", () => {
+        expect(chord2mml.parse("1st inv C/C")).toEqual("'c<eg<c'");
+    });
+    test("drop2等を、chord over bass note にも適用する", () => {
+        expect(chord2mml.parse("drop2 C/C")).toEqual("'ce<cg'");
+    });
+    test("inversion and drop2を、chord over bass note にも適用する", () => {
+        expect(chord2mml.parse("1st inv drop2 C/C")).toEqual("'cg<e<c'");
+    });
 });
