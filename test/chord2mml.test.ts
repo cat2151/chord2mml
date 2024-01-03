@@ -30,7 +30,7 @@ describe("chord2ast", () => {
         expect(parse("C#maj7")).toEqual([{event: "chord", quality: "maj7", root: 1}]);
     });
     test("maj7 表記variation", () => {
-        expect(parse("C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1}, {event: "chord", quality: "maj7", root: 1}]);
+        expect(parse("C#M7 C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1}, {event: "chord", quality: "maj7", root: 1}, {event: "chord", quality: "maj7", root: 1}]);
     });
     test("slash chord", () => {
         expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
@@ -193,6 +193,9 @@ describe("chord2mml", () => {
     });
     test("min", () => {
         expect(chord2mml.parse("C- - C-")).toEqual("'cd+g''cd+g'");
+    });
+    test("min7", () => {
+        expect(chord2mml.parse("Cm7")).toEqual("'cd+ga+'");
     });
     test("min7", () => {
         expect(chord2mml.parse("Cmin7")).toEqual("'cd+ga+'");
