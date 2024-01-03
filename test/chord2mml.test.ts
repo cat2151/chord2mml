@@ -39,10 +39,7 @@ describe("chord2ast", () => {
         expect(parse("chord over bass note")).toEqual([{event: "change slash chord mode to chord over bass note"}]);
     });
     test("slash chord mode to inversion", () => {
-        expect(parse("inversion")).toEqual([{event: "change slash chord mode to inversion"}]);
-    });
-    test("slash chord mode to inversion", () => {
-        expect(parse("inv")).toEqual([{event: "change slash chord mode to inversion"}]);
+        expect(parse("slash chord inversion")).toEqual([{event: "change slash chord mode to inversion"}]);
     });
     test("polychord mode", () => {
         expect(parse("polychord")).toEqual([{event: "change slash chord mode to polychord"}]);
