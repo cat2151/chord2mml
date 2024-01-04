@@ -263,4 +263,9 @@ describe("chord2mml", () => {
     test("bar slash", () => {
         expect(chord2mml.parse("C | C / C C")).toEqual("'c1eg'/*|*/'c2eg''c4eg''c4eg'");
     });
+    test("inversion error", () => {
+        expect(() => {
+            chord2mml.parse("slash chord inversion C/D")
+        }).toThrow();
+    });
 });

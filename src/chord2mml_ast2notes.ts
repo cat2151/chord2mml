@@ -167,12 +167,19 @@ function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot, bassPlayMo
 
 function inversionByTargetNote(notes, targetNote) {
   // targetNoteが最低音となるよう、inversionする
+  let isInverted = false;
   for (let _dummy of notes) {
-    if (((notes[0] % 12) + 12) % 12 == ((targetNote % 12) + 12) % 12) break; // %12は、getUpperNotesで+12されたnotesが来てもmatchする用
+    if (((notes[0] % 12) + 12) % 12 == ((targetNote % 12) + 12) % 12) {
+      isInverted = true;
+      break; // %12は、getUpperNotesで+12されたnotesが来てもmatchする用
+    }
     notes.push(notes.shift());
   }
-  notes = adjustNotesOctave(notes);
-  return notes;
+  if (isInverted) {
+    notes = adjustNotesOctave(notes);
+    return notes;
+  }
+  throw new Error(`ERROR : ${JSON.stringify(notes)} を転回しようとしましたが、chordに ${JSON.stringify(targetNote)} が含まれていません。chordに含まれるnoteを指定してください。`)
 }
 
 function inversionByCount(notes, count) {
