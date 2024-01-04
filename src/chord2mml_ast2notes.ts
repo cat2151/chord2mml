@@ -13,6 +13,7 @@ function astToNotes(asts) {
         break;
       case "chord over bass note":
         notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, inversionMode, openHarmonyMode);
+        notes = keyShiftNotes(notes, -12); // bass noteがあるぶん音域を下げる用
         result.push(notes);
         break;
       case "inversion":
@@ -71,7 +72,7 @@ function getNotes(root, quality, inversionMode = "root inv", openHarmonyMode = "
 
   // root
   //  chordのrootにあわせ、半音単位でshiftする
-  notes = shiftNotes(notes, root);
+  notes = keyShiftNotes(notes, root);
 
   // 転回形 & drop2等
   notes = inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode);
@@ -97,7 +98,7 @@ function inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode) {
   return notes;
 }
 
-function shiftNotes(notes, v) {
+function keyShiftNotes(notes, v) {
   for (let iNotes = 0; iNotes < notes.length; iNotes++) {
     notes[iNotes] += v;
   }
@@ -123,7 +124,7 @@ function getUpperNotes(upperRoot, upperQuality, lowerRoot) {
   let upperNotes = getNotes(upperRoot, upperQuality);
   // octave
   if (upperRoot <= lowerRoot) {
-    upperNotes = shiftNotes(upperNotes, 12);
+    upperNotes = keyShiftNotes(upperNotes, 12);
   }
   return upperNotes;
 }
@@ -137,6 +138,7 @@ function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot, bassPlayMo
     let upperNotes = getUpperNotes(upperRoot, upperQuality, upperRoot); // getUpperNotesを使うのは、bassのrootより上のoctaveのnotesを得る用
     upperNotes = inversionByTargetNote(upperNotes, lowerRoot);
     notes.push(...upperNotes);
+    notes = keyShiftNotes(notes, -12); // bass noteがあるぶん音域を下げる用
   } else {
     notes = getNotes(upperRoot, upperQuality);
     notes = inversionByTargetNote(notes, lowerRoot);
