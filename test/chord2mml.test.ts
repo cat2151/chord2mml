@@ -103,39 +103,39 @@ describe("ast2ast", () => {
 });
 describe("astToNotes", () => {
     test("Cmaj", () => {
-        expect(toNotes([{event: "chord", quality: "maj", root: 0}])).toEqual([[0,4,7]]);
+        expect(toNotes([{event: "chord", quality: "maj", root: 0}])).toEqual([{notes: [0,4,7]}]);
     });
     test("Dmaj", () => {
-        expect(toNotes([{event: "chord", quality: "maj", root: 2}])).toEqual([[2,6,9]]);
+        expect(toNotes([{event: "chord", quality: "maj", root: 2}])).toEqual([{notes: [2,6,9]}]);
     });
     test("Cmaj7", () => {
-        expect(toNotes([{event: "chord", quality: "maj7", root: 0}])).toEqual([[0,4,7,11]]);
+        expect(toNotes([{event: "chord", quality: "maj7", root: 0}])).toEqual([{notes: [0,4,7,11]}]);
     });
     test("Gmaj", () => {
-        expect(toNotes([{event: "chord", quality: "maj", root: 7}])).toEqual([[7,11,14]]);
+        expect(toNotes([{event: "chord", quality: "maj", root: 7}])).toEqual([{notes: [7,11,14]}]);
     });
     test("chord over bass note F/C", () => {
-        expect(toNotes([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[-12+0,-12+5,-12+9,-12+12]]);
+        expect(toNotes([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{notes: [-12+0,-12+5,-12+9,-12+12]}]);
     });
     test("inversion C/G", () => {
-        expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([[7,12,16]]);
+        expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{notes: [7,12,16]}]);
     });
     test("polychord D/C", () => {
-        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([[0,4,7,14,18,21]]);
+        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{notes: [0,4,7,14,18,21]}]);
     });
 });
 describe("notesToMml", () => {
     test("Cmaj", () => {
-        expect(toMml([[0,4,7]])).toEqual("'ceg'");
+        expect(toMml([{notes: [0,4,7]}])).toEqual("'ceg'");
     });
     test("Dmaj", () => {
-        expect(toMml([[2,6,9]])).toEqual("'df+a'");
+        expect(toMml([{notes: [2,6,9]}])).toEqual("'df+a'");
     });
     test("Gmaj", () => {
-        expect(toMml([[7,11,14]])).toEqual("'gb<d'");
+        expect(toMml([{notes: [7,11,14]}])).toEqual("'gb<d'");
     });
     test("Bmaj7", () => {
-        expect(toMml([[11,11 + 4,11+7,11+11]])).toEqual("'b<d+f+a+'");
+        expect(toMml([{notes: [11,11 + 4,11+7,11+11]}])).toEqual("'b<d+f+a+'");
     });
 });
 // parseがぶら下がっているのは、取り急ぎeasychord2mmlでそのまま動く用
@@ -245,4 +245,13 @@ describe("chord2mml", () => {
     test("tempo BPM", () => {
         expect(chord2mml.parse("BPM120 TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual("t120t120t120t120t120");
     });
+    // test("小節線をchord MMLごとのnote lengthに反映する", () => {
+    //     expect(chord2mml.parse("| C |")).toEqual("/*|*/'c1eg'/*|*/");
+    // });
+    // test("小節線をchord MMLごとのnote lengthに反映する", () => {
+    //     expect(chord2mml.parse("| C | C |")).toEqual("/*|*/'c1eg'/*|*/'c1eg'/*|*/");
+    // });
+    // test("小節線をchord MMLごとのnote lengthに反映する", () => {
+    //     expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
+    // });
 });

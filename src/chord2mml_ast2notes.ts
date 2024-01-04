@@ -3,26 +3,44 @@ function astToNotes(asts) {
   let inversionMode = "root inv";
   let openHarmonyMode = "close";
   let bassPlayMode = "no bass";
+  // 備忘、役目完了したeventやpropertyはここで捨てている（後続処理をシンプル化する用）
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
-    let notes;
     switch (ast.event) {
       case "chord":
-        notes = getNotes(ast.root, ast.quality, inversionMode, openHarmonyMode);
-        result.push(notes);
+        ast.notes = getNotes(ast.root, ast.quality, inversionMode, openHarmonyMode);
+        delete ast.event;
+        delete ast.root;
+        delete ast.quality;
+        result.push(ast);
         break;
       case "chord over bass note":
-        notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, inversionMode, openHarmonyMode);
-        notes = keyShiftNotes(notes, -12); // bass noteがあるぶん音域を下げる用
-        result.push(notes);
+        ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, inversionMode, openHarmonyMode);
+        ast.notes = keyShiftNotes(ast.notes, -12); // bass noteがあるぶん音域を下げる用
+        delete ast.event;
+        delete ast.upperRoot;
+        delete ast.upperQuality;
+        delete ast.lowerRoot;
+        delete ast.lowerQuality;
+        result.push(ast);
         break;
       case "inversion":
-        notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, bassPlayMode);
-        result.push(notes);
+        ast.notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, bassPlayMode);
+        delete ast.event;
+        delete ast.upperRoot;
+        delete ast.upperQuality;
+        delete ast.lowerRoot;
+        delete ast.lowerQuality;
+        result.push(ast);
         break;
       case "polychord":
-        notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
-        result.push(notes);
+        ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
+        delete ast.event;
+        delete ast.upperRoot;
+        delete ast.upperQuality;
+        delete ast.lowerRoot;
+        delete ast.lowerQuality;
+        result.push(ast);
         break;
       case "change inversion mode to root inv":
         inversionMode = "root inv";
@@ -56,6 +74,7 @@ function astToNotes(asts) {
         break;
       default:
         result.push(ast);
+        break;
     } // switch
   }
   return result;

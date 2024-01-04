@@ -1,14 +1,20 @@
-function notesToMml(noteses) {
+function notesToMml(noteAsts) {
   let mml = "";
-  for (let i = 0; i < noteses.length; i++) {
-    let notes = noteses[i];
-    switch (notes.event) {
+  for (let i = 0; i < noteAsts.length; i++) {
+    const noteAst = noteAsts[i];
+    switch (noteAst.event) {
       case "inline mml":
-        mml += notes.mml;
+        mml += noteAst.mml;
         continue;
       case "bar":
         mml += "/*|*/";
         continue;
+    }
+
+    const notes = noteAst.notes;
+    if (!notes) {
+      continue; // { event: "change slash chord mode to polychord" } など用
+      // throw new Error(`ERROR : ${JSON.stringify(noteAst)}`);
     }
 
     // chord
