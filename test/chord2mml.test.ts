@@ -257,4 +257,10 @@ describe("chord2mml", () => {
     test("小節線をchord MMLごとのnote lengthに反映する", () => {
         expect(chord2mml.parse("C | C C | C C C C")).toEqual("'c1eg'/*|*/'c2eg''c2eg'/*|*/'c4eg''c4eg''c4eg''c4eg'");
     });
+    test("bar slash", () => {
+        expect(chord2mml.parse("C / C C")).toEqual("'c2eg''c4eg''c4eg'");
+    });
+    test("bar slash", () => {
+        expect(chord2mml.parse("C | C / C C")).toEqual("'c1eg'/*|*/'c2eg''c4eg''c4eg'");
+    });
 });

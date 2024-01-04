@@ -1,5 +1,6 @@
 CHORDS=EVENT*
 EVENT=INLINE_MML
+    / BAR_SLASH
     / TEMPO
     / SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE
     / SLASH_CHORD_MODE_POLYCHORD
@@ -18,14 +19,15 @@ EVENT=INLINE_MML
     / BASS_PLAY_MODE_ROOT
     / CHORD
     / BAR
-CHORD=_ root:ROOT quality:CHORD_QUALITY H _ { return { event: "chord", root, quality }; }
-SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H _ {
+CHORD=_ root:ROOT quality:CHORD_QUALITY H { return { event: "chord", root, quality }; }
+SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H {
     return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
-ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H _ {
+ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H {
     return { event: "chord over bass note", upperRoot, upperQuality, lowerRoot, lowerQuality }; } // このオンコード表記は日本固有である。見かけるので対象とした。
-SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i [\,\.]? _ { return { event: "change slash chord mode to chord over bass note" }; }
-SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? _ { return { event: "change slash chord mode to inversion" }; } // "slash chord"の文言を追加したのは、inversionだけだと意図がわからないことがあるので。当初はわかったが現在は仕様が複雑になったため。
-SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? _ { return { event: "change slash chord mode to polychord" }; }
+SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i [\,\.]? { return { event: "change slash chord mode to chord over bass note" }; }
+SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? { return { event: "change slash chord mode to inversion" }; } // "slash chord"の文言を追加したのは、inversionだけだと意図がわからないことがあるので。当初はわかったが現在は仕様が複雑になったため。
+SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? {
+    return { event: "change slash chord mode to polychord" }; }
 INLINE_MML= "/*" mml:[^*/]+ "*/" { return { event: "inline mml", mml: mml.join("") }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
 INVERSION_MODE_ROOT_INV=_ "root inv"i [\,\.]? _ { return { event: "change inversion mode to root inv" }; }
 INVERSION_MODE_1ST_INV=_ "1st inv"i [\,\.]? _ { return { event: "change inversion mode to 1st inv" }; }
@@ -38,6 +40,7 @@ OPEN_HARMONY_MODE_DROP2AND4=_ ("drop2and4"i / "drop-2-and-4"i) [\,\.]? _ { retur
 BASS_PLAY_MODE_NO_BASS=_ ("no bass"i) [\,\.]? _ { return { event: "change bass play mode to no bass" }; }
 BASS_PLAY_MODE_ROOT=_ ("bass is root"i / "bass plays root"i / "bass play root"i) [\,\.]? _ { return { event: "change bass play mode to root" }; }
 BAR=_ "|" _ { return { event: "bar" }; }
+BAR_SLASH=" / " _ { return { event: "bar slash" }; }
 TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ _ { return { event: "inline mml", mml: "t" + bpm.join("") }; }
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;

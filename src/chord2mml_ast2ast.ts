@@ -42,6 +42,7 @@ function astToAst(asts) {
 
 function bar2noteLength(asts) {
   let barCount = 0;
+  let totalNoteLength = 1;
   let chordIndexes = [];
   for (let i = 0; i < asts.length; i++) {
     let ast = asts[i];
@@ -54,7 +55,16 @@ function bar2noteLength(asts) {
         break;
       case "bar":
         barCount++;
-        asts = updateAstNoteLength(asts, chordIndexes);
+        asts = updateAstNoteLength(asts, chordIndexes, totalNoteLength);
+
+        // 次のカウント用
+        chordIndexes = [];
+        totalNoteLength = 1; // 全音符
+        break;
+      case "bar slash":
+        barCount++; // barなしでbar slashがある場合用
+        totalNoteLength = 2; // bar slashで分割されたそれぞれは2分音符となる
+        asts = updateAstNoteLength(asts, chordIndexes, totalNoteLength);
 
         // 次のカウント用
         chordIndexes = [];
@@ -63,13 +73,13 @@ function bar2noteLength(asts) {
   } // for
 
   // 用途、末尾のchord（後ろに小節線がない）のnoteLengthをupdateする用
-  if (barCount) asts = updateAstNoteLength(asts, chordIndexes);
+  if (barCount) asts = updateAstNoteLength(asts, chordIndexes, totalNoteLength);
 
   return asts;
 }
 
-function updateAstNoteLength(asts, chordIndexes) {
-  const noteLength = chordIndexes.length; // 例、1小節に4つchordがあるなら4分音符とし、4を得る
+function updateAstNoteLength(asts, chordIndexes, totalNoteLength) {
+  const noteLength = chordIndexes.length * totalNoteLength; // 例、1小節に4つchordがあるなら4分音符とし、4を得る。slashにより1/2小節に2つchordがある場合も4を得る。
   for (let iChord of chordIndexes) {
     asts[iChord].noteLength = noteLength;
   }
