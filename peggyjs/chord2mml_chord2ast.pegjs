@@ -1,6 +1,7 @@
-CHORDS=EVENT*
+CHORDS=event:EVENT* _ { return event; }
 EVENT=INLINE_MML
     / BAR_SLASH
+    / MIDI_PROGRAM_CHANGE
     / TEMPO
     / SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE
     / SLASH_CHORD_MODE_POLYCHORD
@@ -68,3 +69,7 @@ MIN_SHORT=("m" / "-") { return "min"; }
 MIN7=("min7"i / "m7" / "-7") { return "min7"; }
 _ "whitespace"= [ \t\n\r]*
 H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
+MIDI_PROGRAM_CHANGE=PC048 / PC049 / PC052
+PC048=_ ("Strings" _ "Ensemble" _ "1"i / "Strings" _ "1" / "Str." _ "1") [\,\.]? _ { return { event: "inline mml", mml: "@48" }; }
+PC049=_ ("Strings" _ "Ensemble" _ "2"i / "Strings" _ "2" / "Str." _ "2") [\,\.]? _ { return { event: "inline mml", mml: "@49" }; }
+PC052=_ ("Voice Aahs"i / "Choir Aahs"i / "Choir"i / "Chor."i) [\,\.]? _ { return { event: "inline mml", mml: "@52" }; }

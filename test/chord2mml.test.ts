@@ -268,4 +268,13 @@ describe("chord2mml", () => {
             chord2mml.parse("slash chord inversion C/D")
         }).toThrow();
     });
+    test("MIDI Program Change", () => {
+        expect(chord2mml.parse("Strings Ensemble 2")).toEqual("@49");
+    });
+    test("MIDI Program Change", () => {
+        expect(chord2mml.parse("Strings2 Str.2 Choir")).toEqual("@49@49@52");
+    });
+    test("last space", () => {
+        expect(chord2mml.parse("C ")).toEqual("'ceg'");
+    });
 });
