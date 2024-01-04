@@ -243,7 +243,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("BPM 120")).toEqual("t120");
     });
     test("tempo BPM", () => {
-        expect(chord2mml.parse("BPM120 TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual("t120t120t120t120t120");
+        expect(chord2mml.parse("BPM120 BPM120, TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual("t120t120t120t120t120t120");
     });
     test("小節線をchord MMLごとのnote lengthに反映する", () => {
         expect(chord2mml.parse("| C |")).toEqual("/*|*/'c1eg'/*|*/");
