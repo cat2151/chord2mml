@@ -239,4 +239,10 @@ describe("chord2mml", () => {
     test("bar", () => {
         expect(chord2mml.parse("C | C")).toEqual("'ceg'/*|*/'ceg'");
     });
+    test("tempo BPM", () => {
+        expect(chord2mml.parse("BPM 120")).toEqual("t120");
+    });
+    test("tempo BPM", () => {
+        expect(chord2mml.parse("BPM120 TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual("t120t120t120t120t120");
+    });
 });

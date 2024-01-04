@@ -1,5 +1,6 @@
 CHORDS=EVENT*
 EVENT=INLINE_MML
+    / TEMPO
     / SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE
     / SLASH_CHORD_MODE_POLYCHORD
     / SLASH_CHORD_MODE_INVERSION
@@ -37,6 +38,7 @@ OPEN_HARMONY_MODE_DROP2AND4=_ ("drop2and4"i / "drop-2-and-4"i) [\,\.]? _ { retur
 BASS_PLAY_MODE_NO_BASS=_ ("no bass"i) [\,\.]? _ { return { event: "change bass play mode to no bass" }; }
 BASS_PLAY_MODE_ROOT=_ ("bass is root"i / "bass plays root"i / "bass play root"i) [\,\.]? _ { return { event: "change bass play mode to root" }; }
 BAR=_ "|" _ { return { event: "bar" }; }
+TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ _ { return { event: "inline mml", mml: "t" + bpm.join("") }; }
 ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {
