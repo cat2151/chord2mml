@@ -4,8 +4,7 @@ function astToNotes(asts) {
   let openHarmonyMode = "close";
   let bassPlayMode = "no bass";
   // 備忘、役目完了したeventやpropertyはここで捨てている（後続処理をシンプル化する用）
-  for (let i = 0; i < asts.length; i++) {
-    let ast = asts[i];
+  for (let ast of asts) {
     switch (ast.event) {
       case "chord":
         ast.notes = getNotes(ast.root, ast.quality, inversionMode, openHarmonyMode);
@@ -168,7 +167,7 @@ function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot, bassPlayMo
 
 function inversionByTargetNote(notes, targetNote) {
   // targetNoteが最低音となるよう、inversionする
-  for (let i = 0; i < notes.length; i++) {
+  for (let _dummy of notes) {
     if (((notes[0] % 12) + 12) % 12 == ((targetNote % 12) + 12) % 12) break; // %12は、getUpperNotesで+12されたnotesが来てもmatchする用
     notes.push(notes.shift());
   }

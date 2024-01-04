@@ -1,7 +1,6 @@
 function notesToMml(noteAsts) {
   let mml = "";
-  for (let i = 0; i < noteAsts.length; i++) {
-    const noteAst = noteAsts[i];
+  for (let noteAst of noteAsts) {
     switch (noteAst.event) {
       case "inline mml":
         mml += noteAst.mml;
@@ -53,7 +52,12 @@ function notesToMml(noteAsts) {
         case 10: mml += "a+"; break;
         case 11: mml += "b";  break;
       }
-    }
+
+      if (!iNotes && noteAst.noteLength) {
+        mml += noteAst.noteLength;
+      }
+
+    } // for
     if (notes.length) mml += "'";
   }
   return mml;

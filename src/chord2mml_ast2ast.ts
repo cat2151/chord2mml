@@ -1,8 +1,7 @@
 function astToAst(asts) {
   let slashMode = "chord over bass note";
   let bassPlayMode = "no bass";
-  for (let i = 0; i < asts.length; i++) {
-    let ast = asts[i];
+  for (let ast of asts) {
     switch (ast.event) {
       case "change slash chord mode to chord over bass note":
         slashMode = "chord over bass note";
@@ -33,7 +32,46 @@ function astToAst(asts) {
           delete ast.quality;
         }
         break;
-      }
+    }
+  }
+
+  asts = bar2noteLength(asts);
+
+  return asts;
+}
+
+function bar2noteLength(asts) {
+  let barCount = 0;
+  let chordIndexes = [];
+  for (let i = 0; i < asts.length; i++) {
+    let ast = asts[i];
+    switch (ast.event) {
+      case "chord":
+      case "chord over bass note":
+      case "inversion":
+      case "polychord":
+        chordIndexes.push(i);
+        break;
+      case "bar":
+        barCount++;
+        asts = updateAstNoteLength(asts, chordIndexes);
+
+        // 次のカウント用
+        chordIndexes = [];
+        break;
+    }
+  } // for
+
+  // 用途、末尾のchord（後ろに小節線がない）のnoteLengthをupdateする用
+  if (barCount) asts = updateAstNoteLength(asts, chordIndexes);
+
+  return asts;
+}
+
+function updateAstNoteLength(asts, chordIndexes) {
+  const noteLength = chordIndexes.length; // 例、1小節に4つchordがあるなら4分音符とし、4を得る
+  for (let iChord of chordIndexes) {
+    asts[iChord].noteLength = noteLength;
   }
   return asts;
 }

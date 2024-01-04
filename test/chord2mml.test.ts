@@ -237,7 +237,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("bass is root, slash chord inversion C/E")).toEqual("'>c<eg<c'");
     });
     test("bar", () => {
-        expect(chord2mml.parse("C | C")).toEqual("'ceg'/*|*/'ceg'");
+        expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
     });
     test("tempo BPM", () => {
         expect(chord2mml.parse("BPM 120")).toEqual("t120");
@@ -245,13 +245,16 @@ describe("chord2mml", () => {
     test("tempo BPM", () => {
         expect(chord2mml.parse("BPM120 TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual("t120t120t120t120t120");
     });
-    // test("小節線をchord MMLごとのnote lengthに反映する", () => {
-    //     expect(chord2mml.parse("| C |")).toEqual("/*|*/'c1eg'/*|*/");
-    // });
-    // test("小節線をchord MMLごとのnote lengthに反映する", () => {
-    //     expect(chord2mml.parse("| C | C |")).toEqual("/*|*/'c1eg'/*|*/'c1eg'/*|*/");
-    // });
-    // test("小節線をchord MMLごとのnote lengthに反映する", () => {
-    //     expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
-    // });
+    test("小節線をchord MMLごとのnote lengthに反映する", () => {
+        expect(chord2mml.parse("| C |")).toEqual("/*|*/'c1eg'/*|*/");
+    });
+    test("小節線をchord MMLごとのnote lengthに反映する", () => {
+        expect(chord2mml.parse("| C | C |")).toEqual("/*|*/'c1eg'/*|*/'c1eg'/*|*/");
+    });
+    test("小節線をchord MMLごとのnote lengthに反映する", () => {
+        expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
+    });
+    test("小節線をchord MMLごとのnote lengthに反映する", () => {
+        expect(chord2mml.parse("C | C C | C C C C")).toEqual("'c1eg'/*|*/'c2eg''c2eg'/*|*/'c4eg''c4eg''c4eg''c4eg'");
+    });
 });
