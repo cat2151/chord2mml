@@ -87,7 +87,7 @@ describe("chord2ast", () => {
         expect(parse("no bass")).toEqual([{event: "change bass play mode to no bass"}]);
     });
     test("Dorian", () => {
-        expect(parse("Dorian")).toEqual([{event: ""}]);
+        expect(parse("Dorian")).toEqual([{event: "scale", offsets: [0,2,3,5,7,9,10]}]);
     });
 });
 describe("ast2ast", () => {
@@ -305,7 +305,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("key=D I")).toEqual("'d1f+a'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
+        expect(chord2mml.parse("Phrygian II")).toEqual("'d-1fa-'");
     });
     test("degree", () => {
         expect(chord2mml.parse("Aeolian IIm")).toEqual("'d1fa'");
@@ -345,5 +345,8 @@ describe("chord2mml", () => {
     });
     test("key to flat", () => {
         expect(chord2mml.parse("key=F IV")).toEqual("'b-1<df'");
+    });
+    test("key and scale to flat", () => {
+        expect(chord2mml.parse("Aeolian VI VII")).toEqual("'a-1<ce-''b-1<df'");
     });
 });

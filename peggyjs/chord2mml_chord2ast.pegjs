@@ -1,86 +1,33 @@
 {{
-    function getOffsetByScale(scale, root) {
+    function getOffsetByScale(scale, degree) {
+        return getOffsetsByScale(scale)[getDegreeIndex(degree)];
+    }
+
+    function getOffsetsByScale(scale) {
         switch (scale) {
-        case "ionian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 2;
-            case 'III': return 4;
-            case 'IV':  return 5;
-            case 'V':   return 7;
-            case 'VI':  return 9;
-            case 'VII': return 11;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        case "dorian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 2;
-            case 'III': return 3;
-            case 'IV':  return 5;
-            case 'V':   return 7;
-            case 'VI':  return 9;
-            case 'VII': return 10;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        case "phrygian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 1;
-            case 'III': return 3;
-            case 'IV':  return 5;
-            case 'V':   return 7;
-            case 'VI':  return 8;
-            case 'VII': return 10;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        case "lydian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 2;
-            case 'III': return 4;
-            case 'IV':  return 6;
-            case 'V':   return 7;
-            case 'VI':  return 9;
-            case 'VII': return 11;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        case "mixolydian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 2;
-            case 'III': return 4;
-            case 'IV':  return 5;
-            case 'V':   return 7;
-            case 'VI':  return 9;
-            case 'VII': return 10;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        case "aeolian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 2;
-            case 'III': return 3;
-            case 'IV':  return 5;
-            case 'V':   return 7;
-            case 'VI':  return 8;
-            case 'VII': return 10;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        case "locrian":
-            switch (root) {
-            case 'I':   return 0;
-            case 'II':  return 1;
-            case 'III': return 3;
-            case 'IV':  return 5;
-            case 'V':   return 6;
-            case 'VI':  return 8;
-            case 'VII': return 10;
-            default: throw new Error(`ERROR : getOffsetByScale`);
-            }
-        default: throw new Error(`ERROR : getOffsetByScale`);
+        case "ionian":     return [0,2,4,5,7,9,11];
+        case "dorian":     return [0,2,3,5,7,9,10];
+        case "phrygian":   return [0,1,3,5,7,8,10];
+        case "lydian":     return [0,2,4,6,7,9,11];
+        case "mixolydian": return [0,2,4,5,7,9,10];
+        case "aeolian":    return [0,2,3,5,7,8,10];
+        case "locrian":    return [0,1,3,5,6,8,10];
+        default: throw new Error(`ERROR : getOffsetsByScale`);
         }
-    } // function
+    }
+
+    function getDegreeIndex(degree) {
+        switch (degree) {
+        case 'I':   return 0;
+        case 'II':  return 1;
+        case 'III': return 2;
+        case 'IV':  return 3;
+        case 'V':   return 4;
+        case 'VI':  return 5;
+        case 'VII': return 6;
+        default: throw new Error(`ERROR : getDegreeIndex`);
+        }
+    }
 
     function getRootCdefgabOffset(root, sharp, flat) {
         let offset;
@@ -99,8 +46,8 @@
     }
 }}
 {
-    let key = 0; // 0～11
-    let scale = "ionian";
+    let gKey = 0; // 0～11
+    let gScale = "ionian";
 }
 CHORDS=event:EVENT* _ { return event; }
 EVENT=INLINE_MML
@@ -153,10 +100,10 @@ BAR=_ "|" _ { return { event: "bar" }; }
 BAR_SLASH=" / " _ { return { event: "bar slash" }; }
 KEY=_ "key"i [ \=]? k:KEY_EVENT [\,\.]? _ { return k; }
 KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* {
-    key = getRootCdefgabOffset(root, sharp, flat);
-    return { event: "key", root, sharpLength: sharp.length, flatLength: flat.length }; }
+    gKey = getRootCdefgabOffset(root, sharp, flat);
+    return { event: "key", root, sharpLength: sharp.length, flatLength: flat.length, offset: gKey }; }
 
-SCALE=_ s:("ionian"i / "dorian"i / "phrygian"i / "lydian"i / "mixolydian"i / "aeolian"i / "locrian"i) [\,\.]? _ { scale = s.toLowerCase(); return { event: "" }; }
+SCALE=_ s:("ionian"i / "dorian"i / "phrygian"i / "lydian"i / "mixolydian"i / "aeolian"i / "locrian"i) [\,\.]? _ { gScale = s.toLowerCase(); return { event: "scale", offsets: getOffsetsByScale(gScale) }; }
 
 OCTAVE_UP=_ ("octave"i [ \-] "up"i) [\,\.]? _ { return { event: "octave up" }; }
 OCTAVE_UP_UPPER=_ ("octave"i [ \-] "up"i) "/" [\,\.]? _ { return { event: "octave up upper" }; }
@@ -171,12 +118,12 @@ ROOT=ROOT_CDEFGAB
 
 ROOT_CDEFGAB=root:[A-G] sharp:SHARP* flat:FLAT* { return getRootCdefgabOffset(root, sharp, flat); }
 
-ROOT_DEGREE=sharp:SHARP* flat:FLAT* root:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I") { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
-    // 課題。getOffsetByScale() が大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
+ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I") { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
+    // 課題。getOffsetByScale() と関連関数がやや大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
     //  対策、このまま進んで様子見する。
     //   根拠、ここでやる理由は、ROOT部分に影響範囲を閉じるため。ここ以外でやると、chord, chord over bass note, などそれぞれのdegree版を作ることになり影響範囲が広いため。
-	let offset = getOffsetByScale(scale, root);
-    offset += sharp.length - flat.length + key;
+	let offset = getOffsetByScale(gScale, degree);
+    offset += sharp.length - flat.length + gKey;
     return offset; }
 
 SHARP=[#＃♯] { return "#"; }

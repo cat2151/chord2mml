@@ -1,6 +1,9 @@
-function notesToMml(noteAsts) {
+function notesToMml(noteAsts: any[]): string {
+  const twelveIonians = create12ionians();
   let mml = "";
-  let keyAst = { event: "key", root: "C", sharpLength: 0, flatLength: 0 };
+  let keyAst = { event: "key", root: "C", sharpLength: 0, flatLength: 0, offset: 0 };
+  let scaleAst = { event: "scale", offsets: [0,2,4,5,7,9,11] };
+  let isSharp = isSharpByKeyAndScale(keyAst.offset, scaleAst.offsets, twelveIonians);
   for (let noteAst of noteAsts) {
     switch (noteAst.event) {
       case "inline mml":
@@ -11,6 +14,12 @@ function notesToMml(noteAsts) {
         continue;
       case "key":
         keyAst = noteAst;
+        isSharp = isSharpByKeyAndScale(keyAst.offset, scaleAst.offsets, twelveIonians);
+        continue;
+      case "scale":
+        scaleAst = noteAst;
+        isSharp = isSharpByKeyAndScale(keyAst.offset, scaleAst.offsets, twelveIonians);
+        continue;
     }
 
     const notes = noteAst.notes;
@@ -41,7 +50,7 @@ function notesToMml(noteAsts) {
         lastOctaveOffset++;
       }
 
-      if (isKeySharp(keyAst)) {
+      if (isSharp) {
         switch (((note % 12) + 12) % 12) {
           case  0: mml += "c";  break;
           case  1: mml += "c+"; break;
@@ -83,21 +92,53 @@ function notesToMml(noteAsts) {
   return mml;
 }
 
-function isKeySharp(keyAst) {
-  const sharp = keyAst.sharpLength ? "#" : ""; // double sharp等はひとまずsharpと同じで進めて様子見する。実用上問題が出る例を得るまでは対応後回しにする
-  const flat = keyAst.flatLength ? "b" : "";
-  const key = keyAst.root + sharp + flat;
-  if (sharp) return true;
-  if (flat) return false;
-  switch (key) {
-    case "C":  return true; // ひとまずCはsharp側で進めて様子見する。実用上問題が出る例を得るまでは対応後回しにする
-    case "D":  return true;
-    case "E":  return true;
-    case "F":  return false; // Fだけifにするよりは、switchの一覧性によるミス防止を優先する
-    case "G":  return true;
-    case "A":  return true;
-    case "B":  return true;
-    default: throw new Error(`ERROR : isKeySharp`);
+function create12ionians(): number[][] {
+  const cIonian = [0,2,4,5,7,9,11];
+  const twelveIonians = generateIonians(cIonian);
+  const normalized12ionians = normalizeArrays(twelveIonians);
+  return normalized12ionians;
+
+  function generateIonians(base: number[]): number[][] {
+    let result: number[][] = [];
+    for(let i = 0; i < 12; i++){
+      const ionian = base.map(x => (x + i) % 12);
+      result.push(ionian);
+    }
+    return result;
+  }
+
+  function normalizeArrays(arrays: number[][]): number[][] {
+    return arrays.map(arr => arr.sort((a, b) => a - b));
+  }
+}
+
+function isSharpByKeyAndScale(key: number, offsets: number[], twelveIonians: number[][]): boolean {
+  const result = searchIonians(key, offsets, twelveIonians);
+  switch (result) {
+    case  0: return true;  // C
+    case  1: return false; // Db
+    case  2: return true;  // D
+    case  3: return false; // Eb
+    case  4: return true;  // E
+    case  5: return false; // F
+    case  6: return false; // Gb
+    case  7: return true;  // G
+    case  8: return false; // Ab
+    case  9: return true;  // A
+    case 10: return false; // Bb
+    case 11: return true;  // B
+    default: throw new Error(`ERROR : isSharpByKeyAndScale`);
+  }
+
+  function searchIonians(key: number, offsets: number[], ionians: number[][]): number {
+    const keyOffsets = offsets.map(offset => offset + key);
+    const sortedOffsets = keyOffsets.map(koffset => koffset % 12).sort((a, b) => a - b);
+    for(let i = 0; i < ionians.length; i++){
+      if(JSON.stringify(ionians[i]) === JSON.stringify(sortedOffsets)){
+        return i;
+      }
+    }
+    throw new Error(`ERROR : isSharpByKeyAndScale searchIonians`);
   }
 }
 
