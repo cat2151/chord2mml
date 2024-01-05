@@ -307,6 +307,9 @@ describe("chord2mml", () => {
     test("degree", () => {
         expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
     });
+    test("degree", () => {
+        expect(chord2mml.parse("Aeolian IIm")).toEqual("'d1fa'");
+    });
     test("octave up", () => {
         expect(chord2mml.parse("C octave up C")).toEqual("'c1eg''<c1eg'");
     });

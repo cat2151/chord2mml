@@ -65,7 +65,7 @@
         case "aeolian":
             switch (root) {
             case 'I':   return 0;
-            case 'II':  return 1;
+            case 'II':  return 2;
             case 'III': return 3;
             case 'IV':  return 5;
             case 'V':   return 7;
