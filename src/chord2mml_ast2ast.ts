@@ -54,6 +54,7 @@ function bar2noteLength(asts) {
       case "chord over bass note":
       case "inversion":
       case "polychord":
+        ast.noteLength = 1;
         chordIndexes.push(i);
         break;
       case "bar":
