@@ -23,7 +23,7 @@
     "build:peggy-commonjs": "peggy ./peggyjs/chord2mml_chord2ast.pegjs --output ./src/chord2mml_chord2ast.cjs",
     "watch": "run-p watch:**",
     "watch:web": "webpack-dev-server --open",
-    "watch:peggy": "chokidar \"**/*.pegjs\" -c \"npm run build:peggy-commonjs && npm run build:peggy-es\"",
+    "watch:peggy": "chokidar \"**/*.pegjs\" -c \"npm run build:peggy-commonjs && npm run build:web\"",
     "test": "jest --silent=false --verbose false"
   },
   "dependencies": {

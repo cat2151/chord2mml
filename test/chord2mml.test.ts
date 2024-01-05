@@ -340,4 +340,7 @@ describe("chord2mml", () => {
     test("octave down", () => {
         expect(chord2mml.parse("C octave-down octave-down C")).toEqual("'c1eg''>>c1eg'");
     });
+    test("key to flat", () => {
+        expect(chord2mml.parse("key=F IV")).toEqual("'b-1<df'");
+    });
 });

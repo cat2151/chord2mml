@@ -80,6 +80,22 @@
             }
         default: throw new Error(`ERROR : getOffsetByScale`);
         }
+    } // function
+
+    function getRootCdefgabOffset(root, sharp, flat) {
+        let offset;
+        switch (root) {
+        case 'C': offset =  0; break;
+        case 'D': offset =  2; break;
+        case 'E': offset =  4; break;
+        case 'F': offset =  5; break;
+        case 'G': offset =  7; break;
+        case 'A': offset =  9; break;
+        case 'B': offset = 11; break;
+        default: throw new Error(`ERROR : getRootCdefgabOffset`);
+        }
+        offset += sharp.length - flat.length;
+        return offset;
     }
 }}
 {
@@ -135,7 +151,11 @@ BASS_PLAY_MODE_ROOT=_ ("bass is root"i / "bass plays root"i / "bass play root"i)
 TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ [\,\.]? _ { return { event: "inline mml", mml: "t" + bpm.join("") }; }
 BAR=_ "|" _ { return { event: "bar" }; }
 BAR_SLASH=" / " _ { return { event: "bar slash" }; }
-KEY=_ "key"i [ \=]? k:ROOT_CDEFGAB [\,\.]? _ { key = k; return { event: "" }; }
+KEY=_ "key"i [ \=]? k:KEY_EVENT [\,\.]? _ { return k; }
+KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* {
+    key = getRootCdefgabOffset(root, sharp, flat);
+    return { event: "key", root, sharpLength: sharp.length, flatLength: flat.length }; }
+
 SCALE=_ s:("ionian"i / "dorian"i / "phrygian"i / "lydian"i / "mixolydian"i / "aeolian"i / "locrian"i) [\,\.]? _ { scale = s.toLowerCase(); return { event: "" }; }
 
 OCTAVE_UP=_ ("octave"i [ \-] "up"i) [\,\.]? _ { return { event: "octave up" }; }
@@ -149,20 +169,7 @@ OCTAVE_DOWN_LOWER=_ "/" ("octave"i [ \-] "down"i) [\,\.]? _ { return { event: "o
 ROOT=ROOT_CDEFGAB
     /ROOT_DEGREE
 
-ROOT_CDEFGAB=root:[A-G] sharp:SHARP* flat:FLAT* {
-	let offset;
-    switch (root) {
-    case 'C': offset =  0; break;
-    case 'D': offset =  2; break;
-    case 'E': offset =  4; break;
-    case 'F': offset =  5; break;
-    case 'G': offset =  7; break;
-    case 'A': offset =  9; break;
-    case 'B': offset = 11; break;
-    default: throw new Error(`ERROR : ROOT_CDEFGAB`);
-    }
-    offset += sharp.length - flat.length;
-    return offset; }
+ROOT_CDEFGAB=root:[A-G] sharp:SHARP* flat:FLAT* { return getRootCdefgabOffset(root, sharp, flat); }
 
 ROOT_DEGREE=sharp:SHARP* flat:FLAT* root:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I") { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
     // 課題。getOffsetByScale() が大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
