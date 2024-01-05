@@ -216,7 +216,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("C-7 - C-7")).toEqual("'c1d+ga+''c1d+ga+'");
     });
     test("hyphen", () => {
-        expect(chord2mml.parse("C - C/C - ConC - C")).toEqual("'c1eg''>c1<ceg''>c1<ceg''c1eg'");
+        expect(chord2mml.parse("C - C/C - ConC - CoverC - C")).toEqual("'c1eg''>c1<ceg''>c1<ceg''>c1<ceg''c1eg'");
     });
     test("hyphen", () => {
         expect(chord2mml.parse("C→C → C")).toEqual("'c1eg''c1eg''c1eg'");
@@ -305,6 +305,9 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("key=D I")).toEqual("'d1f+a'");
     });
     test("degree", () => {
+        expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
+    });
+    test("octave pdegree", () => {
         expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
     });
 });

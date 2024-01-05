@@ -113,8 +113,8 @@ EVENT=INLINE_MML
 CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION H { return { event: "chord", root, quality, inversion }; }
 SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
     return { event: "slash chord", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; }
-ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
-    return { event: "chord over bass note", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; } // このオンコード表記は日本固有である。見かけるので対象とした。
+ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION ("on" / "over") lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
+    return { event: "chord over bass note", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; } // このオンコード表記は日本固有である。見かけるので対象とした。なおover表記を海外で見かけたのでそれも対象にした。
 SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i [\,\.]? { return { event: "change slash chord mode to chord over bass note" }; }
 SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? { return { event: "change slash chord mode to inversion" }; } // "slash chord"の文言を追加したのは、inversionだけだと意図がわからないことがあるので。当初はわかったが現在は仕様が複雑になったため。
 SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? {
