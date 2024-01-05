@@ -20,11 +20,11 @@ EVENT=INLINE_MML
     / BASS_PLAY_MODE_ROOT
     / CHORD
     / BAR
-CHORD=_ root:ROOT quality:CHORD_QUALITY H { return { event: "chord", root, quality }; }
-SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H {
-    return { event: "slash chord", upperRoot, upperQuality, lowerRoot, lowerQuality }; }
-ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY H {
-    return { event: "chord over bass note", upperRoot, upperQuality, lowerRoot, lowerQuality }; } // このオンコード表記は日本固有である。見かけるので対象とした。
+CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION H { return { event: "chord", root, quality, inversion }; }
+SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
+    return { event: "slash chord", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; }
+ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION "on" lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
+    return { event: "chord over bass note", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; } // このオンコード表記は日本固有である。見かけるので対象とした。
 SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i [\,\.]? { return { event: "change slash chord mode to chord over bass note" }; }
 SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? { return { event: "change slash chord mode to inversion" }; } // "slash chord"の文言を追加したのは、inversionだけだと意図がわからないことがあるので。当初はわかったが現在は仕様が複雑になったため。
 SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? {
@@ -69,6 +69,17 @@ MIN_SHORT=("m" / "-") { return "min"; }
 MIN7=("min7"i / "m7" / "-7") { return "min7"; }
 _ "whitespace"= [ \t\n\r]*
 H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
+INVERSION=("^" [0-3])? {
+    switch (text()) {
+        case "": return null; // inversion modeのままとする用
+        case "^0": return "root inv"; // inversion modeで1st～3rdが指定されていたときに、それを打ち消してroot invにする用
+        case "^1": return "1st inv";
+        case "^2": return "2nd inv";
+        case "^3": return "3rd inv";
+        //default: 到達不能と判断する。到達ケースをtestで書けないため。
+    }
+}
+
 MIDI_PROGRAM_CHANGE=PC048 / PC049 / PC052
 PC048=_ ("Strings" _ "Ensemble" _ "1"i / "Strings" _ "1" / "Str." _ "1") [\,\.]? _ { return { event: "inline mml", mml: "@48" }; }
 PC049=_ ("Strings" _ "Ensemble" _ "2"i / "Strings" _ "2" / "Str." _ "2") [\,\.]? _ { return { event: "inline mml", mml: "@49" }; }

@@ -5,35 +5,35 @@ import { notesToMml as toMml } from "../src/chord2mml_notes2mml";
 import { chord2mml } from "../src/chord2mml";
 describe("chord2ast", () => {
     test("Cmaj", () => {
-        expect(parse("C")).toEqual([{event: "chord", quality: "maj", root: 0}]);
+        expect(parse("C")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null}]);
     });
     test("sharp C#maj", () => {
         // 備忘、全角#は、入力環境によって半角#が封じられて全角#を代替で使う用。
         //  もしすべての全角を認めると処理が複雑すぎると判断し、
         //  応急で全角#のみ認識とする。
         //  すべての全角を例えばpreprocessで半角化するか？は別途検討とする。
-        expect(parse("C# C＃ C♯")).toEqual([{event: "chord", quality: "maj", root: 1}, {event: "chord", quality: "maj", root: 1}, {event: "chord", quality: "maj", root: 1}]);
+        expect(parse("C# C＃ C♯")).toEqual([{event: "chord", quality: "maj", root: 1, inversion: null}, {event: "chord", quality: "maj", root: 1, inversion: null}, {event: "chord", quality: "maj", root: 1, inversion: null}]);
     });
     test("Dmaj", () => {
-        expect(parse("D")).toEqual([{event: "chord", quality: "maj", root: 2}]);
+        expect(parse("D")).toEqual([{event: "chord", quality: "maj", root: 2, inversion: null}]);
     });
     test("flat Bbmaj", () => {
-        expect(parse("Bb B♭")).toEqual([{event: "chord", quality: "maj", root: 10}, {event: "chord", quality: "maj", root: 10}]);
+        expect(parse("Bb B♭")).toEqual([{event: "chord", quality: "maj", root: 10, inversion: null}, {event: "chord", quality: "maj", root: 10, inversion: null}]);
     });
     test("Bmaj", () => {
-        expect(parse("B")).toEqual([{event: "chord", quality: "maj", root: 11}]);
+        expect(parse("B")).toEqual([{event: "chord", quality: "maj", root: 11, inversion: null}]);
     });
     test("space maj表記variation G", () => {
-        expect(parse("Cmaj GM")).toEqual([{event: "chord", quality: "maj", root: 0}, {event: "chord", quality: "maj", root: 7}]);
+        expect(parse("Cmaj GM")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null}, {event: "chord", quality: "maj", root: 7, inversion: null}]);
     });
     test("maj7", () => {
-        expect(parse("C#maj7")).toEqual([{event: "chord", quality: "maj7", root: 1}]);
+        expect(parse("C#maj7")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null}]);
     });
     test("maj7 表記variation", () => {
-        expect(parse("C#M7 C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1}, {event: "chord", quality: "maj7", root: 1}, {event: "chord", quality: "maj7", root: 1}]);
+        expect(parse("C#M7 C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null}, {event: "chord", quality: "maj7", root: 1, inversion: null}, {event: "chord", quality: "maj7", root: 1, inversion: null}]);
     });
     test("slash chord", () => {
-        expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}]);
+        expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperInversion: null, lowerInversion: null}]);
     });
     test("chord over bass note mode", () => {
         expect(parse("chord over bass note")).toEqual([{event: "change slash chord mode to chord over bass note"}]);
@@ -276,5 +276,20 @@ describe("chord2mml", () => {
     });
     test("last space", () => {
         expect(chord2mml.parse("C ")).toEqual("'ceg'");
+    });
+    test("inversion by caret", () => {
+        expect(chord2mml.parse("C^1/A")).toEqual("'>a<eg<c'");
+    });
+    test("inversion by caret", () => {
+        expect(chord2mml.parse("C^2/A")).toEqual("'>a<g<ce'");
+    });
+    test("inversion by caret", () => {
+        expect(chord2mml.parse("CM7^3")).toEqual("'b<ceg'");
+    });
+    test("inversion by caret", () => {
+        expect(chord2mml.parse("1st inv CM7 CM7^0")).toEqual("'egb<c''cegb'");
+    });
+    test("inversion by caret", () => {
+        expect(chord2mml.parse("US C^2/C^1")).toEqual("'eg<cg<ce'");
     });
 });

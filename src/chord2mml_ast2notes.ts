@@ -7,14 +7,14 @@ function astToNotes(asts) {
   for (let ast of asts) {
     switch (ast.event) {
       case "chord":
-        ast.notes = getNotes(ast.root, ast.quality, inversionMode, openHarmonyMode);
+        ast.notes = getNotes(ast.root, ast.quality, ast.inversion ?? inversionMode, openHarmonyMode);
         delete ast.event;
         delete ast.root;
         delete ast.quality;
         result.push(ast);
         break;
       case "chord over bass note":
-        ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, inversionMode, openHarmonyMode);
+        ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.upperInversion ?? inversionMode, openHarmonyMode);
         ast.notes = keyShiftNotes(ast.notes, -12); // bass noteがあるぶん音域を下げる用
         delete ast.event;
         delete ast.upperRoot;
@@ -33,7 +33,7 @@ function astToNotes(asts) {
         result.push(ast);
         break;
       case "polychord":
-        ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.lowerQuality);
+        ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.upperInversion ?? inversionMode, ast.lowerRoot, ast.lowerQuality, ast.lowerInversion ?? inversionMode);
         delete ast.event;
         delete ast.upperRoot;
         delete ast.upperQuality;
@@ -205,9 +205,9 @@ function adjustNotesOctave(notes) {
   return notes;
 }
 
-function getNotesByPolychord(upperRoot, upperQuality, lowerRoot, lowerQuality) {
-  const lowerNotes = getNotes(lowerRoot, lowerQuality);
-  const upperNotes = getNotes(upperRoot, upperQuality);
+function getNotesByPolychord(upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion) {
+  const lowerNotes = getNotes(lowerRoot, lowerQuality, lowerInversion);
+  const upperNotes = getNotes(upperRoot, upperQuality, upperInversion);
   let notes = [...lowerNotes, ...upperNotes];
   // lowerNotesの最高音より、upperNotesの最低音のほうが高い音とする用
   notes = adjustNotesOctave(notes);
