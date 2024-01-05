@@ -86,6 +86,9 @@ describe("chord2ast", () => {
     test("no bass", () => {
         expect(parse("no bass")).toEqual([{event: "change bass play mode to no bass"}]);
     });
+    test("Dorian", () => {
+        expect(parse("Dorian")).toEqual([{event: ""}]);
+    });
 });
 describe("ast2ast", () => {
     test("Cmaj", () => {
@@ -294,5 +297,14 @@ describe("chord2mml", () => {
     });
     test("inversion by caret", () => {
         expect(chord2mml.parse("bass is root C^1")).toEqual("'>c1<eg<c'");
+    });
+    test("degree", () => {
+        expect(chord2mml.parse("I")).toEqual("'c1eg'");
+    });
+    test("degree", () => {
+        expect(chord2mml.parse("key=D I")).toEqual("'d1f+a'");
+    });
+    test("degree", () => {
+        expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
     });
 });

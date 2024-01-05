@@ -1,3 +1,91 @@
+{{
+    function getOffsetByScale(scale, root) {
+        switch (scale) {
+        case "ionian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 2;
+            case 'III': return 4;
+            case 'IV':  return 5;
+            case 'V':   return 7;
+            case 'VI':  return 9;
+            case 'VII': return 11;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        case "dorian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 2;
+            case 'III': return 3;
+            case 'IV':  return 5;
+            case 'V':   return 7;
+            case 'VI':  return 9;
+            case 'VII': return 10;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        case "phrygian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 1;
+            case 'III': return 3;
+            case 'IV':  return 5;
+            case 'V':   return 7;
+            case 'VI':  return 8;
+            case 'VII': return 10;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        case "lydian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 2;
+            case 'III': return 4;
+            case 'IV':  return 6;
+            case 'V':   return 7;
+            case 'VI':  return 9;
+            case 'VII': return 11;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        case "mixolydian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 2;
+            case 'III': return 4;
+            case 'IV':  return 5;
+            case 'V':   return 7;
+            case 'VI':  return 9;
+            case 'VII': return 10;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        case "aeolian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 1;
+            case 'III': return 3;
+            case 'IV':  return 5;
+            case 'V':   return 7;
+            case 'VI':  return 8;
+            case 'VII': return 10;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        case "locrian":
+            switch (root) {
+            case 'I':   return 0;
+            case 'II':  return 1;
+            case 'III': return 3;
+            case 'IV':  return 5;
+            case 'V':   return 6;
+            case 'VI':  return 8;
+            case 'VII': return 10;
+            default: throw new Error(`ERROR : getOffsetByScale`);
+            }
+        default: throw new Error(`ERROR : getOffsetByScale`);
+        }
+    }
+}}
+{
+    let key = 0; // 0～11
+    let scale = "ionian";
+}
 CHORDS=event:EVENT* _ { return event; }
 EVENT=INLINE_MML
     / BAR_SLASH
@@ -18,6 +106,8 @@ EVENT=INLINE_MML
     / OPEN_HARMONY_MODE_CLOSE
     / BASS_PLAY_MODE_NO_BASS
     / BASS_PLAY_MODE_ROOT
+    / SCALE
+    / KEY
     / CHORD
     / BAR
 CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION H { return { event: "chord", root, quality, inversion }; }
@@ -43,7 +133,13 @@ BASS_PLAY_MODE_ROOT=_ ("bass is root"i / "bass plays root"i / "bass play root"i)
 TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ [\,\.]? _ { return { event: "inline mml", mml: "t" + bpm.join("") }; }
 BAR=_ "|" _ { return { event: "bar" }; }
 BAR_SLASH=" / " _ { return { event: "bar slash" }; }
-ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
+KEY=_ "key"i [ \=]? k:ROOT_CDEFGAB [\,\.]? _ { key = k; return { event: "" }; }
+SCALE=_ s:("ionian"i / "dorian"i / "phrygian"i / "lydian"i / "mixolydian"i / "aeolian"i / "locrian"i) [\,\.]? _ { scale = s.toLowerCase(); return { event: "" }; }
+
+ROOT=ROOT_CDEFGAB
+    /ROOT_DEGREE
+
+ROOT_CDEFGAB=root:[A-G] sharp:SHARP* flat:FLAT* {
 	let offset;
     switch (root) {
     case 'C': offset =  0; break;
@@ -53,13 +149,22 @@ ROOT=root:[A-G] sharp:SHARP* flat:FLAT* {
     case 'G': offset =  7; break;
     case 'A': offset =  9; break;
     case 'B': offset = 11; break;
-    defaut: assert(false); break;
+    default: throw new Error(`ERROR : ROOT_CDEFGAB`);
     }
     offset += sharp.length - flat.length;
-    offset %= 12;
     return offset; }
+
+ROOT_DEGREE=sharp:SHARP* flat:FLAT* root:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I") { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
+    // 課題。getOffsetByScale() が大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
+    //  対策、このまま進んで様子見する。
+    //   根拠、ここでやる理由は、ROOT部分に影響範囲を閉じるため。ここ以外でやると、chord, chord over bass note, などそれぞれのdegree版を作ることになり影響範囲が広いため。
+	let offset = getOffsetByScale(scale, root);
+    offset += sharp.length - flat.length + key;
+    return offset; }
+
 SHARP=[#＃♯] { return "#"; }
 FLAT=[b♭] { return "b"; }
+
 CHORD_QUALITY=quality:(MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / MIN_SHORT / MAJ_SHORT) { return quality; }
 MAJ_LONG="maj"i { return "maj"; } // LONGとSHORTに分けたのは、文字数の多いものから順に並べ、意図通りにマッチさせる用
 MAJ_SHORT=("M" / "") { return "maj"; }
@@ -67,8 +172,7 @@ MAJ7=("maj7"i / "M7" / "△") { return "maj7"; }
 MIN_LONG="min"i { return "min"; }
 MIN_SHORT=("m" / "-") { return "min"; }
 MIN7=("min7"i / "m7" / "-7") { return "min7"; }
-_ "whitespace"= [ \t\n\r]*
-H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
+
 INVERSION=("^" [0-3])? {
     switch (text()) {
         case "": return null; // inversion modeのままとする用
@@ -76,9 +180,12 @@ INVERSION=("^" [0-3])? {
         case "^1": return "1st inv";
         case "^2": return "2nd inv";
         case "^3": return "3rd inv";
-        //default: 到達不能と判断する。到達ケースをtestで書けないため。
+        default: throw new Error(`ERROR : INVERSION`);
     }
 }
+
+_ "whitespace"= [ \t\n\r]*
+H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
 
 MIDI_PROGRAM_CHANGE=PC048 / PC049 / PC052
 PC048=_ ("Strings" _ "Ensemble" _ "1"i / "Strings" _ "1" / "Str." _ "1") [\,\.]? _ { return { event: "inline mml", mml: "@48" }; }
