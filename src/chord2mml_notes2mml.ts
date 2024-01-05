@@ -33,9 +33,9 @@ function notesToMml(noteAsts) {
 
       // octave up
       let octaveOffset = Math.floor(note / 12);
-      if (octaveOffset > lastOctaveOffset) {
+      while (octaveOffset > lastOctaveOffset) {
         mml += "<";
-        lastOctaveOffset = octaveOffset;
+        lastOctaveOffset++;
       }
 
       switch (((note % 12) + 12) % 12) {

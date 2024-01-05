@@ -91,6 +91,9 @@ EVENT=INLINE_MML
     / BAR_SLASH
     / MIDI_PROGRAM_CHANGE
     / TEMPO
+    / OCTAVE_UP_UPPER / OCTAVE_DOWN_UPPER
+    / OCTAVE_UP_LOWER / OCTAVE_DOWN_LOWER
+    / OCTAVE_UP       / OCTAVE_DOWN
     / SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE
     / SLASH_CHORD_MODE_POLYCHORD
     / SLASH_CHORD_MODE_INVERSION
@@ -106,8 +109,7 @@ EVENT=INLINE_MML
     / OPEN_HARMONY_MODE_CLOSE
     / BASS_PLAY_MODE_NO_BASS
     / BASS_PLAY_MODE_ROOT
-    / SCALE
-    / KEY
+    / SCALE / KEY
     / CHORD
     / BAR
 CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION H { return { event: "chord", root, quality, inversion }; }
@@ -135,6 +137,14 @@ BAR=_ "|" _ { return { event: "bar" }; }
 BAR_SLASH=" / " _ { return { event: "bar slash" }; }
 KEY=_ "key"i [ \=]? k:ROOT_CDEFGAB [\,\.]? _ { key = k; return { event: "" }; }
 SCALE=_ s:("ionian"i / "dorian"i / "phrygian"i / "lydian"i / "mixolydian"i / "aeolian"i / "locrian"i) [\,\.]? _ { scale = s.toLowerCase(); return { event: "" }; }
+
+OCTAVE_UP=_ ("octave"i [ \-] "up"i) [\,\.]? _ { return { event: "octave up" }; }
+OCTAVE_UP_UPPER=_ ("octave"i [ \-] "up"i) "/" [\,\.]? _ { return { event: "octave up upper" }; }
+OCTAVE_UP_LOWER=_ "/" ("octave"i [ \-] "up"i) [\,\.]? _ { return { event: "octave up lower" }; }
+
+OCTAVE_DOWN=_ ("octave"i [ \-] "down"i) [\,\.]? _ { return { event: "octave down" }; }
+OCTAVE_DOWN_UPPER=_ ("octave"i [ \-] "down"i) "/" [\,\.]? _ { return { event: "octave down upper" }; }
+OCTAVE_DOWN_LOWER=_ "/" ("octave"i [ \-] "down"i) [\,\.]? _ { return { event: "octave down lower" }; }
 
 ROOT=ROOT_CDEFGAB
     /ROOT_DEGREE

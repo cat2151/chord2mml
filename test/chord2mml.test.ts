@@ -307,7 +307,37 @@ describe("chord2mml", () => {
     test("degree", () => {
         expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
     });
-    test("octave pdegree", () => {
-        expect(chord2mml.parse("Phrygian II")).toEqual("'c+1fg+'");
+    test("octave up", () => {
+        expect(chord2mml.parse("C octave up C")).toEqual("'c1eg''<c1eg'");
+    });
+    test("octave up chord over bass note", () => {
+        expect(chord2mml.parse("octave-up C/C")).toEqual("'c1<ceg'");
+    });
+    test("octave up chord over bass note", () => {
+        expect(chord2mml.parse("C/C octave-up C/C")).toEqual("'>c1<ceg''c1<ceg'");
+    });
+    test("octave up chord over bass note", () => {
+        expect(chord2mml.parse("C/C /octave-up C/C")).toEqual("'>c1<ceg''c1ceg'");
+    });
+    test("octave up chord over bass note", () => {
+        expect(chord2mml.parse("octave-up/ C/C")).toEqual("'>c1<<ceg'");
+    });
+    test("octave up chord over bass note", () => {
+        expect(chord2mml.parse("C/C octave-up/ C/C")).toEqual("'>c1<ceg''>c1<<ceg'");
+    });
+    test("octave down", () => {
+        expect(chord2mml.parse("C octave-down C")).toEqual("'c1eg''>c1eg'");
+    });
+    test("octave down chord over bass note", () => {
+        expect(chord2mml.parse("C/C octave-down C/C")).toEqual("'>c1<ceg''>>c1<ceg'");
+    });
+    test("octave down chord over bass note", () => {
+        expect(chord2mml.parse("octave-down/ C/C")).toEqual("'>c1ceg'");
+    });
+    test("octave down chord over bass note", () => {
+        expect(chord2mml.parse("/octave-down C/C")).toEqual("'>>c1<<ceg'");
+    });
+    test("octave down", () => {
+        expect(chord2mml.parse("C octave-down octave-down C")).toEqual("'c1eg''>>c1eg'");
     });
 });
