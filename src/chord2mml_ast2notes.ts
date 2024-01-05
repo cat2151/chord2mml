@@ -8,37 +8,23 @@ function astToNotes(asts) {
     switch (ast.event) {
       case "chord":
         ast.notes = getNotes(ast.root, ast.quality, ast.inversion ?? inversionMode, openHarmonyMode);
-        delete ast.event;
-        delete ast.root;
-        delete ast.quality;
+        ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "chord over bass note":
         ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.upperInversion ?? inversionMode, openHarmonyMode);
         ast.notes = keyShiftNotes(ast.notes, -12); // bass noteがあるぶん音域を下げる用
-        delete ast.event;
-        delete ast.upperRoot;
-        delete ast.upperQuality;
-        delete ast.lowerRoot;
-        delete ast.lowerQuality;
+        ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "inversion":
         ast.notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, bassPlayMode);
-        delete ast.event;
-        delete ast.upperRoot;
-        delete ast.upperQuality;
-        delete ast.lowerRoot;
-        delete ast.lowerQuality;
+        ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "polychord":
         ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.upperInversion ?? inversionMode, ast.lowerRoot, ast.lowerQuality, ast.lowerInversion ?? inversionMode);
-        delete ast.event;
-        delete ast.upperRoot;
-        delete ast.upperQuality;
-        delete ast.lowerRoot;
-        delete ast.lowerQuality;
+        ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "change inversion mode to root inv":
@@ -77,6 +63,25 @@ function astToNotes(asts) {
     } // switch
   }
   return result;
+}
+
+function deleteProperties(ast) {
+  // 用途は、 > // 備忘、役目完了したeventやpropertyはここで捨てている（後続処理をシンプル化する用）
+  delete ast.event;
+
+  delete ast.root;
+  delete ast.quality;
+  delete ast.inversion;
+
+  delete ast.upperRoot;
+  delete ast.upperQuality;
+  delete ast.upperInversion;
+
+  delete ast.lowerRoot;
+  delete ast.lowerQuality;
+  delete ast.lowerInversion;
+
+  return ast;
 }
 
 function getNotes(root, quality, inversionMode = "root inv", openHarmonyMode = "close") {

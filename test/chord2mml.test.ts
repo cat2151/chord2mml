@@ -292,4 +292,7 @@ describe("chord2mml", () => {
     test("inversion by caret", () => {
         expect(chord2mml.parse("US C^2/C^1")).toEqual("'eg<cg<ce'");
     });
+    test("inversion by caret", () => {
+        expect(chord2mml.parse("bass is root C^1")).toEqual("'>c<eg<c'");
+    });
 });

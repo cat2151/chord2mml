@@ -26,10 +26,13 @@ function astToAst(asts) {
           ast.event = "chord over bass note";
           ast.upperRoot = ast.root;
           ast.upperQuality = ast.quality;
+          ast.upperInversion = ast.inversion;
           ast.lowerRoot = ast.root;
           ast.lowerQuality = ast.quality;
+          ast.lowerInversion = ast.inversion;
           delete ast.root;
           delete ast.quality;
+          delete ast.inversion;
         }
         break;
     }
