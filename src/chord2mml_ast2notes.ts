@@ -29,6 +29,7 @@ function astToNotes(asts) {
         ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.upperInversion ?? inversionMode,
             ast.lowerRoot, ast.lowerQuality, ast.lowerInversion ?? inversionMode,
             octaveOffsetUpper + ast.upperOctaveOffset, octaveOffsetLower + ast.lowerOctaveOffset);
+        ast.notes = keyShiftNotes(ast.notes, -12); // lower structureがあるぶん音域を下げる用
         ast = deleteProperties(ast);
         result.push(ast);
         break;

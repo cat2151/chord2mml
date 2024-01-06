@@ -124,7 +124,7 @@ describe("astToNotes", () => {
         expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj", upperOctaveOffset: 0, lowerOctaveOffset: 0}])).toEqual([{notes: [7,12,16]}]);
     });
     test("polychord D/C", () => {
-        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperOctaveOffset: 0, lowerOctaveOffset: 0}])).toEqual([{notes: [0,4,7,14,18,21]}]);
+        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperOctaveOffset: 0, lowerOctaveOffset: 0}])).toEqual([{notes: [0-12,4-12,7-12,14-12,18-12,21-12]}]);
     });
 });
 describe("notesToMml", () => {
@@ -150,16 +150,16 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("Bmaj7")).toEqual("'b1<d+f+a+'");
     });
     test("upper structure", () => {
-        expect(chord2mml.parse("US C/G")).toEqual("'g1b<d<ceg'");
+        expect(chord2mml.parse("US C/G")).toEqual("'>g1b<d<ceg'");
     });
     test("upper structure triad", () => {
-        expect(chord2mml.parse("upper structure triad C/G")).toEqual("'g1b<d<ceg'");
+        expect(chord2mml.parse("upper structure triad C/G")).toEqual("'>g1b<d<ceg'");
     });
     test("polychord", () => {
-        expect(chord2mml.parse("polychord C/G")).toEqual("'g1b<d<ceg'");
+        expect(chord2mml.parse("polychord C/G")).toEqual("'>g1b<d<ceg'");
     });
     test("polychord", () => {
-        expect(chord2mml.parse("poly C/G")).toEqual("'g1b<d<ceg'");
+        expect(chord2mml.parse("poly C/G")).toEqual("'>g1b<d<ceg'");
     });
     test("オンコード", () => {
         expect(chord2mml.parse("EonC")).toEqual("'>c1eg+b'");
@@ -293,7 +293,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("1st inv CM7 CM7^0")).toEqual("'e1gb<c''c1egb'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("US C^2/C^1")).toEqual("'e1g<cg<ce'");
+        expect(chord2mml.parse("US C^2/C^1")).toEqual("'>e1g<cg<ce'");
     });
     test("inversion by caret", () => {
         expect(chord2mml.parse("bass is root C^1")).toEqual("'>c1<eg<c'");
@@ -359,7 +359,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("bass is root I,")).toEqual("'>>c1<ceg'");
     });
     test("octave offset", () => {
-        expect(chord2mml.parse("US I'/I,")).toEqual("'>c1eg<<ceg'");
+        expect(chord2mml.parse("US I'/I,")).toEqual("'>>c1eg<<ceg'");
     });
     test("octave offset", () => {
         expect(chord2mml.parse("slash chord inversion C/G C,/G")).toEqual("'g1<ce''>g1<ce'");
