@@ -125,6 +125,15 @@ function getNotes(root: number, quality: string, inversionMode: string, openHarm
     case "maj7": notes = [0,4,7,11]; break;
     case "min": notes = [0,3,7]; break;
     case "min7": notes = [0,3,7,10]; break;
+    case "sus2": notes = [0,2,7]; break;
+    case "sus4": notes = [0,5,7]; break;
+    case "7sus2": notes = [0,2,7,10]; break;
+    case "7sus4": notes = [0,5,7,10]; break;
+    case "6": notes = [0,4,7,9]; break;
+    case "7": notes = [0,4,7,10]; break;
+    case "9": notes = [0,4,7,10,14]; break;
+    case "11": notes = [0,4,7,10,14,17]; break;
+    case "13": notes = [0,4,7,10,14,17,21]; break;
   }
 
   for (let o of q) {
@@ -132,15 +141,12 @@ function getNotes(root: number, quality: string, inversionMode: string, openHarm
       case "omit1": notes = notes.filter(e => e !== 0); break;
       case "omit3": notes = notes.filter(e => ![3,4].includes(e)); break; // 短三度と長三度を削除
       case "omit5": notes = notes.filter(e => e !== 7); break;
-      case "add2":
-      case "add9":
-                    notes = addNote(notes, 2); break;
-      case "add4":
-      case "add11":
-                    notes = addNote(notes, 5); break;
-      case "add6":
-      case "add13":
-                    notes = addNote(notes, 9); break;
+      case "add2":  notes = addNote(notes, 2); break;
+      case "add9":  notes = addNote(notes, 2 + 12); break;
+      case "add4":  notes = addNote(notes, 5); break;
+      case "add11": notes = addNote(notes, 5 + 12); break;
+      case "add6":  notes = addNote(notes, 9); break;
+      case "add13": notes = addNote(notes, 9 + 12); break;
     } // switch
   } // for
 

@@ -373,6 +373,15 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("C,, C''")).toEqual("'>>c1eg''<<c1eg'");
     });
     test("omit5 etc.", () => {
-        expect(chord2mml.parse("C(omit5) C(omit1) C(omit3) Comit5 Cadd2 Cadd9 Cadd4 Cadd11 Cadd6 Cadd13")).toEqual("'c1e''e1g''c1g''c1e''c1deg''c1deg''c1efg''c1efg''c1ega''c1ega'");
+        expect(chord2mml.parse("C(omit5) C(omit1) C(omit3) Comit5")).toEqual("'c1e''e1g''c1g''c1e'");
+    });
+    test("add2 etc.", () => {
+        expect(chord2mml.parse("C(add2) Cadd9 Cadd4 Cadd11 Cadd6 Cadd13")).toEqual("'c1deg''c1eg<d''c1efg''c1eg<f''c1ega''c1eg<a'");
+    });
+    test("6～13", () => {
+        expect(chord2mml.parse("C6 C7 C9 C11 C13")).toEqual("'c1ega''c1ega+''c1ega+<d''c1ega+<df''c1ega+<dfa'");
+    });
+    test("sus2 sus4 etc.", () => {
+        expect(chord2mml.parse("Csus2 Csus4 C7sus2 C7sus4")).toEqual("'c1dg''c1fg''c1dga+''c1fga+'");
     });
 });

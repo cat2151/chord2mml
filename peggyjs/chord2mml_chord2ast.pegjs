@@ -135,13 +135,26 @@ ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / 
 SHARP=[#＃♯] { return "#"; }
 FLAT=[b♭] { return "b"; }
 
-CHORD_QUALITY=quality:((MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / MIN_SHORT / MAJ_SHORT) (OMIT_N / ADD_N)* ) { return quality.join(""); }
+CHORD_QUALITY=quality:((MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / SEVENTH_SUS4 / SEVENTH_SUS2 / SUS4 / SUS2 / THIRTEENTH / ELEVENTH // 2文字以上系
+    / NINTH / SEVENTH / SIXTH / MIN_SHORT // 1文字系
+    / MAJ_SHORT ) // 0文字系
+    (OMIT_N / ADD_N)* ) {
+    return quality.join(""); }
 MAJ_LONG="maj"i { return "maj"; } // LONGとSHORTに分けたのは、文字数の多いものから順に並べ、意図通りにマッチさせる用
 MAJ_SHORT=("M" / "") { return "maj"; }
 MAJ7=("maj7"i / "M7" / "△") { return "maj7"; }
 MIN_LONG="min"i { return "min"; }
 MIN_SHORT=("m" / "-") { return "min"; }
 MIN7=("min7"i / "m7" / "-7") { return "min7"; }
+SIXTH="6" { return "6"; }
+SEVENTH="7" { return "7"; }
+NINTH="9" { return "9"; }
+ELEVENTH="11" { return "11"; }
+THIRTEENTH="13" { return "13"; }
+SUS2="sus2"i { return "sus2"; }
+SUS4="sus4"i { return "sus4"; }
+SEVENTH_SUS2="7sus2"i { return "7sus2"; }
+SEVENTH_SUS4="7sus4"i { return "7sus4"; }
 OMIT_N="("? "omit" n:[135] ")"? { return ",omit" + n; }
 ADD_N="("? "add" n:[0-9]+ ")"? { return ",add" + n.join(""); }
 //今後の仕様検討のため残しておく：
