@@ -349,4 +349,7 @@ describe("chord2mml", () => {
     test("key and scale to flat", () => {
         expect(chord2mml.parse("Aeolian VI VII")).toEqual("'a-1<ce-''b-1<df'");
     });
+    test("I VIm^2 を単純に書くとoctave以上跳躍", () => {
+        expect(chord2mml.parse("I VIm^2")).toEqual("'c1eg''<e1a<c'");
+    });
 });
