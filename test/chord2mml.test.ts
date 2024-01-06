@@ -387,12 +387,15 @@ describe("chord2mml", () => {
     test("dim triad", () => {
         // dimは文脈依存で、dim triadか、dim7のどちらかを意味する。
         // ひとまずdim triadのほうがプログラムとしてはシンプルなのでそれで進めて様子見する。
-        // また、C-5はおそらくC- が先にCminorとして認識されてしまう問題があるため、まずは対応なしとする。C(-5)表記のみの対応とする。b5も同様。
-        // また、flat表記にできないのは C Ionian をsharp表記と定義しているためである。これは別途検討とする。
-        expect(chord2mml.parse("Cdim C(b5) C(-5)")).toEqual("'c1d+f+''c1d+f+''c1d+f+'");
+        expect(chord2mml.parse("Cdim")).toEqual("'c1d+f+'");
     });
     test("aug", () => {
         // C+5とC#5に対応しないのは、dim triad同様。
         expect(chord2mml.parse("Caug C(#5) C(+5)")).toEqual("'c1eg+''c1eg+''c1eg+'");
+    });
+    test("flatted fifth", () => {
+        // C-5はおそらくC- が先にCminorとして認識されてしまう問題があるため、まずは対応なしとする。C(-5)表記のみの対応とする。b5も同様。
+        // また、flat表記にできないのは C Ionian をsharp表記と定義しているためである。これは別途検討とする。
+        expect(chord2mml.parse("C(b5) C(-5)")).toEqual("'c1ef+''c1ef+'");
     });
 });

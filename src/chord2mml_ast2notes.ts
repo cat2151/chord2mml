@@ -143,12 +143,14 @@ function getNotes(root: number, quality: string, inversionMode: string, openHarm
       case "omit1": notes = notes.filter(e => e !== 0); break;
       case "omit3": notes = notes.filter(e => ![3,4].includes(e)); break; // 短三度と長三度を削除
       case "omit5": notes = notes.filter(e => e !== 7); break;
-      case "add2":  notes = addNote(notes, 2); break;
+      case "add2":  notes = addNote(notes, 2);      break;
       case "add9":  notes = addNote(notes, 2 + 12); break;
-      case "add4":  notes = addNote(notes, 5); break;
+      case "add4":  notes = addNote(notes, 5);      break;
       case "add11": notes = addNote(notes, 5 + 12); break;
-      case "add6":  notes = addNote(notes, 9); break;
+      case "add6":  notes = addNote(notes, 9);      break;
       case "add13": notes = addNote(notes, 9 + 12); break;
+      case "flatted fifth":   notes = notes.map(note => note === 7 ? 6 : note); break;
+      case "augmented fifth": notes = notes.map(note => note === 7 ? 8 : note); break;
     } // switch
   } // for
 
