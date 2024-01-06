@@ -75,11 +75,17 @@ EVENT=INLINE_MML
     / SCALE / KEY
     / CHORD
     / BAR
-CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION H { return { event: "chord", root, quality, inversion }; }
-SLASH_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION "/" lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
-    return { event: "slash chord", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; }
-ON_CHORD=_ upperRoot:ROOT upperQuality:CHORD_QUALITY upperInversion:INVERSION ("on" / "over") lowerRoot:ROOT lowerQuality:CHORD_QUALITY lowerInversion:INVERSION H {
-    return { event: "chord over bass note", upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion }; } // このオンコード表記は日本固有である。見かけるので対象とした。なおover表記を海外で見かけたのでそれも対象にした。
+CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION octaveOffset:OCTAVE_OFFSET H { return { event: "chord", root, quality, inversion, octaveOffset }; }
+SLASH_CHORD=_   upperRoot:ROOT  upperQuality:CHORD_QUALITY  upperInversion:INVERSION upperOctaveOffset:OCTAVE_OFFSET "/"
+                lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET H {
+    lowerRoot ??= upperRoot;
+    lowerQuality ??= upperQuality;
+    return { event: "slash chord", upperRoot, upperQuality, upperInversion, upperOctaveOffset, lowerRoot, lowerQuality, lowerInversion, lowerOctaveOffset }; }
+ON_CHORD=_  upperRoot:ROOT  upperQuality:CHORD_QUALITY  upperInversion:INVERSION upperOctaveOffset:OCTAVE_OFFSET ("on" / "over")
+            lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET H {
+    lowerRoot ??= upperRoot;
+    lowerQuality ??= upperQuality;
+    return { event: "chord over bass note", upperRoot, upperQuality, upperInversion, upperOctaveOffset, lowerRoot, lowerQuality, lowerInversion, lowerOctaveOffset }; } // このオンコード表記は日本固有である。見かけるので対象とした。なおover表記を海外で見かけたのでそれも対象にした。
 SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i [\,\.]? { return { event: "change slash chord mode to chord over bass note" }; }
 SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? { return { event: "change slash chord mode to inversion" }; } // "slash chord"の文言を追加したのは、inversionだけだと意図がわからないことがあるので。当初はわかったが現在は仕様が複雑になったため。
 SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? {
@@ -147,6 +153,8 @@ INVERSION=("^" [0-3])? {
         default: throw new Error(`ERROR : INVERSION`);
     }
 }
+
+OCTAVE_OFFSET=up:"'"* down:","* { return up.length - down.length; } // ABC Notation のoctave offsetと類似の記法とする
 
 _ "whitespace"= [ \t\n\r]*
 H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。

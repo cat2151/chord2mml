@@ -9,23 +9,26 @@ function astToNotes(asts) {
   for (let ast of asts) {
     switch (ast.event) {
       case "chord":
-        ast.notes = getNotes(ast.root, ast.quality, ast.inversion ?? inversionMode, openHarmonyMode, octaveOffsetUpper);
+        ast.notes = getNotes(ast.root, ast.quality, ast.inversion ?? inversionMode, openHarmonyMode, octaveOffsetUpper + ast.octaveOffset);
         ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "chord over bass note":
-        ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.upperInversion ?? inversionMode, openHarmonyMode, octaveOffsetUpper, octaveOffsetLower);
+        ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.upperInversion ?? inversionMode, openHarmonyMode,
+          octaveOffsetUpper + ast.upperOctaveOffset, octaveOffsetLower + ast.lowerOctaveOffset);
         ast.notes = keyShiftNotes(ast.notes, -12); // bass noteがあるぶん音域を下げる用
         ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "inversion":
-        ast.notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, bassPlayMode, octaveOffsetUpper);
+        ast.notes = getNotesByInversionChord(ast.upperRoot, ast.upperQuality, ast.lowerRoot, bassPlayMode, octaveOffsetUpper + ast.upperOctaveOffset);
         ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "polychord":
-        ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.upperInversion ?? inversionMode, ast.lowerRoot, ast.lowerQuality, ast.lowerInversion ?? inversionMode, octaveOffsetUpper, octaveOffsetLower);
+        ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.upperInversion ?? inversionMode,
+            ast.lowerRoot, ast.lowerQuality, ast.lowerInversion ?? inversionMode,
+            octaveOffsetUpper + ast.upperOctaveOffset, octaveOffsetLower + ast.lowerOctaveOffset);
         ast = deleteProperties(ast);
         result.push(ast);
         break;
@@ -97,14 +100,17 @@ function deleteProperties(ast) {
   delete ast.root;
   delete ast.quality;
   delete ast.inversion;
+  delete ast.octaveOffset;
 
   delete ast.upperRoot;
   delete ast.upperQuality;
   delete ast.upperInversion;
+  delete ast.upperOctaveOffset;
 
   delete ast.lowerRoot;
   delete ast.lowerQuality;
   delete ast.lowerInversion;
+  delete ast.lowerOctaveOffset;
 
   return ast;
 }
@@ -227,9 +233,9 @@ function inversionByCount(notes, count) {
 function adjustNotesOctave(notes) {
   // notesについて、一つ前より低い音があればoctave upさせる用
   // example: [7,0,4] to [7,12,16]
-  let oldNote = -1;
+  let oldNote = -128; // 「臨時octave downを0に補正しない」用
   for (let i = 0; i < notes.length; i++) {
-    for (let iNote = 0; iNote < 128; iNote +=12) {
+    for (let iNote = -128; iNote < 128; iNote +=12) {
       if (notes[i] > oldNote) break;
       notes[i] += 12;
     }

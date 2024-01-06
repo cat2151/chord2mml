@@ -5,35 +5,35 @@ import { notesToMml as toMml } from "../src/chord2mml_notes2mml";
 import { chord2mml } from "../src/chord2mml";
 describe("chord2ast", () => {
     test("Cmaj", () => {
-        expect(parse("C")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null}]);
+        expect(parse("C")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null, octaveOffset: 0}]);
     });
     test("sharp C#maj", () => {
         // 備忘、全角#は、入力環境によって半角#が封じられて全角#を代替で使う用。
         //  もしすべての全角を認めると処理が複雑すぎると判断し、
         //  応急で全角#のみ認識とする。
         //  すべての全角を例えばpreprocessで半角化するか？は別途検討とする。
-        expect(parse("C# C＃ C♯")).toEqual([{event: "chord", quality: "maj", root: 1, inversion: null}, {event: "chord", quality: "maj", root: 1, inversion: null}, {event: "chord", quality: "maj", root: 1, inversion: null}]);
+        expect(parse("C# C＃ C♯")).toEqual([{event: "chord", quality: "maj", root: 1, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj", root: 1, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj", root: 1, inversion: null, octaveOffset: 0}]);
     });
     test("Dmaj", () => {
-        expect(parse("D")).toEqual([{event: "chord", quality: "maj", root: 2, inversion: null}]);
+        expect(parse("D")).toEqual([{event: "chord", quality: "maj", root: 2, inversion: null, octaveOffset: 0}]);
     });
     test("flat Bbmaj", () => {
-        expect(parse("Bb B♭")).toEqual([{event: "chord", quality: "maj", root: 10, inversion: null}, {event: "chord", quality: "maj", root: 10, inversion: null}]);
+        expect(parse("Bb B♭")).toEqual([{event: "chord", quality: "maj", root: 10, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj", root: 10, inversion: null, octaveOffset: 0}]);
     });
     test("Bmaj", () => {
-        expect(parse("B")).toEqual([{event: "chord", quality: "maj", root: 11, inversion: null}]);
+        expect(parse("B")).toEqual([{event: "chord", quality: "maj", root: 11, inversion: null, octaveOffset: 0}]);
     });
     test("space maj表記variation G", () => {
-        expect(parse("Cmaj GM")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null}, {event: "chord", quality: "maj", root: 7, inversion: null}]);
+        expect(parse("Cmaj GM")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj", root: 7, inversion: null, octaveOffset: 0}]);
     });
     test("maj7", () => {
-        expect(parse("C#maj7")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null}]);
+        expect(parse("C#maj7")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}]);
     });
     test("maj7 表記variation", () => {
-        expect(parse("C#M7 C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null}, {event: "chord", quality: "maj7", root: 1, inversion: null}, {event: "chord", quality: "maj7", root: 1, inversion: null}]);
+        expect(parse("C#M7 C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}]);
     });
     test("slash chord", () => {
-        expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperInversion: null, lowerInversion: null}]);
+        expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperInversion: null, lowerInversion: null, upperOctaveOffset: 0, lowerOctaveOffset: 0}]);
     });
     test("chord over bass note mode", () => {
         expect(parse("chord over bass note")).toEqual([{event: "change slash chord mode to chord over bass note"}]);
@@ -106,25 +106,25 @@ describe("ast2ast", () => {
 });
 describe("astToNotes", () => {
     test("Cmaj", () => {
-        expect(toNotes([{event: "chord", quality: "maj", root: 0}])).toEqual([{notes: [0,4,7]}]);
+        expect(toNotes([{event: "chord", quality: "maj", root: 0, octaveOffset: 0}])).toEqual([{notes: [0,4,7]}]);
     });
     test("Dmaj", () => {
-        expect(toNotes([{event: "chord", quality: "maj", root: 2}])).toEqual([{notes: [2,6,9]}]);
+        expect(toNotes([{event: "chord", quality: "maj", root: 2, octaveOffset: 0}])).toEqual([{notes: [2,6,9]}]);
     });
     test("Cmaj7", () => {
-        expect(toNotes([{event: "chord", quality: "maj7", root: 0}])).toEqual([{notes: [0,4,7,11]}]);
+        expect(toNotes([{event: "chord", quality: "maj7", root: 0, octaveOffset: 0}])).toEqual([{notes: [0,4,7,11]}]);
     });
     test("Gmaj", () => {
-        expect(toNotes([{event: "chord", quality: "maj", root: 7}])).toEqual([{notes: [7,11,14]}]);
+        expect(toNotes([{event: "chord", quality: "maj", root: 7, octaveOffset: 0}])).toEqual([{notes: [7,11,14]}]);
     });
     test("chord over bass note F/C", () => {
-        expect(toNotes([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{notes: [-12+0,-12+5,-12+9,-12+12]}]);
+        expect(toNotes([{event: "chord over bass note", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperOctaveOffset: 0, lowerOctaveOffset: 0}])).toEqual([{notes: [-12+0,-12+5,-12+9,-12+12]}]);
     });
     test("inversion C/G", () => {
-        expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj"}])).toEqual([{notes: [7,12,16]}]);
+        expect(toNotes([{event: "inversion", upperRoot: 0, upperQuality: "maj", lowerRoot: 7, lowerQuality: "maj", upperOctaveOffset: 0, lowerOctaveOffset: 0}])).toEqual([{notes: [7,12,16]}]);
     });
     test("polychord D/C", () => {
-        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj"}])).toEqual([{notes: [0,4,7,14,18,21]}]);
+        expect(toNotes([{event: "polychord", upperRoot: 2, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperOctaveOffset: 0, lowerOctaveOffset: 0}])).toEqual([{notes: [0,4,7,14,18,21]}]);
     });
 });
 describe("notesToMml", () => {
@@ -351,5 +351,22 @@ describe("chord2mml", () => {
     });
     test("I VIm^2 を単純に書くとoctave以上跳躍", () => {
         expect(chord2mml.parse("I VIm^2")).toEqual("'c1eg''<e1a<c'");
+    });
+    test("I VIm^2 octave offset", () => {
+        expect(chord2mml.parse("I VIm^2, VIm^2'")).toEqual("'c1eg''e1a<c''<<e1a<c'");
+    });
+    test("octave offset", () => {
+        expect(chord2mml.parse("bass is root I,")).toEqual("'>>c1<ceg'");
+    });
+    test("octave offset", () => {
+        expect(chord2mml.parse("US I'/I,")).toEqual("'>c1eg<<ceg'");
+    });
+    test("octave offset", () => {
+        expect(chord2mml.parse("slash chord inversion C/G C,/G")).toEqual("'g1<ce''>g1<ce'");
+    });
+    test("octave offset", () => {
+        // slash chordのlowerのrootとqualityを省略した場合はupperを継承する
+        // （bass is root時にoctave offsetをupperとlower個別に指定できる用）
+        expect(chord2mml.parse("bass is root VIm^2 VIm^2, VIm^2,/")).toEqual("'>a1<<ea<c''>>a1<<ea<c''>a1<ea<c'");
     });
 });

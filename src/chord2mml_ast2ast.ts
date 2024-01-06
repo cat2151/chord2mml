@@ -27,12 +27,15 @@ function astToAst(asts) {
           ast.upperRoot = ast.root;
           ast.upperQuality = ast.quality;
           ast.upperInversion = ast.inversion;
+          ast.upperOctaveOffset = ast.octaveOffset;
           ast.lowerRoot = ast.root;
           ast.lowerQuality = ast.quality;
           ast.lowerInversion = ast.inversion;
+          ast.lowerOctaveOffset = ast.octaveOffset;
           delete ast.root;
           delete ast.quality;
           delete ast.inversion;
+          delete ast.octaveOffset;
         }
         break;
     }
