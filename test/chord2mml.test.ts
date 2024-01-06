@@ -369,4 +369,7 @@ describe("chord2mml", () => {
         // （bass is root時にoctave offsetをupperとlower個別に指定できる用）
         expect(chord2mml.parse("bass is root VIm^2 VIm^2, VIm^2,/")).toEqual("'>a1<<ea<c''>>a1<<ea<c''>a1<ea<c'");
     });
+    test("octave offset", () => {
+        expect(chord2mml.parse("C,, C''")).toEqual("'>>c1eg''<<c1eg'");
+    });
 });
