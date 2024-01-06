@@ -117,13 +117,32 @@ function deleteProperties(ast) {
 }
 
 function getNotes(root: number, quality: string, inversionMode: string, openHarmonyMode:string, octaveOffset: number) {
+  const q = quality.split(",");
+
   let notes = [];
-  switch (quality) {
+  switch (q[0]) {
     case "maj": notes = [0,4,7]; break;
     case "maj7": notes = [0,4,7,11]; break;
     case "min": notes = [0,3,7]; break;
     case "min7": notes = [0,3,7,10]; break;
   }
+
+  for (let o of q) {
+    switch (o) {
+      case "omit1": notes = notes.filter(e => e !== 0); break;
+      case "omit3": notes = notes.filter(e => ![3,4].includes(e)); break; // 短三度と長三度を削除
+      case "omit5": notes = notes.filter(e => e !== 7); break;
+      case "add2":
+      case "add9":
+                    notes = addNote(notes, 2); break;
+      case "add4":
+      case "add11":
+                    notes = addNote(notes, 5); break;
+      case "add6":
+      case "add13":
+                    notes = addNote(notes, 9); break;
+    } // switch
+  } // for
 
   // root
   //  chordのrootにあわせ、半音単位でshiftする
@@ -135,6 +154,14 @@ function getNotes(root: number, quality: string, inversionMode: string, openHarm
   // octave offset
   notes = keyShiftNotes(notes, octaveOffset * 12);
 
+  return notes;
+}
+
+function addNote(notes: number[], n: number): number[] {
+  if (!notes.includes(n)) {
+    notes.push(n);
+    notes.sort((a, b) => a - b);
+  }
   return notes;
 }
 

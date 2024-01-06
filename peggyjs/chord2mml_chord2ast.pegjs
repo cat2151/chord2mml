@@ -135,13 +135,15 @@ ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / 
 SHARP=[#＃♯] { return "#"; }
 FLAT=[b♭] { return "b"; }
 
-CHORD_QUALITY=quality:(MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / MIN_SHORT / MAJ_SHORT) { return quality; }
+CHORD_QUALITY=quality:((MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / MIN_SHORT / MAJ_SHORT) (OMIT_N / ADD_N)* ) { return quality.join(""); }
 MAJ_LONG="maj"i { return "maj"; } // LONGとSHORTに分けたのは、文字数の多いものから順に並べ、意図通りにマッチさせる用
 MAJ_SHORT=("M" / "") { return "maj"; }
 MAJ7=("maj7"i / "M7" / "△") { return "maj7"; }
 MIN_LONG="min"i { return "min"; }
 MIN_SHORT=("m" / "-") { return "min"; }
 MIN7=("min7"i / "m7" / "-7") { return "min7"; }
+OMIT_N="("? "omit" n:[135] ")"? { return ",omit" + n; }
+ADD_N="("? "add" n:[0-9]+ ")"? { return ",add" + n.join(""); }
 //今後の仕様検討のため残しておく：
 //  CHORD_QUALITY=[A-Za-z0-9△\-]* { return text(); }
 //      NGだった。NG事例は「ConC」。「onC」をqualityとして認識してしまうため。

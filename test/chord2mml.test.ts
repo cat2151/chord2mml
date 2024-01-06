@@ -372,4 +372,7 @@ describe("chord2mml", () => {
     test("octave offset", () => {
         expect(chord2mml.parse("C,, C''")).toEqual("'>>c1eg''<<c1eg'");
     });
+    test("omit5 etc.", () => {
+        expect(chord2mml.parse("C(omit5) C(omit1) C(omit3) Comit5 Cadd2 Cadd9 Cadd4 Cadd11 Cadd6 Cadd13")).toEqual("'c1e''e1g''c1g''c1e''c1deg''c1deg''c1efg''c1efg''c1ega''c1ega'");
+    });
 });
