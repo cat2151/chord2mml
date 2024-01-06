@@ -142,6 +142,11 @@ MAJ7=("maj7"i / "M7" / "△") { return "maj7"; }
 MIN_LONG="min"i { return "min"; }
 MIN_SHORT=("m" / "-") { return "min"; }
 MIN7=("min7"i / "m7" / "-7") { return "min7"; }
+//今後の仕様検討のため残しておく：
+//  CHORD_QUALITY=[A-Za-z0-9△\-]* { return text(); }
+//      NGだった。NG事例は「ConC」。「onC」をqualityとして認識してしまうため。
+//      ここで必要なのは「onCにはmatchしない」ことである。
+//      そこで必要なのは「qualityとして成立するもののみmatchする。それ以外にはmatchしない」ことである。
 
 INVERSION=("^" [0-3])? {
     switch (text()) {
