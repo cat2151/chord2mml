@@ -129,6 +129,8 @@ function getNotes(root: number, quality: string, inversionMode: string, openHarm
     case "sus4": notes = [0,5,7]; break;
     case "7sus2": notes = [0,2,7,10]; break;
     case "7sus4": notes = [0,5,7,10]; break;
+    case "dim triad": notes = [0,3,6]; break;
+    case "aug": notes = [0,4,8]; break;
     case "6": notes = [0,4,7,9]; break;
     case "7": notes = [0,4,7,10]; break;
     case "9": notes = [0,4,7,10,14]; break;
