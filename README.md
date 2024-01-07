@@ -1,8 +1,8 @@
 # chord2mml
 A library transpiles Chord notation into Music Macro Language.
 
-# demo
-https://cat2151.github.io/dist/chord2mml/
+# Demo
+https://cat2151.github.io/chord2mml/dist/
 
 # Features
 - text to textのシンプルなJavaScriptライブラリ
