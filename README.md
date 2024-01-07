@@ -4,6 +4,11 @@ A library transpiles Chord notation into Music Macro Language.
 # demo
 https://cat2151.github.io/dist/chord2mml/
 
+# Features
+- text to textのシンプルなJavaScriptライブラリ
+- コード進行（Chord notation）から MMLを生成
+- ブラウザや[Obsidian](https://github.com/cat2151/obsidian-plugin-mmlabc)でコード進行を手軽に鳴らせます
+
 ## 関連するproject
 - [MML-chord-generator](https://github.com/cat2151/MML-chord-generator)：chord2mmlの仕様の一部は、MML-chord-generatorから継承したものです。
 - [obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc)：chord2mmlが組み込まれています。Obsidianでコード進行を書くと、音が鳴ります。作曲のアイデアスケッチの用途などを想定しています。
