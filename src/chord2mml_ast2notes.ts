@@ -7,16 +7,16 @@ function astToNotes(asts) {
   let octaveOffsetLower = 0;
   // 備忘、役目完了したeventやpropertyはここで捨てている（後続処理をシンプル化する用）
   for (let ast of asts) {
+
     switch (ast.event) {
       case "chord":
-        ast.notes = getNotes(ast.root, ast.quality, ast.inversion ?? inversionMode, openHarmonyMode, octaveOffsetUpper + ast.octaveOffset);
+        ast.notes = getNotesByChord(ast.root, ast.quality, ast.inversion ?? inversionMode, openHarmonyMode, octaveOffsetUpper + ast.octaveOffset);
         ast = deleteProperties(ast);
         result.push(ast);
         break;
       case "chord over bass note":
         ast.notes = getNotesByChordOverBassNote(ast.upperRoot, ast.upperQuality, ast.lowerRoot, ast.upperInversion ?? inversionMode, openHarmonyMode,
           octaveOffsetUpper + ast.upperOctaveOffset, octaveOffsetLower + ast.lowerOctaveOffset);
-        ast.notes = keyShiftNotes(ast.notes, -12); // bass noteがあるぶん音域を下げる用
         ast = deleteProperties(ast);
         result.push(ast);
         break;
@@ -29,7 +29,6 @@ function astToNotes(asts) {
         ast.notes = getNotesByPolychord(ast.upperRoot, ast.upperQuality, ast.upperInversion ?? inversionMode,
             ast.lowerRoot, ast.lowerQuality, ast.lowerInversion ?? inversionMode,
             octaveOffsetUpper + ast.upperOctaveOffset, octaveOffsetLower + ast.lowerOctaveOffset);
-        ast.notes = keyShiftNotes(ast.notes, -12); // lower structureがあるぶん音域を下げる用
         ast = deleteProperties(ast);
         result.push(ast);
         break;
@@ -116,7 +115,112 @@ function deleteProperties(ast) {
   return ast;
 }
 
-function getNotes(root: number, quality: string, inversionMode: string, openHarmonyMode:string, octaveOffset: number) {
+// 基本chord用
+function getNotesByChord(root: number, quality: string, inversionMode: string, openHarmonyMode:string, octaveOffset: number): number[] {
+  let notes = getNotes(root, quality);
+
+  // 転回形 & drop2等
+  notes = inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode);
+
+  // octave offset
+  notes = keyShiftNotes(notes, octaveOffset * 12);
+
+  return notes;
+}
+
+function getNotesByChordOverBassNote(upperRoot: number, upperQuality:string, lowerRoot: number,
+                                      inversionMode: string, openHarmonyMode: string, octaveOffsetUpper: number, octaveOffsetLower: number): number[] {
+  // lower
+  let lowerNotes = [lowerRoot];
+
+  // upper
+  let upperNotes = getNotes(upperRoot, upperQuality);
+  // 転回形 & drop2等
+  upperNotes = inversionAndOpenHarmony(upperNotes, inversionMode, openHarmonyMode);
+  // lowerの上にupperを重ねる
+  upperNotes = keyShiftUpperNotes(upperNotes, lowerNotes);
+
+  // lower + upper
+  let notes = concatLowerAndUpper(upperNotes, octaveOffsetUpper, lowerNotes, octaveOffsetLower);
+
+  // bass noteがあるぶん音域を下げる
+  notes = keyShiftNotes(notes, -12);
+
+  return notes;
+}
+
+function concatLowerAndUpper(upperNotes: number[], octaveOffsetUpper:number, lowerNotes: number[], octaveOffsetLower): number[] {
+  // octave offset
+  lowerNotes = keyShiftNotes(lowerNotes, octaveOffsetLower * 12);
+  upperNotes = keyShiftNotes(upperNotes, octaveOffsetUpper * 12);
+
+  // lower vs upper 衝突したか？
+  if (upperNotes[0] <= lowerNotes[lowerNotes.length - 1]) throw new Error(`ERROR : lowerとupperが衝突しました lowerNotes:${lowerNotes} upperNotes:${upperNotes}`);
+
+  // 結合
+  let notes = [];
+  notes.push(...lowerNotes, ...upperNotes);
+
+  return notes;
+}
+
+function keyShiftUpperNotes(upperNotes: number[], lowerNotes: number[]): number[] {
+  // lowerの上にupperを積み重ねる用
+  while (upperNotes[0] <= lowerNotes[lowerNotes.length - 1]) {
+    upperNotes = keyShiftNotes(upperNotes, 12);
+  }
+  return upperNotes;
+}
+
+function getNotesByInversionChord(upperRoot: number, upperQuality: string, lowerRoot: number, bassPlayMode: string, octaveOffset: number): number[] {
+  if (bassPlayMode == "root") {
+    // bass
+    let lowerNotes = [upperRoot]; // bass is root時は、upper部に記述されたものをrootつまりここではlowerNotesとして扱う
+
+    // chord inversion
+    let upperNotes = getNotes(upperRoot, upperQuality);
+    upperNotes = inversionByTargetNote(upperNotes, lowerRoot);
+
+    // lower + upper
+    let notes = concatLowerAndUpper(upperNotes, octaveOffset, lowerNotes, /*octaveOffsetLower=*/octaveOffset); // 備忘、ここはbass is rootかつ、slashなしchord時である。よって臨時octave指定はupper lower共通でかかる、とする。
+
+    // bass noteがあるぶん音域を下げる
+    notes = keyShiftNotes(notes, -12);
+
+    return notes;
+  } else {
+    let notes = getNotes(upperRoot, upperQuality);
+    // octave offset
+    notes = keyShiftNotes(notes, octaveOffset * 12);
+    // inversion
+    notes = inversionByTargetNote(notes, lowerRoot);
+
+    return notes;
+  }
+}
+
+function getNotesByPolychord(upperRoot: number, upperQuality: string, upperInversion: string,
+    lowerRoot: number, lowerQuality: string, lowerInversion: string, octaveOffsetUpper: number, octaveOffsetLower: number): number[] {
+  let upperNotes = getNotes(upperRoot, upperQuality);
+  let lowerNotes = getNotes(lowerRoot, lowerQuality);
+
+  // inversion
+  upperNotes = inversionAndOpenHarmony(upperNotes, upperInversion, /*openHarmonyMode = */"");
+  lowerNotes = inversionAndOpenHarmony(lowerNotes, lowerInversion, /*openHarmonyMode = */"");
+
+  // lowerNotesの最高音より、upperNotesの最低音のほうが高い音とする用
+  upperNotes = keyShiftUpperNotes(upperNotes, lowerNotes);
+
+  // lower + upper
+  let notes = concatLowerAndUpper(upperNotes, octaveOffsetUpper, lowerNotes, octaveOffsetLower);
+
+  // lower structureがあるぶん音域を下げる用
+  notes = keyShiftNotes(notes, -12);
+
+  return notes;
+}
+
+function getNotes(root: number, quality: string): number[] {
   const q = quality.split(",");
 
   let notes = [];
@@ -158,12 +262,6 @@ function getNotes(root: number, quality: string, inversionMode: string, openHarm
   //  chordのrootにあわせ、半音単位でshiftする
   notes = keyShiftNotes(notes, root);
 
-  // 転回形 & drop2等
-  notes = inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode);
-
-  // octave offset
-  notes = keyShiftNotes(notes, octaveOffset * 12);
-
   return notes;
 }
 
@@ -175,7 +273,7 @@ function addNote(notes: number[], n: number): number[] {
   return notes;
 }
 
-function inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode) {
+function inversionAndOpenHarmony(notes: number[], inversionMode: string, openHarmonyMode: string): number[] {
   // inversion
   switch (inversionMode) {
     case "1st inv": notes = inversionByCount(notes, 1); break;
@@ -200,49 +298,7 @@ function keyShiftNotes(notes, v) {
   return notes;
 }
 
-function getNotesByChordOverBassNote(upperRoot, upperQuality, lowerRoot, inversionMode, openHarmonyMode, octaveOffsetUpper, octaveOffsetLower) {
-  // lower
-  let notes = [];
-  notes.push(lowerRoot + octaveOffsetLower * 12);
-
-  // upper
-  let upperNotes = getUpperNotes(upperRoot, upperQuality, lowerRoot, octaveOffsetUpper);
-  // 転回形 & drop2等
-  upperNotes = inversionAndOpenHarmony(upperNotes, inversionMode, openHarmonyMode);
-
-  notes.push(...upperNotes);
-
-  return notes;
-}
-
-function getUpperNotes(upperRoot, upperQuality, lowerRoot, octaveOffset) {
-  let upperNotes = getNotes(upperRoot, upperQuality, /*inversionMode=*/"root inv", /*openHarmonyMode=*/"close", octaveOffset);
-  // octave
-  if (upperRoot <= lowerRoot) {
-    upperNotes = keyShiftNotes(upperNotes, 12);
-  }
-  return upperNotes;
-}
-
-function getNotesByInversionChord(upperRoot, upperQuality, lowerRoot, bassPlayMode, octaveOffset) {
-  let notes = [];
-  if (bassPlayMode == "root") {
-    // bass
-    notes.push(upperRoot);
-    // chord inversion
-    let upperNotes = getUpperNotes(upperRoot, upperQuality, upperRoot, octaveOffset); // getUpperNotesを使うのは、bassのrootより上のoctaveのnotesを得る用
-    upperNotes = inversionByTargetNote(upperNotes, lowerRoot);
-    notes.push(...upperNotes);
-    notes = keyShiftNotes(notes, -12); // bass noteがあるぶん音域を下げる用
-  } else {
-    notes = getNotes(upperRoot, upperQuality, /*inversionMode=*/"root inv", /*openHarmonyMode=*/"close", octaveOffset);
-    notes = inversionByTargetNote(notes, lowerRoot);
-  }
-
-  return notes;
-}
-
-function inversionByTargetNote(notes, targetNote) {
+function inversionByTargetNote(notes: number[], targetNote: number): number[] {
   // targetNoteが最低音となるよう、inversionする
   let isInverted = false;
   for (let _dummy of notes) {
@@ -279,15 +335,6 @@ function adjustNotesOctave(notes) {
     }
     oldNote = notes[i];
   }
-  return notes;
-}
-
-function getNotesByPolychord(upperRoot, upperQuality, upperInversion, lowerRoot, lowerQuality, lowerInversion, octaveOffsetUpper, octaveOffsetLower) {
-  const upperNotes = getNotes(upperRoot, upperQuality, upperInversion, /*openHarmonyMode=*/"close", octaveOffsetUpper);
-  const lowerNotes = getNotes(lowerRoot, lowerQuality, lowerInversion, /*openHarmonyMode=*/"close", octaveOffsetLower);
-  let notes = [...lowerNotes, ...upperNotes];
-  // lowerNotesの最高音より、upperNotesの最低音のほうが高い音とする用
-  notes = adjustNotesOctave(notes);
   return notes;
 }
 

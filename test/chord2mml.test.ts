@@ -222,7 +222,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("C→C → C")).toEqual("'c1eg''c1eg''c1eg'");
     });
     test("inversionを、chord over bass note にも適用する", () => {
-        expect(chord2mml.parse("1st inv C/C")).toEqual("'>c1<eg<c'");
+        expect(chord2mml.parse("1st inv C/C")).toEqual("'>c1eg<c'");
     });
     test("drop2等を、chord over bass note にも適用する", () => {
         expect(chord2mml.parse("drop2 C/C")).toEqual("'>c1e<cg'");
@@ -237,7 +237,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("bass is root C no bass C")).toEqual("'>c1<ceg''c1eg'");
     });
     test("bass is root, slash chord inversion において、inversionされつつbassも鳴る", () => {
-        expect(chord2mml.parse("bass is root, slash chord inversion C/E")).toEqual("'>c1<eg<c'");
+        expect(chord2mml.parse("bass is root, slash chord inversion, C/E")).toEqual("'>c1eg<c'");
     });
     test("bar", () => {
         expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
@@ -296,7 +296,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("US C^2/C^1")).toEqual("'>e1g<cg<ce'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("bass is root C^1")).toEqual("'>c1<eg<c'");
+        expect(chord2mml.parse("bass is root C^1")).toEqual("'>c1eg<c'");
     });
     test("degree", () => {
         expect(chord2mml.parse("I")).toEqual("'c1eg'");
@@ -320,7 +320,12 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("C/C octave-up C/C")).toEqual("'>c1<ceg''c1<ceg'");
     });
     test("octave up chord over bass note", () => {
-        expect(chord2mml.parse("C/C /octave-up C/C")).toEqual("'>c1<ceg''c1ceg'");
+        expect(chord2mml.parse("C/C /octave-up C'/C")).toEqual("'>c1<ceg''c1<ceg'");
+    });
+    test("octave up chord over bass note", () => {
+        expect(() => {
+            expect(chord2mml.parse("C/C /octave-up C/C"))
+        }).toThrow();
     });
     test("octave up chord over bass note", () => {
         expect(chord2mml.parse("octave-up/ C/C")).toEqual("'>c1<<ceg'");
@@ -335,7 +340,12 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("C/C octave-down C/C")).toEqual("'>c1<ceg''>>c1<ceg'");
     });
     test("octave down chord over bass note", () => {
-        expect(chord2mml.parse("octave-down/ C/C")).toEqual("'>c1ceg'");
+        expect(() => {
+            expect(chord2mml.parse("octave-down/ C/C"))
+        }).toThrow();
+    });
+    test("octave down chord over bass note", () => {
+        expect(chord2mml.parse("octave-down/ C/C,")).toEqual("'>>c1<ceg'");
     });
     test("octave down chord over bass note", () => {
         expect(chord2mml.parse("/octave-down C/C")).toEqual("'>>c1<<ceg'");
@@ -359,16 +369,25 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("bass is root I,")).toEqual("'>>c1<ceg'");
     });
     test("octave offset", () => {
-        expect(chord2mml.parse("US I'/I,")).toEqual("'>>c1eg<<ceg'");
+        expect(chord2mml.parse("US I'/I,")).toEqual("'>>c1eg<<<ceg'");
     });
     test("octave offset", () => {
         expect(chord2mml.parse("slash chord inversion C/G C,/G")).toEqual("'g1<ce''>g1<ce'");
     });
+
+    // 以下3つでセット。仕様整理用に3つに切り分けた
+    test("octave 仕様整理用", () => {
+        expect(chord2mml.parse("bass is root VIm^2")).toEqual("'>a1<ea<c'");
+    });
     test("octave offset", () => {
+        expect(chord2mml.parse("bass is root VIm^2,")).toEqual("'>>a1<ea<c'");
+    });
+    test("octave offset と slash", () => {
         // slash chordのlowerのrootとqualityを省略した場合はupperを継承する
         // （bass is root時にoctave offsetをupperとlower個別に指定できる用）
-        expect(chord2mml.parse("bass is root VIm^2 VIm^2, VIm^2,/")).toEqual("'>a1<<ea<c''>>a1<<ea<c''>a1<ea<c'");
+        expect(chord2mml.parse("bass is root VIm^2/")).toEqual("'>a1<ea<c'");
     });
+
     test("octave offset", () => {
         expect(chord2mml.parse("C,, C''")).toEqual("'>>c1eg''<<c1eg'");
     });
@@ -397,5 +416,8 @@ describe("chord2mml", () => {
         // C-5はおそらくC- が先にCminorとして認識されてしまう問題があるため、まずは対応なしとする。C(-5)表記のみの対応とする。b5も同様。
         // また、flat表記にできないのは C Ionian をsharp表記と定義しているためである。これは別途検討とする。
         expect(chord2mml.parse("C(b5) C(-5)")).toEqual("'c1ef+''c1ef+'");
+    });
+    test("GitHub Issues #1", () => {
+        expect(chord2mml.parse("US C/C US C'/C")).toEqual("'>c1eg<ceg''>c1eg<<ceg'");
     });
 });
