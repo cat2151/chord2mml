@@ -9,16 +9,18 @@
     <textarea id="chord-notation" autofocus>C</textarea>
     <div id="music-score"></div>
     <textarea readonly id="mml"></textarea>
-    <textarea readonly id="abc-notation"></textarea>
+    <textarea readonly id="abc-notation"></textarea><br>
+    <select id="chord-template"></select>
     <script defer src="https://cdn.jsdelivr.net/npm/abcjs@6/dist/abcjs-basic-min.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/gh/cat2151/easyabcjs6@0.0/easyabcjs6.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/cat2151/easyabcjs6/easyabcjs6.js"></script>
     <script defer type="module">
-      import "./chord2mml.js"
+      import "./chord2mml.js";
       window.chord2mml = chord2mml;
-      import { SyntaxError as mml2abc_SyntaxError, parse as mml2abc_parse } from "https://cdn.jsdelivr.net/gh/cat2151/mml2abc@0.0/dist/mml2abc.mjs";
+      import { SyntaxError as mml2abc_SyntaxError, parse as mml2abc_parse } from "https://cdn.jsdelivr.net/gh/cat2151/mml2abc/dist/mml2abc.mjs";
       window.mml2abc = { SyntaxError: mml2abc_SyntaxError, parse: mml2abc_parse };
     </script>
-    <script defer src="https://cdn.jsdelivr.net/gh/cat2151/easychord2mml@0.0/easychord2mml.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/cat2151/easychord2mml/chordTemplates.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/gh/cat2151/easychord2mml@0/easychord2mml.js"></script>
     <a href="https://github.com/cat2151/chord2mml/">GitHub</a>
   </body>
 </html>
