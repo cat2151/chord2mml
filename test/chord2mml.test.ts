@@ -170,8 +170,14 @@ describe("chord2mml", () => {
     test("inline mml", () => {
         expect(chord2mml.parse("/*@48*/")).toEqual("@48");
     });
+    test("inline mml * と / も含むことができるようにした。このMML自体は鳴らない。あくまで * と / のtest用。", () => {
+        expect(chord2mml.parse("/*@48 * / * *** /// */")).toEqual("@48 * / * *** /// ");
+    });
     test("inline ABC notation", () => {
         expect(chord2mml.parse("/*/*CDEFG*/*/")).toEqual("/*CDEFG*/");
+    });
+    test("inline ABC notation * と / も含むことができるようにした。このABCにおける * / には効果はない。あくまで * と / のtest用。", () => {
+        expect(chord2mml.parse("/*/* CDEFG * / * *** /// */*/")).toEqual("/* CDEFG * / * *** /// */");
     });
     test("第1転回形", () => {
         expect(chord2mml.parse("1st inv C")).toEqual("'e1g<c'");

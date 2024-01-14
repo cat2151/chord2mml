@@ -99,8 +99,9 @@ SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE=_ "chord over bass note"i [\,\.]? { return
 SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? { return { event: "change slash chord mode to inversion" }; } // "slash chord"の文言を追加したのは、inversionだけだと意図がわからないことがあるので。当初はわかったが現在は仕様が複雑になったため。
 SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? {
     return { event: "change slash chord mode to polychord" }; }
-INLINE_MML= "/*" mml:[^*/]+ "*/" { return { event: "inline mml", mml: mml.join("") }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
-INLINE_ABC= "/*/*" abc:[^*/]+ "*/*/" { return { event: "inline mml", mml: "/*" + abc.join("") + "*/" }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
+INLINE_MML= "/*" mml:([^*/] / INLINE_MML_SUB / "/")+ "*/" { return { event: "inline mml", mml: mml.join("") }; }
+INLINE_MML_SUB = "*" [^/] { return text(); }
+INLINE_ABC= "/*/*" abc:([^*/] / INLINE_MML_SUB / "/")+ "*/*/" { return { event: "inline mml", mml: "/*" + abc.join("") + "*/" }; }
 INVERSION_MODE_ROOT_INV=_ "root inv"i [\,\.]? _ { return { event: "change inversion mode to root inv" }; }
 INVERSION_MODE_1ST_INV=_ "1st inv"i [\,\.]? _ { return { event: "change inversion mode to 1st inv" }; }
 INVERSION_MODE_2ND_INV=_ "2nd inv"i [\,\.]? _ { return { event: "change inversion mode to 2nd inv" }; }
