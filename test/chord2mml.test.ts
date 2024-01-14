@@ -420,4 +420,7 @@ describe("chord2mml", () => {
     test("GitHub Issues #1", () => {
         expect(chord2mml.parse("US C/C US C'/C")).toEqual("'>c1eg<ceg''>c1eg<<ceg'");
     });
+    test("アラビア数字によるdegree表記", () => {
+        expect(chord2mml.parse("1M7 2m7 3m7 4M7 56 57 6m7 7m7(b5)")).toEqual("'c1egb''d1fa<c''e1gb<d''f1a<ce''g1b<de''g1b<df''a1<ceg''b1<dfa'");
+    });
 });

@@ -25,6 +25,14 @@
         case 'V':   return 4;
         case 'VI':  return 5;
         case 'VII': return 6;
+        //
+        case '1':   return 0;
+        case '2':   return 1;
+        case '3':   return 2;
+        case '4':   return 3;
+        case '5':   return 4;
+        case '6':   return 5;
+        case '7':   return 6;
         default: throw new Error(`ERROR : getDegreeIndex`);
         }
     }
@@ -73,8 +81,8 @@ EVENT=INLINE_MML
     / BASS_PLAY_MODE_NO_BASS
     / BASS_PLAY_MODE_ROOT
     / SCALE / KEY
-    / CHORD
     / BAR
+    / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION octaveOffset:OCTAVE_OFFSET H { return { event: "chord", root, quality, inversion, octaveOffset }; }
 SLASH_CHORD=_   upperRoot:ROOT  upperQuality:CHORD_QUALITY  upperInversion:INVERSION upperOctaveOffset:OCTAVE_OFFSET "/"
                 lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET H {
@@ -124,7 +132,7 @@ ROOT=ROOT_CDEFGAB
 
 ROOT_CDEFGAB=root:[A-G] sharp:SHARP* flat:FLAT* { return getRootCdefgabOffset(root, sharp, flat); }
 
-ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I") { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
+ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I" / [1-7]) { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
     // 課題。getOffsetByScale() と関連関数がやや大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
     //  対策、このまま進んで様子見する。
     //   根拠、ここでやる理由は、ROOT部分に影響範囲を閉じるため。ここ以外でやると、chord, chord over bass note, などそれぞれのdegree版を作ることになり影響範囲が広いため。
