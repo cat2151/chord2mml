@@ -58,7 +58,8 @@
     let gScale = "ionian";
 }
 CHORDS=event:EVENT* _ { return event; }
-EVENT=INLINE_MML
+EVENT=INLINE_ABC
+    / INLINE_MML
     / BAR_SLASH
     / MIDI_PROGRAM_CHANGE
     / TEMPO
@@ -99,6 +100,7 @@ SLASH_CHORD_MODE_INVERSION=_ ("slash chord inversion"i) [\,\.]? { return { event
 SLASH_CHORD_MODE_POLYCHORD=_ ("upper structure triad"i / "upper structure"i / "UST"i / "US"i / "polychord"i / "poly"i) [\,\.]? {
     return { event: "change slash chord mode to polychord" }; }
 INLINE_MML= "/*" mml:[^*/]+ "*/" { return { event: "inline mml", mml: mml.join("") }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
+INLINE_ABC= "/*/*" abc:[^*/]+ "*/*/" { return { event: "inline mml", mml: "/*" + abc.join("") + "*/" }; } // 問題、*と/を含むことができない。適切な書き方があるか把握できていない。対策、ひとまず試して様子見する
 INVERSION_MODE_ROOT_INV=_ "root inv"i [\,\.]? _ { return { event: "change inversion mode to root inv" }; }
 INVERSION_MODE_1ST_INV=_ "1st inv"i [\,\.]? _ { return { event: "change inversion mode to 1st inv" }; }
 INVERSION_MODE_2ND_INV=_ "2nd inv"i [\,\.]? _ { return { event: "change inversion mode to 2nd inv" }; }

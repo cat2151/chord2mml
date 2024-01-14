@@ -53,6 +53,9 @@ describe("chord2ast", () => {
     test("inline mml", () => {
         expect(parse("/*@48*/")).toEqual([{event: "inline mml", mml: "@48"}]);
     });
+    test("inline ABC notation", () => {
+        expect(parse("/*/*CDEFG*/*/")).toEqual([{event: "inline mml", mml: "/*CDEFG*/"}]);
+    });
     test("1st inv", () => {
         expect(parse("1st inv")).toEqual([{event: "change inversion mode to 1st inv"}]);
     });
@@ -166,6 +169,9 @@ describe("chord2mml", () => {
     });
     test("inline mml", () => {
         expect(chord2mml.parse("/*@48*/")).toEqual("@48");
+    });
+    test("inline ABC notation", () => {
+        expect(chord2mml.parse("/*/*CDEFG*/*/")).toEqual("/*CDEFG*/");
     });
     test("第1転回形", () => {
         expect(chord2mml.parse("1st inv C")).toEqual("'e1g<c'");
