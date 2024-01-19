@@ -1,6 +1,6 @@
 function notesToMml(noteAsts: any[]): string {
   const twelveIonians = create12ionians();
-  let mml = "";
+  let mml = "v11"; // 和音なのでv16では大きすぎることがある想定。ひとまずこれにして様子見する
   let keyAst = { event: "key", root: "C", sharpLength: 0, flatLength: 0, offset: 0 };
   let scaleAst = { event: "scale", offsets: [0,2,4,5,7,9,11] };
   let isSharp = isSharpByKeyAndScale(keyAst.offset, scaleAst.offsets, twelveIonians);

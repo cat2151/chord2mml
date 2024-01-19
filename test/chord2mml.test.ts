@@ -131,152 +131,154 @@ describe("astToNotes", () => {
     });
 });
 describe("notesToMml", () => {
+    const prefix = "v11";
     test("Cmaj", () => {
-        expect(toMml([{notes: [0,4,7]}])).toEqual("'ceg'");
+        expect(toMml([{notes: [0,4,7]}])).toEqual(prefix + "'ceg'");
     });
     test("Dmaj", () => {
-        expect(toMml([{notes: [2,6,9]}])).toEqual("'df+a'");
+        expect(toMml([{notes: [2,6,9]}])).toEqual(prefix + "'df+a'");
     });
     test("Gmaj", () => {
-        expect(toMml([{notes: [7,11,14]}])).toEqual("'gb<d'");
+        expect(toMml([{notes: [7,11,14]}])).toEqual(prefix + "'gb<d'");
     });
     test("Bmaj7", () => {
-        expect(toMml([{notes: [11,11 + 4,11+7,11+11]}])).toEqual("'b<d+f+a+'");
+        expect(toMml([{notes: [11,11 + 4,11+7,11+11]}])).toEqual(prefix + "'b<d+f+a+'");
     });
 });
 // parseがぶら下がっているのは、取り急ぎeasychord2mmlでそのまま動く用
 describe("chord2mml", () => {
+    const prefix = "v11";
     test("Cmaj", () => {
-        expect(chord2mml.parse("C")).toEqual("'c1eg'");
+        expect(chord2mml.parse("C")).toEqual(prefix + "'c1eg'");
     });
     test("Bmaj7", () => {
-        expect(chord2mml.parse("Bmaj7")).toEqual("'b1<d+f+a+'");
+        expect(chord2mml.parse("Bmaj7")).toEqual(prefix + "'b1<d+f+a+'");
     });
     test("upper structure", () => {
-        expect(chord2mml.parse("US C/G")).toEqual("'>g1b<d<ceg'");
+        expect(chord2mml.parse("US C/G")).toEqual(prefix + "'>g1b<d<ceg'");
     });
     test("upper structure triad", () => {
-        expect(chord2mml.parse("upper structure triad C/G")).toEqual("'>g1b<d<ceg'");
+        expect(chord2mml.parse("upper structure triad C/G")).toEqual(prefix + "'>g1b<d<ceg'");
     });
     test("polychord", () => {
-        expect(chord2mml.parse("polychord C/G")).toEqual("'>g1b<d<ceg'");
+        expect(chord2mml.parse("polychord C/G")).toEqual(prefix + "'>g1b<d<ceg'");
     });
     test("polychord", () => {
-        expect(chord2mml.parse("poly C/G")).toEqual("'>g1b<d<ceg'");
+        expect(chord2mml.parse("poly C/G")).toEqual(prefix + "'>g1b<d<ceg'");
     });
     test("オンコード", () => {
-        expect(chord2mml.parse("EonC")).toEqual("'>c1eg+b'");
+        expect(chord2mml.parse("EonC")).toEqual(prefix + "'>c1eg+b'");
     });
     test("inline mml", () => {
-        expect(chord2mml.parse("/*@48*/")).toEqual("@48");
+        expect(chord2mml.parse("/*@48*/")).toEqual(prefix + "@48");
     });
     test("inline mml * と / も含むことができるようにした。このMML自体は鳴らない。あくまで * と / のtest用。", () => {
-        expect(chord2mml.parse("/*@48 * / * *** /// */")).toEqual("@48 * / * *** /// ");
+        expect(chord2mml.parse("/*@48 * / * *** /// */")).toEqual(prefix + "@48 * / * *** /// ");
     });
     test("inline ABC notation", () => {
-        expect(chord2mml.parse("/*/*CDEFG*/*/")).toEqual("/*CDEFG*/");
+        expect(chord2mml.parse("/*/*CDEFG*/*/")).toEqual(prefix + "/*CDEFG*/");
     });
     test("inline ABC notation * と / も含むことができるようにした。このABCにおける * / には効果はない。あくまで * と / のtest用。", () => {
-        expect(chord2mml.parse("/*/* CDEFG * / * *** /// */*/")).toEqual("/* CDEFG * / * *** /// */");
+        expect(chord2mml.parse("/*/* CDEFG * / * *** /// */*/")).toEqual(prefix + "/* CDEFG * / * *** /// */");
     });
     test("第1転回形", () => {
-        expect(chord2mml.parse("1st inv C")).toEqual("'e1g<c'");
+        expect(chord2mml.parse("1st inv C")).toEqual(prefix + "'e1g<c'");
     });
     test("第2転回形", () => {
-        expect(chord2mml.parse("2nd inv C")).toEqual("'g1<ce'");
+        expect(chord2mml.parse("2nd inv C")).toEqual(prefix + "'g1<ce'");
     });
     test("第3転回形 & 基本形", () => {
-        expect(chord2mml.parse("3rd inv Cmaj7 root inv Cmaj7")).toEqual("'b1<ceg''c1egb'");
+        expect(chord2mml.parse("3rd inv Cmaj7 root inv Cmaj7")).toEqual(prefix + "'b1<ceg''c1egb'");
     });
     test("drop2", () => {
-        expect(chord2mml.parse("drop2 C")).toEqual("'>e1<cg'");
+        expect(chord2mml.parse("drop2 C")).toEqual(prefix + "'>e1<cg'");
     });
     test("open triad", () => {
-        expect(chord2mml.parse("open triad C")).toEqual("'>e1<cg'");
+        expect(chord2mml.parse("open triad C")).toEqual(prefix + "'>e1<cg'");
     });
     test("2nd inv drop2", () => {
-        expect(chord2mml.parse("2nd inv drop2 Cmaj7")).toEqual("'c1gb<e'");
+        expect(chord2mml.parse("2nd inv drop2 Cmaj7")).toEqual(prefix + "'c1gb<e'");
     });
     test("1st inv drop2", () => {
-        expect(chord2mml.parse("1st inv drop2 C")).toEqual("'>g1<e<c'");
+        expect(chord2mml.parse("1st inv drop2 C")).toEqual(prefix + "'>g1<e<c'");
     });
     test("drop4", () => {
-        expect(chord2mml.parse("drop4 Cmaj7")).toEqual("'>c1<egb'");
+        expect(chord2mml.parse("drop4 Cmaj7")).toEqual(prefix + "'>c1<egb'");
     });
     test("drop2and4", () => {
-        expect(chord2mml.parse("drop2and4 Cmaj7")).toEqual("'>c1g<eb'");
+        expect(chord2mml.parse("drop2and4 Cmaj7")).toEqual(prefix + "'>c1g<eb'");
     });
     test("drop4 のち close", () => {
-        expect(chord2mml.parse("drop4 Cmaj7 close Cmaj7")).toEqual("'>c1<egb''c1egb'");
+        expect(chord2mml.parse("drop4 Cmaj7 close Cmaj7")).toEqual(prefix + "'>c1<egb''c1egb'");
     });
     test("min", () => {
-        expect(chord2mml.parse("Cm")).toEqual("'c1d+g'");
+        expect(chord2mml.parse("Cm")).toEqual(prefix + "'c1d+g'");
     });
     test("min", () => {
-        expect(chord2mml.parse("Cmin")).toEqual("'c1d+g'");
+        expect(chord2mml.parse("Cmin")).toEqual(prefix + "'c1d+g'");
     });
     test("min", () => {
-        expect(chord2mml.parse("C- - C-")).toEqual("'c1d+g''c1d+g'");
+        expect(chord2mml.parse("C- - C-")).toEqual(prefix + "'c1d+g''c1d+g'");
     });
     test("min7", () => {
-        expect(chord2mml.parse("Cm7")).toEqual("'c1d+ga+'");
+        expect(chord2mml.parse("Cm7")).toEqual(prefix + "'c1d+ga+'");
     });
     test("min7", () => {
-        expect(chord2mml.parse("Cmin7")).toEqual("'c1d+ga+'");
+        expect(chord2mml.parse("Cmin7")).toEqual(prefix + "'c1d+ga+'");
     });
     test("min7", () => {
-        expect(chord2mml.parse("C-7 - C-7")).toEqual("'c1d+ga+''c1d+ga+'");
+        expect(chord2mml.parse("C-7 - C-7")).toEqual(prefix + "'c1d+ga+''c1d+ga+'");
     });
     test("hyphen", () => {
-        expect(chord2mml.parse("C - C/C - ConC - CoverC - C")).toEqual("'c1eg''>c1<ceg''>c1<ceg''>c1<ceg''c1eg'");
+        expect(chord2mml.parse("C - C/C - ConC - CoverC - C")).toEqual(prefix + "'c1eg''>c1<ceg''>c1<ceg''>c1<ceg''c1eg'");
     });
     test("hyphen", () => {
-        expect(chord2mml.parse("C→C → C")).toEqual("'c1eg''c1eg''c1eg'");
+        expect(chord2mml.parse("C→C → C")).toEqual(prefix + "'c1eg''c1eg''c1eg'");
     });
     test("inversionを、chord over bass note にも適用する", () => {
-        expect(chord2mml.parse("1st inv C/C")).toEqual("'>c1eg<c'");
+        expect(chord2mml.parse("1st inv C/C")).toEqual(prefix + "'>c1eg<c'");
     });
     test("drop2等を、chord over bass note にも適用する", () => {
-        expect(chord2mml.parse("drop2 C/C")).toEqual("'>c1e<cg'");
+        expect(chord2mml.parse("drop2 C/C")).toEqual(prefix + "'>c1e<cg'");
     });
     test("inversion and drop2を、chord over bass note にも適用する", () => {
-        expect(chord2mml.parse("1st inv drop2 C/C")).toEqual("'>c1g<e<c'");
+        expect(chord2mml.parse("1st inv drop2 C/C")).toEqual(prefix + "'>c1g<e<c'");
     });
     test("bass is root", () => {
-        expect(chord2mml.parse("bass is root C")).toEqual("'>c1<ceg'");
+        expect(chord2mml.parse("bass is root C")).toEqual(prefix + "'>c1<ceg'");
     });
     test("bass is root", () => {
-        expect(chord2mml.parse("bass is root C no bass C")).toEqual("'>c1<ceg''c1eg'");
+        expect(chord2mml.parse("bass is root C no bass C")).toEqual(prefix + "'>c1<ceg''c1eg'");
     });
     test("bass is root, slash chord inversion において、inversionされつつbassも鳴る", () => {
-        expect(chord2mml.parse("bass is root, slash chord inversion, C/E")).toEqual("'>c1eg<c'");
+        expect(chord2mml.parse("bass is root, slash chord inversion, C/E")).toEqual(prefix + "'>c1eg<c'");
     });
     test("bar", () => {
-        expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
+        expect(chord2mml.parse("C | C")).toEqual(prefix + "'c1eg'/*|*/'c1eg'");
     });
     test("tempo BPM", () => {
-        expect(chord2mml.parse("BPM 120")).toEqual("t120");
+        expect(chord2mml.parse("BPM 120")).toEqual(prefix + "t120");
     });
     test("tempo BPM", () => {
-        expect(chord2mml.parse("BPM120 BPM120, TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual("t120t120t120t120t120t120");
+        expect(chord2mml.parse("BPM120 BPM120, TEMPO 120 TEMPO120 Tempo120 Bpm120")).toEqual(prefix + "t120t120t120t120t120t120");
     });
     test("小節線をchord MMLごとのnote lengthに反映する", () => {
-        expect(chord2mml.parse("| C |")).toEqual("/*|*/'c1eg'/*|*/");
+        expect(chord2mml.parse("| C |")).toEqual(prefix + "/*|*/'c1eg'/*|*/");
     });
     test("小節線をchord MMLごとのnote lengthに反映する", () => {
-        expect(chord2mml.parse("| C | C |")).toEqual("/*|*/'c1eg'/*|*/'c1eg'/*|*/");
+        expect(chord2mml.parse("| C | C |")).toEqual(prefix + "/*|*/'c1eg'/*|*/'c1eg'/*|*/");
     });
     test("小節線をchord MMLごとのnote lengthに反映する", () => {
-        expect(chord2mml.parse("C | C")).toEqual("'c1eg'/*|*/'c1eg'");
+        expect(chord2mml.parse("C | C")).toEqual(prefix + "'c1eg'/*|*/'c1eg'");
     });
     test("小節線をchord MMLごとのnote lengthに反映する", () => {
-        expect(chord2mml.parse("C | C C | C C C C")).toEqual("'c1eg'/*|*/'c2eg''c2eg'/*|*/'c4eg''c4eg''c4eg''c4eg'");
+        expect(chord2mml.parse("C | C C | C C C C")).toEqual(prefix + "'c1eg'/*|*/'c2eg''c2eg'/*|*/'c4eg''c4eg''c4eg''c4eg'");
     });
     test("bar slash", () => {
-        expect(chord2mml.parse("C / C C")).toEqual("'c2eg''c4eg''c4eg'");
+        expect(chord2mml.parse("C / C C")).toEqual(prefix + "'c2eg''c4eg''c4eg'");
     });
     test("bar slash", () => {
-        expect(chord2mml.parse("C | C / C C")).toEqual("'c1eg'/*|*/'c2eg''c4eg''c4eg'");
+        expect(chord2mml.parse("C | C / C C")).toEqual(prefix + "'c1eg'/*|*/'c2eg''c4eg''c4eg'");
     });
     test("inversion error", () => {
         expect(() => {
@@ -284,55 +286,55 @@ describe("chord2mml", () => {
         }).toThrow();
     });
     test("MIDI Program Change", () => {
-        expect(chord2mml.parse("Strings Ensemble 2")).toEqual("@49");
+        expect(chord2mml.parse("Strings Ensemble 2")).toEqual(prefix + "@49");
     });
     test("MIDI Program Change", () => {
-        expect(chord2mml.parse("Strings2 Str.2 Choir")).toEqual("@49@49@52");
+        expect(chord2mml.parse("Strings2 Str.2 Choir")).toEqual(prefix + "@49@49@52");
     });
     test("last space", () => {
-        expect(chord2mml.parse("C ")).toEqual("'c1eg'");
+        expect(chord2mml.parse("C ")).toEqual(prefix + "'c1eg'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("C^1/A")).toEqual("'>a1<eg<c'");
+        expect(chord2mml.parse("C^1/A")).toEqual(prefix + "'>a1<eg<c'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("C^2/A")).toEqual("'>a1<g<ce'");
+        expect(chord2mml.parse("C^2/A")).toEqual(prefix + "'>a1<g<ce'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("CM7^3")).toEqual("'b1<ceg'");
+        expect(chord2mml.parse("CM7^3")).toEqual(prefix + "'b1<ceg'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("1st inv CM7 CM7^0")).toEqual("'e1gb<c''c1egb'");
+        expect(chord2mml.parse("1st inv CM7 CM7^0")).toEqual(prefix + "'e1gb<c''c1egb'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("US C^2/C^1")).toEqual("'>e1g<cg<ce'");
+        expect(chord2mml.parse("US C^2/C^1")).toEqual(prefix + "'>e1g<cg<ce'");
     });
     test("inversion by caret", () => {
-        expect(chord2mml.parse("bass is root C^1")).toEqual("'>c1eg<c'");
+        expect(chord2mml.parse("bass is root C^1")).toEqual(prefix + "'>c1eg<c'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("I")).toEqual("'c1eg'");
+        expect(chord2mml.parse("I")).toEqual(prefix + "'c1eg'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("key=D I")).toEqual("'d1f+a'");
+        expect(chord2mml.parse("key=D I")).toEqual(prefix + "'d1f+a'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("Phrygian II")).toEqual("'d-1fa-'");
+        expect(chord2mml.parse("Phrygian II")).toEqual(prefix + "'d-1fa-'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("Aeolian IIm")).toEqual("'d1fa'");
+        expect(chord2mml.parse("Aeolian IIm")).toEqual(prefix + "'d1fa'");
     });
     test("octave up", () => {
-        expect(chord2mml.parse("C octave up C")).toEqual("'c1eg''<c1eg'");
+        expect(chord2mml.parse("C octave up C")).toEqual(prefix + "'c1eg''<c1eg'");
     });
     test("octave up chord over bass note", () => {
-        expect(chord2mml.parse("octave-up C/C")).toEqual("'c1<ceg'");
+        expect(chord2mml.parse("octave-up C/C")).toEqual(prefix + "'c1<ceg'");
     });
     test("octave up chord over bass note", () => {
-        expect(chord2mml.parse("C/C octave-up C/C")).toEqual("'>c1<ceg''c1<ceg'");
+        expect(chord2mml.parse("C/C octave-up C/C")).toEqual(prefix + "'>c1<ceg''c1<ceg'");
     });
     test("octave up chord over bass note", () => {
-        expect(chord2mml.parse("C/C /octave-up C'/C")).toEqual("'>c1<ceg''c1<ceg'");
+        expect(chord2mml.parse("C/C /octave-up C'/C")).toEqual(prefix + "'>c1<ceg''c1<ceg'");
     });
     test("octave up chord over bass note", () => {
         expect(() => {
@@ -340,16 +342,16 @@ describe("chord2mml", () => {
         }).toThrow();
     });
     test("octave up chord over bass note", () => {
-        expect(chord2mml.parse("octave-up/ C/C")).toEqual("'>c1<<ceg'");
+        expect(chord2mml.parse("octave-up/ C/C")).toEqual(prefix + "'>c1<<ceg'");
     });
     test("octave up chord over bass note", () => {
-        expect(chord2mml.parse("C/C octave-up/ C/C")).toEqual("'>c1<ceg''>c1<<ceg'");
+        expect(chord2mml.parse("C/C octave-up/ C/C")).toEqual(prefix + "'>c1<ceg''>c1<<ceg'");
     });
     test("octave down", () => {
-        expect(chord2mml.parse("C octave-down C")).toEqual("'c1eg''>c1eg'");
+        expect(chord2mml.parse("C octave-down C")).toEqual(prefix + "'c1eg''>c1eg'");
     });
     test("octave down chord over bass note", () => {
-        expect(chord2mml.parse("C/C octave-down C/C")).toEqual("'>c1<ceg''>>c1<ceg'");
+        expect(chord2mml.parse("C/C octave-down C/C")).toEqual(prefix + "'>c1<ceg''>>c1<ceg'");
     });
     test("octave down chord over bass note", () => {
         expect(() => {
@@ -357,82 +359,82 @@ describe("chord2mml", () => {
         }).toThrow();
     });
     test("octave down chord over bass note", () => {
-        expect(chord2mml.parse("octave-down/ C/C,")).toEqual("'>>c1<ceg'");
+        expect(chord2mml.parse("octave-down/ C/C,")).toEqual(prefix + "'>>c1<ceg'");
     });
     test("octave down chord over bass note", () => {
-        expect(chord2mml.parse("/octave-down C/C")).toEqual("'>>c1<<ceg'");
+        expect(chord2mml.parse("/octave-down C/C")).toEqual(prefix + "'>>c1<<ceg'");
     });
     test("octave down", () => {
-        expect(chord2mml.parse("C octave-down octave-down C")).toEqual("'c1eg''>>c1eg'");
+        expect(chord2mml.parse("C octave-down octave-down C")).toEqual(prefix + "'c1eg''>>c1eg'");
     });
     test("key to flat", () => {
-        expect(chord2mml.parse("key=F IV")).toEqual("'b-1<df'");
+        expect(chord2mml.parse("key=F IV")).toEqual(prefix + "'b-1<df'");
     });
     test("key and scale to flat", () => {
-        expect(chord2mml.parse("Aeolian VI VII")).toEqual("'a-1<ce-''b-1<df'");
+        expect(chord2mml.parse("Aeolian VI VII")).toEqual(prefix + "'a-1<ce-''b-1<df'");
     });
     test("I VIm^2 を単純に書くとoctave以上跳躍", () => {
-        expect(chord2mml.parse("I VIm^2")).toEqual("'c1eg''<e1a<c'");
+        expect(chord2mml.parse("I VIm^2")).toEqual(prefix + "'c1eg''<e1a<c'");
     });
     test("I VIm^2 octave offset", () => {
-        expect(chord2mml.parse("I VIm^2, VIm^2'")).toEqual("'c1eg''e1a<c''<<e1a<c'");
+        expect(chord2mml.parse("I VIm^2, VIm^2'")).toEqual(prefix + "'c1eg''e1a<c''<<e1a<c'");
     });
     test("octave offset", () => {
-        expect(chord2mml.parse("bass is root I,")).toEqual("'>>c1<ceg'");
+        expect(chord2mml.parse("bass is root I,")).toEqual(prefix + "'>>c1<ceg'");
     });
     test("octave offset", () => {
-        expect(chord2mml.parse("US I'/I,")).toEqual("'>>c1eg<<<ceg'");
+        expect(chord2mml.parse("US I'/I,")).toEqual(prefix + "'>>c1eg<<<ceg'");
     });
     test("octave offset", () => {
-        expect(chord2mml.parse("slash chord inversion C/G C,/G")).toEqual("'g1<ce''>g1<ce'");
+        expect(chord2mml.parse("slash chord inversion C/G C,/G")).toEqual(prefix + "'g1<ce''>g1<ce'");
     });
 
     // 以下3つでセット。仕様整理用に3つに切り分けた
     test("octave 仕様整理用", () => {
-        expect(chord2mml.parse("bass is root VIm^2")).toEqual("'>a1<ea<c'");
+        expect(chord2mml.parse("bass is root VIm^2")).toEqual(prefix + "'>a1<ea<c'");
     });
     test("octave offset", () => {
-        expect(chord2mml.parse("bass is root VIm^2,")).toEqual("'>>a1<ea<c'");
+        expect(chord2mml.parse("bass is root VIm^2,")).toEqual(prefix + "'>>a1<ea<c'");
     });
     test("octave offset と slash", () => {
         // slash chordのlowerのrootとqualityを省略した場合はupperを継承する
         // （bass is root時にoctave offsetをupperとlower個別に指定できる用）
-        expect(chord2mml.parse("bass is root VIm^2/")).toEqual("'>a1<ea<c'");
+        expect(chord2mml.parse("bass is root VIm^2/")).toEqual(prefix + "'>a1<ea<c'");
     });
 
     test("octave offset", () => {
-        expect(chord2mml.parse("C,, C''")).toEqual("'>>c1eg''<<c1eg'");
+        expect(chord2mml.parse("C,, C''")).toEqual(prefix + "'>>c1eg''<<c1eg'");
     });
     test("omit5 etc.", () => {
-        expect(chord2mml.parse("C(omit5) C(omit1) C(omit3) Comit5")).toEqual("'c1e''e1g''c1g''c1e'");
+        expect(chord2mml.parse("C(omit5) C(omit1) C(omit3) Comit5")).toEqual(prefix + "'c1e''e1g''c1g''c1e'");
     });
     test("add2 etc.", () => {
-        expect(chord2mml.parse("C(add2) Cadd9 Cadd4 Cadd11 Cadd6 Cadd13")).toEqual("'c1deg''c1eg<d''c1efg''c1eg<f''c1ega''c1eg<a'");
+        expect(chord2mml.parse("C(add2) Cadd9 Cadd4 Cadd11 Cadd6 Cadd13")).toEqual(prefix + "'c1deg''c1eg<d''c1efg''c1eg<f''c1ega''c1eg<a'");
     });
     test("6～13", () => {
-        expect(chord2mml.parse("C6 C7 C9 C11 C13")).toEqual("'c1ega''c1ega+''c1ega+<d''c1ega+<df''c1ega+<dfa'");
+        expect(chord2mml.parse("C6 C7 C9 C11 C13")).toEqual(prefix + "'c1ega''c1ega+''c1ega+<d''c1ega+<df''c1ega+<dfa'");
     });
     test("sus2 sus4 etc.", () => {
-        expect(chord2mml.parse("Csus2 Csus4 C7sus2 C7sus4")).toEqual("'c1dg''c1fg''c1dga+''c1fga+'");
+        expect(chord2mml.parse("Csus2 Csus4 C7sus2 C7sus4")).toEqual(prefix + "'c1dg''c1fg''c1dga+''c1fga+'");
     });
     test("dim triad", () => {
         // dimは文脈依存で、dim triadか、dim7のどちらかを意味する。
         // ひとまずdim triadのほうがプログラムとしてはシンプルなのでそれで進めて様子見する。
-        expect(chord2mml.parse("Cdim")).toEqual("'c1d+f+'");
+        expect(chord2mml.parse("Cdim")).toEqual(prefix + "'c1d+f+'");
     });
     test("aug", () => {
         // C+5とC#5に対応しないのは、dim triad同様。
-        expect(chord2mml.parse("Caug C(#5) C(+5)")).toEqual("'c1eg+''c1eg+''c1eg+'");
+        expect(chord2mml.parse("Caug C(#5) C(+5)")).toEqual(prefix + "'c1eg+''c1eg+''c1eg+'");
     });
     test("flatted fifth", () => {
         // C-5はおそらくC- が先にCminorとして認識されてしまう問題があるため、まずは対応なしとする。C(-5)表記のみの対応とする。b5も同様。
         // また、flat表記にできないのは C Ionian をsharp表記と定義しているためである。これは別途検討とする。
-        expect(chord2mml.parse("C(b5) C(-5)")).toEqual("'c1ef+''c1ef+'");
+        expect(chord2mml.parse("C(b5) C(-5)")).toEqual(prefix + "'c1ef+''c1ef+'");
     });
     test("GitHub Issues #1", () => {
-        expect(chord2mml.parse("US C/C US C'/C")).toEqual("'>c1eg<ceg''>c1eg<<ceg'");
+        expect(chord2mml.parse("US C/C US C'/C")).toEqual(prefix + "'>c1eg<ceg''>c1eg<<ceg'");
     });
     test("アラビア数字によるdegree表記", () => {
-        expect(chord2mml.parse("1M7 2m7 3m7 4M7 56 57 6m7 7m7(b5)")).toEqual("'c1egb''d1fa<c''e1gb<d''f1a<ce''g1b<de''g1b<df''a1<ceg''b1<dfa'");
+        expect(chord2mml.parse("1M7 2m7 3m7 4M7 56 57 6m7 7m7(b5)")).toEqual(prefix + "'c1egb''d1fa<c''e1gb<d''f1a<ce''g1b<de''g1b<df''a1<ceg''b1<dfa'");
     });
 });
