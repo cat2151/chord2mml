@@ -1,6 +1,6 @@
 {{
-    function getOffsetByScale(scale, degree) {
-        return getOffsetsByScale(scale)[getDegreeIndex(degree)];
+    function getOffsetIonian(degree) {
+        return getOffsetsByScale("ionian")[getDegreeIndex(degree)];
     }
 
     function getOffsetsByScale(scale) {
@@ -136,10 +136,10 @@ ROOT=ROOT_CDEFGAB
 ROOT_CDEFGAB=root:[A-G] sharp:SHARP* flat:FLAT* { return getRootCdefgabOffset(root, sharp, flat); }
 
 ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / "V" / "I" / [1-7]) { // 文字数の多い順に並べるのは、そうしないとVIをV Iと認識するので防止用
-    // 課題。getOffsetByScale() と関連関数がやや大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
+    // 課題。 getOffsetIonian() と関連関数がやや大規模。当ライブラリの方針的に、AST生成側の分担としては大規模すぎる感触。
     //  対策、このまま進んで様子見する。
     //   根拠、ここでやる理由は、ROOT部分に影響範囲を閉じるため。ここ以外でやると、chord, chord over bass note, などそれぞれのdegree版を作ることになり影響範囲が広いため。
-	let offset = getOffsetByScale(gScale, degree);
+	let offset = getOffsetIonian(degree);
     offset += sharp.length - flat.length + gKey;
     return offset; }
 

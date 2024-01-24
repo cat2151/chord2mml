@@ -319,10 +319,10 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("key=D I")).toEqual(prefix + "'d1f+a'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("Phrygian II")).toEqual(prefix + "'d-1fa-'");
+        expect(chord2mml.parse("Phrygian bII")).toEqual(prefix + "'d-1fa-'");
     });
     test("degree", () => {
-        expect(chord2mml.parse("Aeolian IIm")).toEqual(prefix + "'d1fa'");
+        expect(chord2mml.parse("Aeolian IIm(b5)")).toEqual(prefix + "'d1fa-'");
     });
     test("octave up", () => {
         expect(chord2mml.parse("C octave up C")).toEqual(prefix + "'c1eg''<c1eg'");
@@ -371,7 +371,7 @@ describe("chord2mml", () => {
         expect(chord2mml.parse("key=F IV")).toEqual(prefix + "'b-1<df'");
     });
     test("key and scale to flat", () => {
-        expect(chord2mml.parse("Aeolian VI VII")).toEqual(prefix + "'a-1<ce-''b-1<df'");
+        expect(chord2mml.parse("Aeolian bVI bVII")).toEqual(prefix + "'a-1<ce-''b-1<df'");
     });
     test("I VIm^2 を単純に書くとoctave以上跳躍", () => {
         expect(chord2mml.parse("I VIm^2")).toEqual(prefix + "'c1eg''<e1a<c'");
