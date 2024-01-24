@@ -69,8 +69,6 @@ EVENT=INLINE_ABC
     / SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE
     / SLASH_CHORD_MODE_POLYCHORD
     / SLASH_CHORD_MODE_INVERSION
-    / SLASH_CHORD
-    / ON_CHORD
     / INVERSION_MODE_ROOT_INV
     / INVERSION_MODE_1ST_INV
     / INVERSION_MODE_2ND_INV
@@ -81,8 +79,10 @@ EVENT=INLINE_ABC
     / OPEN_HARMONY_MODE_CLOSE
     / BASS_PLAY_MODE_NO_BASS
     / BASS_PLAY_MODE_ROOT
-    / SCALE / KEY
     / BAR
+    / SCALE / KEY
+    / SLASH_CHORD
+    / ON_CHORD
     / CHORD
 CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION octaveOffset:OCTAVE_OFFSET H { return { event: "chord", root, quality, inversion, octaveOffset }; }
 SLASH_CHORD=_   upperRoot:ROOT  upperQuality:CHORD_QUALITY  upperInversion:INVERSION upperOctaveOffset:OCTAVE_OFFSET "/"
@@ -116,7 +116,7 @@ TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ [\,\.]? _ { return { event: "inline mml
 BAR=_ "|" _ { return { event: "bar" }; }
 BAR_SLASH=" / " _ { return { event: "bar slash" }; }
 KEY=_ "key"i [ \=]? k:KEY_EVENT [\,\.]? _ { return k; }
-KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* {
+KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* m:"m"? {
     gKey = getRootCdefgabOffset(root, sharp, flat);
     return { event: "key", root, sharpLength: sharp.length, flatLength: flat.length, offset: gKey }; }
 
@@ -195,6 +195,6 @@ _ "whitespace"= [ \t\n\r]*
 H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
 
 MIDI_PROGRAM_CHANGE=PC048 / PC049 / PC052
-PC048=_ ("Strings" _ "Ensemble" _ "1"i / "Strings" _ "1" / "Str." _ "1") [\,\.]? _ { return { event: "inline mml", mml: "@48" }; }
-PC049=_ ("Strings" _ "Ensemble" _ "2"i / "Strings" _ "2" / "Str." _ "2") [\,\.]? _ { return { event: "inline mml", mml: "@49" }; }
+PC048=_ ("Strings"i _ "Ensemble"i _ "1" / "Strings"i _ "1" / "Str."i _ "1") [\,\.]? _ { return { event: "inline mml", mml: "@48" }; }
+PC049=_ ("Strings"i _ "Ensemble"i _ "2" / "Strings"i _ "2" / "Str."i _ "2") [\,\.]? _ { return { event: "inline mml", mml: "@49" }; }
 PC052=_ ("Voice Aahs"i / "Choir Aahs"i / "Choir"i / "Chor."i) [\,\.]? _ { return { event: "inline mml", mml: "@52" }; }

@@ -437,4 +437,7 @@ describe("chord2mml", () => {
     test("アラビア数字によるdegree表記", () => {
         expect(chord2mml.parse("1M7 2m7 3m7 4M7 56 57 6m7 7m7(b5)")).toEqual(prefix + "'c1egb''d1fa<c''e1gb<d''f1a<ce''g1b<de''g1b<df''a1<ceg''b1<dfa'");
     });
+    test("Key=Amの認識", () => { // IonianやAeolian等はコメントに近い扱いとし、書いても書かなくても出力されるnote numberには影響しない、とする
+        expect(chord2mml.parse("Key=Am Im Key=A Ionian Im")).toEqual(prefix + "'a1<ce''a1<ce'");
+    });
 });
