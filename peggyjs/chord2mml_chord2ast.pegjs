@@ -116,7 +116,7 @@ TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ [\,\.]? _ { return { event: "inline mml
 BAR=_ "|" _ { return { event: "bar" }; }
 BAR_SLASH=" / " _ { return { event: "bar slash" }; }
 KEY=_ "key"i [ \=]? k:KEY_EVENT [\,\.]? _ { return k; }
-KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* m:"m"? {
+KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* m:("minor"i / "m")? {
     gKey = getRootCdefgabOffset(root, sharp, flat);
     return { event: "key", root, sharpLength: sharp.length, flatLength: flat.length, offset: gKey }; }
 
