@@ -337,7 +337,7 @@ function peg$parse(input, options) {
   var peg$r1 = /^[^*\/]/;
   var peg$r2 = /^[^\/]/;
   var peg$r3 = /^[0-9]/;
-  var peg$r4 = /^[ =]/;
+  var peg$r4 = /^[ =:]/;
   var peg$r5 = /^[A-G]/;
   var peg$r6 = /^[ \-]/;
   var peg$r7 = /^[1-7]/;
@@ -389,7 +389,7 @@ function peg$parse(input, options) {
   var peg$e39 = peg$literalExpectation("|", false);
   var peg$e40 = peg$literalExpectation(" / ", false);
   var peg$e41 = peg$literalExpectation("key", true);
-  var peg$e42 = peg$classExpectation([" ", "="], false, false);
+  var peg$e42 = peg$classExpectation([" ", "=", ":"], false, false);
   var peg$e43 = peg$classExpectation([["A", "G"]], false, false);
   var peg$e44 = peg$literalExpectation("minor", true);
   var peg$e45 = peg$literalExpectation("m", false);
