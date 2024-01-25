@@ -240,6 +240,15 @@ function getNotes(root: number, quality: string): number[] {
     case "9": notes = [0,4,7,10,14]; break;
     case "11": notes = [0,4,7,10,14,17]; break;
     case "13": notes = [0,4,7,10,14,17,21]; break;
+    default:
+      // 四度堆積
+      if (q[0].substring(0, 2) == "4.") {
+        notes = [0];
+        for (let i = 1; i < parseInt(q[0][2]); i++) {
+          notes.push(i * 5);
+        }
+      }
+      break;
   }
 
   for (let o of q) {

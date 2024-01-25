@@ -440,4 +440,7 @@ describe("chord2mml", () => {
     test("Key=Amの認識", () => { // IonianやAeolian等はコメントに近い扱いとし、書いても書かなくても出力されるnote numberには影響しない、とする
         expect(chord2mml.parse("Key=Am Key:Aminor Im Key=A Ionian Im")).toEqual(prefix + "'a1<ce''a1<ce'");
     });
+    test("四度堆積", () => {
+        expect(chord2mml.parse("C4.2 C4.3 C4.4")).toEqual(prefix + "'c1f''c1fa+''c1fa+<d+'");
+    });
 });

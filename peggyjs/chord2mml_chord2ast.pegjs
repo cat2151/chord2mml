@@ -146,7 +146,7 @@ ROOT_DEGREE=sharp:SHARP* flat:FLAT* degree:("VII" / "III" / "VI"/ "IV" / "II" / 
 SHARP=[#＃♯] { return "#"; }
 FLAT=[b♭] { return "b"; }
 
-CHORD_QUALITY=quality:((MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / SEVENTH_SUS4 / SEVENTH_SUS2 / SUS4 / SUS2 / DIM_TRIAD / AUG / THIRTEENTH / ELEVENTH // 2文字以上系
+CHORD_QUALITY=quality:((QUARTAL_HARMONY / MIN7 / MAJ7 / MAJ_LONG / MIN_LONG / SEVENTH_SUS4 / SEVENTH_SUS2 / SUS4 / SUS2 / DIM_TRIAD / AUG / THIRTEENTH / ELEVENTH // 2文字以上系
     / NINTH / SEVENTH / SIXTH / MIN_SHORT // 1文字系
     / MAJ_SHORT ) // 0文字系
     (OMIT_N / ADD_N / FLATTED_FIFTH / AUGMENTED_FIFTH)* ) {
@@ -168,6 +168,7 @@ SEVENTH_SUS2="7sus2" { return "7sus2"; }
 SEVENTH_SUS4="7sus4" { return "7sus4"; }
 DIM_TRIAD="dim" { return "dim triad"; }
 AUG="aug" { return "aug"; }
+QUARTAL_HARMONY="4." n:[2-9]+ { return text(); } // 四度堆積
 FLATTED_FIFTH=("(b5)" / "(-5)") { return ",flatted fifth"; }
 AUGMENTED_FIFTH=("(+5)" / "(#5)") { return ",augmented fifth"; }
 OMIT_N="("? ("omit" / "o") n:[135] ")"? { return ",omit" + n; }
