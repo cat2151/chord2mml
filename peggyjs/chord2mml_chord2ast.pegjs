@@ -84,14 +84,15 @@ EVENT=INLINE_ABC
     / SLASH_CHORD
     / ON_CHORD
     / CHORD
-CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION octaveOffset:OCTAVE_OFFSET H { return { event: "chord", root, quality, inversion, octaveOffset }; }
+CHORD=_ root:ROOT quality:CHORD_QUALITY inversion:INVERSION octaveOffset:OCTAVE_OFFSET CHORD_SEPARATOR {
+    return { event: "chord", root, quality, inversion, octaveOffset }; }
 SLASH_CHORD=_   upperRoot:ROOT  upperQuality:CHORD_QUALITY  upperInversion:INVERSION upperOctaveOffset:OCTAVE_OFFSET "/"
-                lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET H {
+                lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET CHORD_SEPARATOR {
     lowerRoot ??= upperRoot;
     lowerQuality ??= upperQuality;
     return { event: "slash chord", upperRoot, upperQuality, upperInversion, upperOctaveOffset, lowerRoot, lowerQuality, lowerInversion, lowerOctaveOffset }; }
 ON_CHORD=_  upperRoot:ROOT  upperQuality:CHORD_QUALITY  upperInversion:INVERSION upperOctaveOffset:OCTAVE_OFFSET ("on" / "over")
-            lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET H {
+            lowerRoot:ROOT? lowerQuality:CHORD_QUALITY? lowerInversion:INVERSION lowerOctaveOffset:OCTAVE_OFFSET CHORD_SEPARATOR {
     lowerRoot ??= upperRoot;
     lowerQuality ??= upperQuality;
     return { event: "chord over bass note", upperRoot, upperQuality, upperInversion, upperOctaveOffset, lowerRoot, lowerQuality, lowerInversion, lowerOctaveOffset }; } // このオンコード表記は日本固有である。見かけるので対象とした。なおover表記を海外で見かけたのでそれも対象にした。
@@ -114,7 +115,7 @@ BASS_PLAY_MODE_NO_BASS=_ ("no bass"i) [\,\.]? _ { return { event: "change bass p
 BASS_PLAY_MODE_ROOT=_ ("bass is root"i / "bass plays root"i / "bass play root"i) [\,\.]? _ { return { event: "change bass play mode to root" }; }
 TEMPO=_ ("BPM"i / "TEMPO"i) _ bpm:[0-9]+ [\,\.]? _ { return { event: "inline mml", mml: "t" + bpm.join("") }; }
 BAR=_ "|" _ { return { event: "bar" }; }
-BAR_SLASH=" / " _ { return { event: "bar slash" }; }
+BAR_SLASH=_ "/ " _ { return { event: "bar slash" }; }
 KEY=_ "key"i [ \=:]? k:KEY_EVENT [\,\.]? _ { return k; }
 KEY_EVENT=root:[A-G] sharp:SHARP* flat:FLAT* m:("minor"i / "m")? {
     gKey = getRootCdefgabOffset(root, sharp, flat);
@@ -192,8 +193,10 @@ INVERSION=("^" [0-3])? {
 
 OCTAVE_OFFSET=up:"'"* down:","* { return up.length - down.length; } // ABC Notation のoctave offsetと類似の記法とする
 
-_ "whitespace"= [ \t\n\r]*
-H "hyphen"= (" - " / _ "→" _)* // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
+_ "whitespace"= WHITE_SPACE*
+WHITE_SPACE=[ \t\n\r]
+HYPHEN= (" - " / _ "→" _) // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
+CHORD_SEPARATOR=(HYPHEN / WHITE_SPACE / !.) // !. は end of input
 
 MIDI_PROGRAM_CHANGE=PC048 / PC049 / PC052
 PC048=_ ("Strings"i _ "Ensemble"i _ "1" / "Strings"i _ "1" / "Str."i _ "1") [\,\.]? _ { return { event: "inline mml", mml: "@48" }; }

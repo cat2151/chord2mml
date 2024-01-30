@@ -443,4 +443,9 @@ describe("chord2mml", () => {
     test("四度堆積", () => {
         expect(chord2mml.parse("C4.2 C4.3 C4.4")).toEqual(prefix + "'c1f''c1fa+''c1fa+<d+'");
     });
+    test("11をエラーにする。つまりchord（この場合はアラビア数字によるdegree表記）を 1 1 と分けて書かないとエラーとする", () => {
+        expect(() => {
+            expect(chord2mml.parse("11"))
+        }).toThrow();
+    });
 });
