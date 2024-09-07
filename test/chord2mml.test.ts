@@ -33,7 +33,7 @@ describe("chord2ast", () => {
         expect(parse("C#M7 C#Maj7 C#△")).toEqual([{event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}, {event: "chord", quality: "maj7", root: 1, inversion: null, octaveOffset: 0}]);
     });
     test("maj9", () => {
-        expect(parse("C#maj9 C#M9 C#Maj9 C#△9")).toEqual([{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0}]);
+        expect(parse("C#maj9 C#M9 C#Maj9 C#△9 C#△(9)")).toEqual([{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0},{event: "chord", quality: "maj7,add9", root: 1, inversion: null, octaveOffset: 0}]);
     });
     test("slash chord", () => {
         expect(parse("F/C")).toEqual([{event: "slash chord", upperRoot: 5, upperQuality: "maj", lowerRoot: 0, lowerQuality: "maj", upperInversion: null, lowerInversion: null, upperOctaveOffset: 0, lowerOctaveOffset: 0}]);
