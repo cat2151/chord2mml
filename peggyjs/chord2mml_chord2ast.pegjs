@@ -196,7 +196,7 @@ OCTAVE_OFFSET=up:"'"* down:","* { return up.length - down.length; } // ABC Notat
 
 _ "whitespace"= WHITE_SPACE*
 WHITE_SPACE=[ \t\n\r]
-HYPHEN= (" - " / _ "→" _) // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
+HYPHEN= (" - " / _ [→・] _) // コードのつなぎで書かれることがあり、それを扱える用。ハイフンは前後space必須。でないと C-C が、Cmin Cmaj なのか、Cmaj - Cmaj なのか区別がつかない。
 CHORD_SEPARATOR=(HYPHEN / WHITE_SPACE / !.) // !. は end of input
 
 MIDI_PROGRAM_CHANGE= PC000 / PC001 / PC002 / PC003 / PC004 / PC005 / PC006 / PC007 / PC008 / PC009

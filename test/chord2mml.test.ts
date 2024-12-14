@@ -238,6 +238,9 @@ describe("chord2mml", () => {
     test("hyphen", () => {
         expect(chord2mml.parse("C→C → C")).toEqual(prefix + "'c1eg''c1eg''c1eg'");
     });
+    test("hyphen", () => {
+        expect(chord2mml.parse("C・C ・ C")).toEqual(prefix + "'c1eg''c1eg''c1eg'");
+    });
     test("inversionを、chord over bass note にも適用する", () => {
         expect(chord2mml.parse("1st inv C/C")).toEqual(prefix + "'>c1eg<c'");
     });
