@@ -1,141 +1,153 @@
-Last updated: 2025-11-11
+Last updated: 2025-11-12
 
 # Project Overview
 
 ## プロジェクト概要
-- コード表記（Chord notation）を音楽マクロ言語（MML）に変換するシンプルなJavaScriptライブラリです。
-- ブラウザやObsidianプラグインに組み込むことで、コード進行を手軽に音として確認できます。
-- 作曲のアイデアスケッチや音楽的な表現の試行を支援することを目的としています。
+-   コード進行表記（Chord notation）をMML（Music Macro Language）に変換するシンプルなJavaScriptライブラリです。
+-   入力されたコード進行からMML文字列を生成し、ブラウザや対応するアプリケーションで音楽を再生できるようにします。
+-   作曲のアイデアスケッチや、既存のコード進行を音で確認する用途などに手軽に活用できます。
 
 ## 技術スタック
-- フロントエンド:
-  - **JavaScript**: ブラウザで動作するライブラリ本体として使用されています。デモページもJavaScriptベースで提供されます。
-  - **HTML**: ライブラリのデモページを構築するために使用されています。
-  - **webpack-dev-server**: 開発中にデモページやライブラリをブラウザでリアルタイムにテスト・確認するための開発用サーバーです。
-- 音楽・オーディオ:
-  - **Music Macro Language (MML)**: 最終的な出力形式として使用されており、音楽の演奏情報をテキストで記述するための言語です。
-- 開発ツール:
-  - **TypeScript**: コードの品質と保守性を向上させるために、型安全なJavaScript開発を可能にする言語です。
-  - **webpack**: 複数のモジュールを一つのファイルにバンドルし、ブラウザで効率的に利用できるようにするためのモジュールバンドラーです。
-  - **ts-loader**: webpackがTypeScriptファイルを処理できるようにするためのローダーです。
-  - **peggy**: 独自の文法（Chord notation）を解析するためのパーサージェネレーターです。入力されたコード表記を抽象構文木（AST）に変換するコードを生成します。
-  - **@babel/parser**: JavaScriptのコードを解析し、抽象構文木（AST）を生成するために使用されるパーサーです。
-- テスト:
-  - **jest**: JavaScriptコードのテストを行うための人気の高いテストフレームワークです。
-  - **@types/jest**: Jestの型定義を提供し、TypeScript環境での開発を支援します。
-  - **ts-jest**: JestがTypeScriptファイルをテストできるようにするためのプリセットです。
-  - **jest-environment-jsdom**: Jestテストをブラウザ環境（JSDOM）で実行できるようにする環境です。
-- ビルドツール:
-  - **webpack**: TypeScriptファイルのコンパイル、依存関係の解決、出力ファイルの最適化を行います。
-  - **webpack-cli**: webpackコマンドラインインターフェースを提供します。
-  - **peggy**: コード表記の文法定義ファイルからパーサーを生成します。
-- 言語機能:
-  - **TypeScript**: 静的型付けにより、大規模なプロジェクトでのコードの信頼性と可読性を高めます。
-- 自動化・CI/CD:
-  - **npm-run-all**: `package.json`スクリプトを並行または逐次実行するためのユーティリティです。
-  - **chokidar-cli**: ファイルシステムの変更を監視し、特定のコマンドをトリガーするために使用されます（例: 自動ビルド）。
-- 開発標準:
-  - (特になし。`tsconfig.json`はTypeScriptの言語設定として利用。)
+-   フロントエンド:
+    -   **HTML**: デモページの構造を記述するために使用されています (`dist/index.html`)。
+    -   **JavaScript**: ライブラリの最終的な実行環境言語であり、TypeScriptからコンパイルされます。
+    -   **Webpack**: JavaScriptモジュールのバンドル、最適化、およびデモページの開発サーバー機能を提供します。
+-   音楽・オーディオ:
+    -   **Chord notation**: 入力として受け取るコード進行の表記法です。
+    -   **Music Macro Language (MML)**: 出力される音楽表現言語で、様々な音楽プレイヤーや環境で利用可能です。
+-   開発ツール:
+    -   **TypeScript**: 静的型付けを導入したJavaScriptのスーパーセットで、コードの品質と保守性を高めます。
+    -   **Peggy.js**: 文法定義ファイル（.pegjs）からパーサー（構文解析器）を自動生成するためのツールです。
+    -   **Chokidar-cli**: ファイルの変更を監視し、自動ビルドなどの開発ワークフローをトリガーするために使用されます。
+    -   **npm-run-all**: 複数のnpmスクリプトを並列または直列で実行するためのユーティリティです。
+-   テスト:
+    -   **Jest**: JavaScriptのテストフレームワークで、ライブラリの機能検証に利用されます。
+-   ビルドツール:
+    -   **Webpack**: ソースコードを結合し、`dist/chord2mml.js`として配布可能な形式にバンドルするために使用されます。
+    -   **ts-loader**: WebpackがTypeScriptファイルを処理するためのローダーです。
+    -   **@babel/parser**: JavaScriptコードを抽象構文木（AST）に変換するためのパーサー（依存関係にありますが、直接的な使用はプロジェクト情報からは不明です）。
+-   言語機能:
+    -   **TypeScript**: 型安全なJavaScript開発を可能にする言語機能を提供します。
+    -   **JavaScript**: ECMAScript標準に基づいたプログラミング言語です。
+-   自動化・CI/CD:
+    -   明確なCI/CDパイプラインは明記されていませんが、`chokidar-cli`や`npm-run-all`が開発プロセスの自動化に貢献しています。
+-   開発標準:
+    -   **TypeScript**: 型定義によりコードの品質と可読性を向上させます。
+    -   **tsconfig.json**: TypeScriptコンパイラの設定を統一し、プロジェクト全体のコード品質を維持します。
 
 ## ファイル階層ツリー
 ```
-.
-├── .gitignore
-├── LICENSE
-├── README.ja.md
-├── README.md
-├── _config.yml
-├── dist/
-│   ├── chord2mml.js
-│   └── index.html
-├── generated-docs/
-├── issue-notes/
-│   └── 2.md
-├── jest.config.js
-├── package-lock.json
-├── package.json
-├── peggyjs/
-│   └── chord2mml_chord2ast.pegjs
-├── src/
-│   ├── chord2mml.ts
-│   ├── chord2mml_ast2ast.ts
-│   ├── chord2mml_ast2notes.ts
-│   ├── chord2mml_chord2ast.cjs
-│   └── chord2mml_notes2mml.ts
-├── test/
-│   └── chord2mml.test.ts
-├── tsconfig.json
-└── webpack.config.js
+📄 .gitignore
+📄 LICENSE
+📖 README.ja.md
+📖 README.md
+📄 _config.yml
+📁 dist/
+  📜 chord2mml.js
+  🌐 index.html
+📁 generated-docs/
+📁 issue-notes/
+  📖 2.md
+📜 jest.config.js
+📊 package-lock.json
+📊 package.json
+📁 peggyjs/
+  📝 chord2mml_chord2ast.pegjs
+📁 src/
+  📘 chord2mml.ts
+  📘 chord2mml_ast2ast.ts
+  📘 chord2mml_ast2notes.ts
+  📄 chord2mml_chord2ast.cjs
+  📘 chord2mml_notes2mml.ts
+📁 test/
+  📘 chord2mml.test.ts
+📊 tsconfig.json
+📜 webpack.config.js
 ```
 
 ## ファイル詳細説明
-- **`.gitignore`**: Gitがバージョン管理の対象としないファイルやディレクトリを指定します。
-- **`LICENSE`**: プロジェクトのライセンス情報が記載されています。
-- **`README.ja.md`**, **`README.md`**: プロジェクトの概要、目的、機能、使い方などを説明するドキュメント（日本語版と英語版）。
-- **`_config.yml`**: GitHub Pagesなどの静的サイトジェネレータ（Jekyll）の設定ファイルです。
-- **`dist/chord2mml.js`**: TypeScriptソースコードをコンパイルし、Webpackによってバンドル・最適化された、ブラウザで利用可能なJavaScriptライブラリ本体です。
-- **`dist/index.html`**: `chord2mml.js`ライブラリの動作を確認できるデモページです。
-- **`generated-docs/`**: 自動生成されたドキュメントが格納されることを想定したディレクトリですが、現在は空です。
-- **`issue-notes/2.md`**: 開発中の特定の課題や検討事項に関するメモファイルです。
-- **`jest.config.js`**: JavaScriptのテストフレームワークJestの設定ファイルです。
-- **`package-lock.json`**: `package.json`に記述された依存関係の正確なバージョンとツリー構造を記録し、ビルドの一貫性を保証します。
-- **`package.json`**: プロジェクトのメタデータ（名前、バージョン、スクリプト、依存関係など）を定義するファイルです。
-- **`peggyjs/chord2mml_chord2ast.pegjs`**: Chord記法（コード進行）を抽象構文木（AST）に変換するためのPEG.js文法定義ファイルです。このファイルに基づいてパーサーが生成されます。
-- **`src/chord2mml.ts`**: `chord2mml`ライブラリのエントリポイントとなるファイルです。コード表記からMMLへの一連の変換プロセスを調整します。
-- **`src/chord2mml_ast2ast.ts`**: 抽象構文木（AST）を受け取り、その構造をさらに処理・整形するロジックが含まれています。例えば、イベントの長さ情報（拍数）の更新などを行います。
-- **`src/chord2mml_ast2notes.ts`**: 抽象構文木（AST）を解析し、個々の音符（MIDIノート番号と長さ）のリストに変換する主要なロジックが含まれています。コードの種類、転回形、オープンハーモニー、キー変更などが考慮されます。
-- **`src/chord2mml_chord2ast.cjs`**: `peggyjs/chord2mml_chord2ast.pegjs`ファイルからPEG.jsによって自動生成された、コード進行をASTにパースするJavaScriptモジュールです。
-- **`src/chord2mml_notes2mml.ts`**: 個々の音符リストを最終的なMusic Macro Language（MML）形式の文字列に変換するロジックが含まれています。
-- **`test/chord2mml.test.ts`**: ライブラリの機能が正しく動作するかを確認するためのテストコードが記述されています。
-- **`tsconfig.json`**: TypeScriptコンパイラの設定ファイルで、コンパイルオプションや対象ファイルなどを指定します。
-- **`webpack.config.js`**: プロジェクトのビルドプロセスをWebpackでどのように行うかの設定ファイルです。
+-   **`.gitignore`**: Gitによるバージョン管理から除外するファイルやディレクトリを指定します。
+-   **`LICENSE`**: プロジェクトのライセンス情報が記述されています。
+-   **`README.ja.md`, `README.md`**: プロジェクトの概要、目的、機能、使い方などを説明するドキュメントです。
+-   **`_config.yml`**: GitHub Pagesなどの静的サイトジェネレーター（例: Jekyll）の設定ファイルです。
+-   **`dist/chord2mml.js`**: プロジェクトのメインライブラリファイルです。TypeScriptで記述されたソースコードがWebpackによってバンドル・最適化されたもので、ブラウザやNode.js環境でコード進行をMMLに変換するための全機能が含まれています。
+-   **`dist/index.html`**: ライブラリのデモンストレーションページを提供するためのHTMLファイルです。`chord2mml.js`を読み込み、ユーザーが実際にコード進行を入力してMML変換を試せるインターフェースを提供します。
+-   **`generated-docs/`**: 生成されたドキュメントを格納するためのディレクトリです（現在は空ですが、将来的に使用される可能性があります）。
+-   **`issue-notes/2.md`**: 開発中の特定の課題や検討事項に関するメモファイルです。
+-   **`jest.config.js`**: JavaScriptテストフレームワークJestの設定ファイルです。テスト対象ファイル、環境、モック設定などが定義されています。
+-   **`package-lock.json`**: `package.json`に記述された依存関係の正確なバージョンと依存ツリーを記録し、プロジェクトの依存関係の一貫性を保証します。
+-   **`package.json`**: プロジェクトのメタデータ（名前、バージョン、説明など）、依存関係、開発スクリプトなどを定義するファイルです。
+-   **`peggyjs/chord2mml_chord2ast.pegjs`**: Peggy.jsパーサー生成ツール用の文法定義ファイルです。Chord notationの文字列を解析し、抽象構文木（AST）に変換するためのルールが詳細に記述されており、コード進行の多様な表記を理解する基盤となります。
+-   **`src/chord2mml.ts`**: ライブラリのエントリーポイントとなるTypeScriptファイルです。各変換ステージ（文字列からAST、ASTから音符、音符からMML）のモジュールを統合し、ユーザーが利用する主要な変換関数などを提供します。
+-   **`src/chord2mml_ast2ast.ts`**: 抽象構文木（AST）を処理し、別のASTを生成するTypeScriptファイルです。この段階で、コード進行の長さやテンポなど、音楽的なメタデータがASTに付加されたり、調整されたりします。
+-   **`src/chord2mml_ast2notes.ts`**: ASTから具体的な音符のリストを生成するTypeScriptファイルです。コードの種類（メジャー、マイナー）、転回形（Inversion）、オープンハーモニー（Drop2, Drop4など）といった複雑な音楽理論を適用し、実際に演奏されるべき音符の並びを計算します。
+-   **`src/chord2mml_chord2ast.cjs`**: `peggyjs/chord2mml_chord2ast.pegjs`から自動生成された、Chord notationをASTに変換するパーサーモジュールです。
+-   **`src/chord2mml_notes2mml.ts`**: 生成された音符のリストをMusic Macro Language (MML) 形式の文字列に変換するTypeScriptファイルです。MMLの構文規則に従い、音符、オクターブ、長さなどを適切に表現します。
+-   **`test/chord2mml.test.ts`**: ライブラリの各モジュールおよび全体の変換ロジックが正しく機能するかを検証するためのテストコードです。
+-   **`tsconfig.json`**: TypeScriptコンパイラの設定ファイルです。コンパイルオプション（ターゲットECMAScriptバージョン、モジュール解決方法など）が記述されています。
+-   **`webpack.config.js`**: Webpackモジュールバンドラーの設定ファイルです。ソースコードのバンドル方法、出力先、ローダー、プラグインなどが定義されており、配布用の`dist/chord2mml.js`を生成するために使用されます。
 
 ## 関数詳細説明
-- **`CHORDS`, `EVENT`, `CHORD`, `SLASH_CHORD`, `ON_CHORD` など (`peggyjs/chord2mml_chord2ast.pegjs`)**:
-  - 役割: これらはPEG.jsの文法ルールであり、Chord記法の入力文字列を解析し、抽象構文木（AST）の特定の構造に変換するためのパターンを定義します。
-  - 引数: なし（PEG.jsルールは入力文字列を解析します）
-  - 戻り値: 解析された入力に対応するASTノード。
-  - 機能: コード進行全体、個々の音楽イベント、コード、スラッシュコード（分数コード）、オンコード、インラインMML、テンポ、キー、オクターブ変更、各種コードクオリティやテンションなどの複雑な音楽表記を正確に認識し、構造化されたデータに変換する役割を担います。
-- **`astToAst(ast: any)` (`src/chord2mml_ast2ast.ts`)**:
-  - 役割: 抽象構文木（AST）を受け取り、その内容を加工して別のASTを生成します。特に、コードの長さ情報（拍数）を更新する処理が含まれます。
-  - 引数: `ast` - コード進行を表す抽象構文木オブジェクト。
-  - 戻り値: 加工された抽象構文木オブジェクト。
-  - 機能: 入力されたASTを元に、各イベントの拍数を計算し、更新することで、後続の音符生成プロセスが正しい長さの音符を生成できるように準備します。
-- **`astToNotes(ast: any)` (`src/chord2mml_ast2notes.ts`)**:
-  - 役割: 抽象構文木（AST）から、実際に演奏される個々の音符のリストを生成します。コードの種類、転回形、オープンハーモニー、キー変更、テンポ、MIDIプログラムチェンジなどを考慮して音符を決定する中心的なロジックです。
-  - 引数: `ast` - コード進行を表す抽象構文木オブジェクト。
-  - 戻り値: 音符オブジェクト（MIDIノート番号、長さなど）の配列。
-  - 機能: コードのルート音、クオリティ、テンション、ベース音などに基づいて、MIDIノート番号と長さを計算し、転回形やオープンハーモニーなどの音楽的な表現を適用して最終的な音符データを生成します。
-- **`getNotes(event: any, currentKey: any, currentScale: any, prevMidiProgramChange: any)` (`src/chord2mml_ast2notes.ts`)**:
-  - 役割: AST内の特定のイベントオブジェクトから、そのイベントに対応する音符のリストを取得します。`astToNotes`内で呼び出され、各イベントの具体的な音符生成を担当します。
-  - 引数: `event` - AST内のイベントオブジェクト、`currentKey` - 現在のキー、`currentScale` - 現在のスケール、`prevMidiProgramChange` - 直前のMIDIプログラムチェンジ情報。
-  - 戻り値: 処理された音符（ノート）の配列。
-  - 機能: コード、テンポ、キー変更、MIDIプログラムチェンジなどのイベントタイプに応じて、適切な音符生成ロジックを呼び出します。
-- **`getNotesByChord(root: any, quality: any, tension: any, add: any, omit: any)` (`src/chord2mml_ast2notes.ts`)**:
-  - 役割: ルート音、コードクオリティ、テンション、追加音、省略音に基づいて、そのコードに含まれる音符のセットを取得します。
-  - 引数: `root` - ルート音、`quality` - コードの質（メジャー、マイナーなど）、`tension` - テンションノート、`add` - 追加音、`omit` - 省略音。
-  - 戻り値: コードを構成する音符の配列。
-  - 機能: 標準的な和音構成ルールに従って、指定されたコードの音符を生成します。
-- **`notesToMml(notes: any)` (`src/chord2mml_notes2mml.ts`)**:
-  - 役割: 音符リストをMusic Macro Language（MML）形式の文字列に変換します。これが最終的な出力となります。
-  - 引数: `notes` - 音符オブジェクトの配列。
-  - 戻り値: MML形式の文字列。
-  - 機能: 音符のMIDIノート番号、長さ、およびキー情報やシャープ/フラットの指定などをMMLコマンドに変換し、演奏可能なMMLシーケンスを生成します。
-- **`create12ionians()` (`src/chord2mml_notes2mml.ts`)**:
-  - 役割: 12種類のキーに対応するイオニアンスケール（長音階）の定義を生成します。キー変更時の音符調整に利用されます。
-  - 引数: なし。
-  - 戻り値: 12のキーに対応するイオニアンスケールの配列。
-  - 機能: 音楽理論に基づき、各キーの長音階を構成する音符の情報を準備します。
-- **`generateIonians(key: any)` (`src/chord2mml_notes2mml.ts`)**:
-  - 役割: 指定されたキーのイオニアンスケールを具体的に生成します。
-  - 引数: `key` - スケールのルートとなるキー（例: 'C', 'C#'）。
-  - 戻り値: 指定キーのイオニアンスケールの音符の配列。
-  - 機能: あるキーの長音階を構成する音符を計算し、配列として返します。
-- **`r, e, n, s, u, o, uf, of, af, cf, lf, hf, bf, ff, mf, vf, Af, df, Cf, wf, pf, Lf, gf, yf, kf, Of, Sf, Rf, a, c, i, l, h, b, f, m, v, A, d, C, w` (dist/chord2mml.js)**:
-  - 役割: これらはWebpackによってバンドル・ミニファイされたJavaScriptファイルに含まれる内部関数です。元のTypeScriptソースコードの複数の関数が、配布用に最適化される過程で短縮された名前になっています。
-  - 引数: なし、または最適化された形式の引数。
-  - 戻り値: なし、または最適化された形式の戻り値。
-  - 機能: ライブラリの主要なロジックやヘルパー関数が、実行効率とファイルサイズ最適化のために難読化・統合されたものです。具体的な役割は元のTypeScriptファイルで定義されている関数群に対応します。
+-   **`chord2mml`の主要変換関数 (src/chord2mml.tsより)**:
+    -   **役割**: コード進行の文字列全体をMML文字列に変換するライブラリのメイン関数です。内部で、入力文字列のパーシング、抽象構文木（AST）の変換、具体的な音符の生成、MML文字列への変換という一連の処理をオーケストレートします。
+    -   **引数**: `Chord notation文字列` (コード進行のテキストデータ)
+    -   **戻り値**: `MML文字列` (変換されたMMLテキスト)
+-   **パーサー生成ルール (`peggyjs/chord2mml_chord2ast.pegjs`内の各種ルール)**:
+    -   **役割**: `CHORDS`, `EVENT`, `CHORD`, `SLASH_CHORD`, `ON_CHORD`, `INLINE_MML`, `TEMPO`, `BAR`, `KEY`, `OCTAVE_UP`, `OCTAVE_DOWN`, `ROOT`, `SHARP`, `FLAT`, `CHORD_QUALITY`など多数のルールが含まれます。これらはコード進行表記の文法（構文）を定義し、入力された文字列がこれらのルールに基づいて解析され、抽象構文木（AST）が構築される際の基盤となります。
+-   **AST変換関数 (`src/chord2mml_ast2ast.ts`より)**:
+    -   **`astToAst(ast)`**:
+        -   **役割**: 最初のASTを受け取り、小節の長さやその他の音楽的プロパティを更新・追加した新たなASTを生成します。
+        -   **引数**: 初期の抽象構文木（AST）オブジェクト。
+        -   **戻り値**: 音楽的メタデータが更新された抽象構文木（AST）オブジェクト。
+    -   **`bar2noteLength(bar)`**:
+        -   **役割**: 小節情報から、対応する音符の長さを計算します。
+        -   **引数**: 小節を表すデータ構造。
+        -   **戻り値**: 計算された音符の長さ。
+    -   **`updateAstNoteLength(ast, noteLength)`**:
+        -   **役割**: AST内の音符の長さを指定された値に更新します。
+        -   **引数**: 抽象構文木（AST）オブジェクト、更新する音符の長さ。
+        -   **戻り値**: 更新された抽象構文木（AST）オブジェクト。
+-   **ASTから音符生成関数 (`src/chord2mml_ast2notes.ts`より)**:
+    -   **`astToNotes(ast)`**:
+        -   **役割**: 抽象構文木（AST）を解析し、実際に演奏されるべき具体的な音符のリストを生成します。コードの種類、転回形、オープンハーモニーなどの複雑な音楽理論がこの段階で適用されます。
+        -   **引数**: 抽象構文木（AST）オブジェクト。
+        -   **戻り値**: 音楽的音符のリスト。
+    -   **`getNotesByChord(chord)`**:
+        -   **役割**: 指定されたコード（例: `Cmaj7`）から構成音のリストを取得します。
+        -   **引数**: コード情報を表すオブジェクト。
+        -   **戻り値**: そのコードを構成する音符のリスト。
+    -   **`getNotesByChordOverBassNote(chord, bass)`**:
+        -   **役割**: 分数コード（例: `C/G`）のように、ベース音が指定されたコードの構成音リストを取得します。
+        -   **引数**: コード情報を表すオブジェクト、ベース音を表すオブジェクト。
+        -   **戻り値**: 分数コードを構成する音符のリスト。
+    -   **`inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode)`**:
+        -   **役割**: 音符のリストに対し、転回形（ルート、1st、2ndなど）やオープンハーモニー（Drop2, Drop4など）のルールを適用して音の配置を調整します。
+        -   **引数**: 音符のリスト、転回形のモード、オープンハーモニーのモード。
+        -   **戻り値**: 転回形とオープンハーモニーが適用された音符のリスト。
+    -   **`adjustNotesOctave(notes)`**:
+        -   **役割**: 生成された音符のオクターブを、音楽的に適切な範囲に調整します。
+        -   **引数**: 音符のリスト。
+        -   **戻り値**: オクターブが調整された音符のリスト。
+    -   **`drop2(notes)`, `drop4(notes)`, `drop2and4(notes)`**:
+        -   **役割**: それぞれ特定のオープンハーモニーのルール（Drop2、Drop4、Drop2&4）に基づき、音符を特定のオクターブ下げて配置し、響きを調整します。
+        -   **引数**: 音符のリスト。
+        -   **戻り値**: オープンハーモニーが適用された音符のリスト。
+-   **音符からMML生成関数 (`src/chord2mml_notes2mml.ts`より)**:
+    -   **`notesToMml(notes)`**:
+        -   **役割**: 生成された音符のリストをMML形式の文字列に変換します。音符、長さ、オクターブ、臨時記号などをMMLの構文に従って表現します。
+        -   **引数**: 音符のリスト。
+        -   **戻り値**: MML形式の文字列。
+    -   **`create12ionians(key)`**:
+        -   **役割**: 特定のキー（調）に基づき、12音階（イオニアンスケール）の音符リストを生成します。
+        -   **引数**: キー情報を表すオブジェクト。
+        -   **戻り値**: イオニアンスケールの音符リスト。
+    -   **`generateIonians(root)`**:
+        -   **役割**: 指定されたルート音からイオニアンスケールを生成します。
+        -   **引数**: ルート音を表すオブジェクト。
+        -   **戻り値**: イオニアンスケールの音符リスト。
+-   **その他の関数 (dist/chord2mml.js内のミニファイされた関数など)**:
+    -   `r`, `e`, `n`, `s`, `u`, `o`, `uf`, `of`, `af`, `cf`, `lf`, `hf`, `bf`, `ff`, `mf`, `vf`, `Af`, `df`, `Cf`, `wf`, `pf`, `Lf`, `gf`, `yf`, `kf`, `Of`, `Sf`, `Rf`, `a`, `c`, `i`, `l`, `h`, `b`, `f`, `m`, `v`, `A`, `d`, `C`, `w`: これらの関数は、`dist/chord2mml.js`に含まれるWebpackによってバンドル・ミニファイされた内部関数群です。元のTypeScriptファイルで定義された様々な補助関数やロジックが、最適化された形で含まれています。具体的な役割は元のソースコードを参照する必要がありますが、主にASTや音符データの処理、MML文字列の組み立てに関与しています。
+    -   `function`, `switch`, `if`, `map`, `replace`, `return`, `filter`, `sort`, `for`, `while`: これらは特定の関数ではなく、JavaScript/TypeScript言語における一般的なプログラミングの制御構文や配列/文字列操作のための組み込みメソッドです。様々な関数内でロジックの実装に使用されます。
 
 ## 関数呼び出し階層ツリー
 ```
@@ -395,15 +407,15 @@ Last updated: 2025-11-11
       - getNotesByInversionChord ()
       - getNotesByPolychord ()
       - getNotes ()
-        - addNote ()
-        - inversionAndOpenHarmony ()
-        - keyShiftNotes ()
-        - inversionByTargetNote ()
-        - inversionByCount ()
-        - adjustNotesOctave ()
-        - drop2 ()
-        - drop4 ()
-        - drop2and4 ()
+      - addNote ()
+      - inversionAndOpenHarmony ()
+      - keyShiftNotes ()
+      - inversionByTargetNote ()
+      - inversionByCount ()
+      - adjustNotesOctave ()
+      - drop2 ()
+      - drop4 ()
+      - drop2and4 ()
   - notesToMml ()
     - create12ionians ()
       - generateIonians ()
@@ -412,4 +424,4 @@ Last updated: 2025-11-11
       - searchIonians ()
 
 ---
-Generated at: 2025-11-11 09:27:19 JST
+Generated at: 2025-11-12 07:09:55 JST

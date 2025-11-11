@@ -1,4 +1,4 @@
-Last updated: 2025-11-11
+Last updated: 2025-11-12
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -921,6 +921,7 @@ PC127=_ ("Gunshot"i)                        [\,\.]? _ { return { event: "inline 
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
+bd3e54f Update project summaries (overview & development status) [auto]
 c9f3468 Auto-translate README.ja.md to README.md [auto]
 cbd35ae ja
 961661d github-actionsリポジトリの共通ワークフローを導入
@@ -934,8 +935,12 @@ d8b6a3b jekyll settings
 README.ja.md
 README.md
 _config.yml
+generated-docs/development-status-generated-prompt.md
+generated-docs/development-status.md
+generated-docs/project-overview-generated-prompt.md
+generated-docs/project-overview.md
 issue-notes/2.md
 
 
 ---
-Generated at: 2025-11-11 09:26:19 JST
+Generated at: 2025-11-12 07:08:43 JST
