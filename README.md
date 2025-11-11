@@ -5,43 +5,39 @@ A library transpiles Chord notation into Music Macro Language.
 https://cat2151.github.io/chord2mml/dist/
 
 # Features
-- text to textのシンプルなJavaScriptライブラリ
-- コード進行（Chord notation）から MMLを生成
-- ブラウザや[Obsidian](https://github.com/cat2151/obsidian-plugin-mmlabc)でコード進行を手軽に鳴らせます
+- A simple text-to-text JavaScript library
+- Generates MML from chord progressions (Chord notation)
+- Easily play chord progressions in browsers and [Obsidian](https://github.com/cat2151/obsidian-plugin-mmlabc).
 
-## 関連するproject
-- [MML-chord-generator](https://github.com/cat2151/MML-chord-generator)：chord2mmlの仕様の一部は、MML-chord-generatorから継承したものです。
-- [obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc)：chord2mmlが組み込まれています。Obsidianでコード進行を書くと、音が鳴ります。作曲のアイデアスケッチの用途などを想定しています。
+## Related Projects
+- [MML-chord-generator](https://github.com/cat2151/MML-chord-generator): Some specifications of chord2mml are inherited from MML-chord-generator.
+- [obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc): chord2mml is integrated into this plugin. When you write chord progressions in Obsidian, it plays the sound. It's intended for use cases such as sketching composition ideas.
 
-# 分担
-- `chord2mml_chord2ast.pegjs ～ chord2mml_notes2mml.ts を作ること`
-  - が、このリポジトリの担当です。
-- `easyにchord2mmlを使える仕組み を作ること`
-  - は、[easychord2mml](https://github.com/cat2151/easychord2mml/)で担当します。
-- `コード進行を鳴らすことで、作曲のアイデアスケッチなどに役立てること`
-  - は、[obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc)で担当します。
+# Project Scope
+- This repository is responsible for creating `chord2mml_chord2ast.pegjs` to `chord2mml_notes2mml.ts`.
+- [easychord2mml](https://github.com/cat2151/easychord2mml/) is responsible for creating a mechanism to use chord2mml easily.
+- [obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc) is responsible for utilizing chord progressions to help with sketching composition ideas, etc., by playing them.
 
-# このprojectが優先すること
-- 関数に`Chord notation文字列`を与えて、`MML文字列`を取得できること。
-- [obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc) でコード進行を鳴らせるようにすること。
+# Project Priorities
+- Be able to provide a `Chord notation string` to a function and receive an `MML string`.
+- Enable playing chord progressions in [obsidian-plugin-mmlabc](https://github.com/cat2151/obsidian-plugin-mmlabc).
 
-# 目指すこと
-- 概念実証
-  - 丁寧で完璧な動作を細部まで完璧に作り込むことよりも、
-    - 大きな用途のある機能の目処を立てることを優先する
-- シンプル
-  - ルールはシンプルであることを優先します。
-  - できるだけ入力データそのままを扱います。
-  - 例えばオクターブは手動制御とします。
-    - 「octave-up」などをユーザーが明示的に書きます。
-    - なぜなら「octave上がよい」「octave下がよい」かは、入力データからは断定できないためです。
-    - また「スタンダードなほうを自動で選び、そこから外れた場合にユーザーが制御とする」こともしません。
-      - なぜなら、スタンダードの境界線がグラデーションであること。そして、どこまでがスタンダードかのルールが複雑となること。それにより仕様が複雑となるためです。
+# Goals
+- Proof of Concept
+  - Prioritize establishing the prospects for features with broad applications, rather than meticulously crafting every detail for perfect operation.
+- Simplicity
+  - Prioritize simple rules.
+  - Process input data as directly as possible.
+  - For example, octave control will be manual.
+    - Users explicitly write "octave-up" or similar.
+    - This is because it's impossible to determine from the input data whether "octave up" or "octave down" is preferred.
+    - We also won't automatically select the "standard" octave and provide user control only when deviating from it.
+      - This is because the boundaries of what is "standard" are often a gradient, and defining rules for what constitutes "standard" would be complex, leading to a complicated specification.
 
-# 目指さないこと
-- レアケース調査。あらゆるレアケースのコード表記を、全ての書籍とインターネットの隅々まで調べ上げる
-- まだ発生していない可能性への先行対応。「こんなコード表記をする可能性もありそう」というものをすべて実装する
-- 完璧なフォーマット。全てに対応できる表記フォーマットを完成させる
-- 全組み合わせテスト。全てに対応できるようテストケースを全組み合わせについて完成させる
-- 完璧な全自動。あらゆる曖昧な入力に対してすべてを全自動でいい感じにしてくれるシステムを構築する
-- 実用性。実用に耐えうる高機能と高品質を提供する
+# Out of Scope
+- Exhaustive rare case investigation: Thoroughly researching every rare chord notation across all books and the entire internet.
+- Proactive support for potential, yet unencountered, possibilities: Implementing everything that "might be a possible chord notation."
+- Perfect format: Completing a notation format that can accommodate everything.
+- Full combinatorial testing: Completing test cases for all combinations to ensure everything is covered.
+- Perfect full automation: Building a system that automatically "makes everything nice" for all ambiguous inputs.
+- Production-ready practicality: Providing high functionality and quality suitable for practical use.
