@@ -1,4 +1,4 @@
-Last updated: 2025-11-12
+Last updated: 2025-12-02
 
 
 # プロジェクト概要生成プロンプト（来訪者向け）
@@ -141,6 +141,7 @@ https://cat2151.github.io/chord2mml/dist/
   📜 chord2mml.js
   🌐 index.html
 📁 generated-docs/
+🌐 googled947dc864c270e07.html
 📁 issue-notes/
   📖 2.md
 📜 jest.config.js
@@ -165,6 +166,10 @@ https://cat2151.github.io/chord2mml/dist/
   - インポート: なし
 
 **dist/index.html** (28行, 1319バイト)
+  - 関数: なし
+  - インポート: なし
+
+**googled947dc864c270e07.html** (1行, 53バイト)
   - 関数: なし
   - インポート: なし
 
@@ -479,6 +484,7 @@ README.ja.md
 README.md
 dist/chord2mml.js
 dist/index.html
+googled947dc864c270e07.html
 issue-notes/2.md
 jest.config.js
 package-lock.json
@@ -502,4 +508,4 @@ webpack.config.js
 
 
 ---
-Generated at: 2025-11-12 07:08:43 JST
+Generated at: 2025-12-02 07:07:44 JST

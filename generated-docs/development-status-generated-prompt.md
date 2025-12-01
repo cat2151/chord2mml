@@ -1,4 +1,4 @@
-Last updated: 2025-11-12
+Last updated: 2025-12-02
 
 # 開発状況生成プロンプト（開発者向け）
 
@@ -161,6 +161,7 @@ Last updated: 2025-11-12
 - .github/actions-tmp/generated-docs/project-overview-generated-prompt.md
 - .github/actions-tmp/generated-docs/project-overview.md
 - .github/actions-tmp/generated-docs/style.css
+- .github/actions-tmp/googled947dc864c270e07.html
 - .github/actions-tmp/issue-notes/10.md
 - .github/actions-tmp/issue-notes/11.md
 - .github/actions-tmp/issue-notes/12.md
@@ -203,6 +204,7 @@ Last updated: 2025-11-12
 - dist/chord2mml.js
 - dist/index.html
 - generated-docs/project-overview-generated-prompt.md
+- googled947dc864c270e07.html
 - issue-notes/2.md
 - jest.config.js
 - package-lock.json
@@ -921,17 +923,13 @@ PC127=_ ("Gunshot"i)                        [\,\.]? _ { return { event: "inline 
 
 ## 最近の変更（過去7日間）
 ### コミット履歴:
-bd3e54f Update project summaries (overview & development status) [auto]
-c9f3468 Auto-translate README.ja.md to README.md [auto]
-cbd35ae ja
-961661d github-actionsリポジトリの共通ワークフローを導入
-d8b6a3b jekyll settings
+7697ed1 Google検索にindexさせる用
+b414132 Google検索にindexさせる用
 
 ### 変更されたファイル:
 .github/workflows/call-daily-project-summary.yml
 .github/workflows/call-issue-note.yml
 .github/workflows/call-translate-readme.yml
-.github/workflows/issue-note.yml
 README.ja.md
 README.md
 _config.yml
@@ -939,8 +937,8 @@ generated-docs/development-status-generated-prompt.md
 generated-docs/development-status.md
 generated-docs/project-overview-generated-prompt.md
 generated-docs/project-overview.md
-issue-notes/2.md
+googled947dc864c270e07.html
 
 
 ---
-Generated at: 2025-11-12 07:08:43 JST
+Generated at: 2025-12-02 07:07:45 JST
