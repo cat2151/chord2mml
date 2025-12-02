@@ -1,57 +1,66 @@
-Last updated: 2025-12-02
+Last updated: 2025-12-03
 
 # Development Status
 
 ## 現在のIssues
-- [Issue #3](../issue-notes/3.md): `obsidian-plugin-mmlabc` への組み込みを見据え、`easychord2mml` のプリプロセッサ機能を `chord2mml` へ統合することが主要な開発タスクです。
-- [Issue #2](../issue-notes/2.md): LLMが生成したコード進行の認識に関する対応は `easychord2mml` 側で完了したため、現在このIssueのクローズ作業が保留されています。
-- これらの対応により、多様なコード表記をMMLへ変換する際の柔軟性とロバスト性が向上することが期待されます。
+- [Issue #4](../issue-notes/4.md) は、Jekyll (GitHub Pages) が自動生成されるMarkdown内のLiquidタグを誤認識しビルドが失敗する問題について、修正のテスト結果を待っています。
+- [Issue #3](../issue-notes/3.md) は、`obsidian-plugin-mmlabc` への統合に向け、`easychord2mml` のプリプロセッサを `chord2mml` へ取り込む必要性が提起されていますが、詳細な内容はまだ記述されていません。
+- [Issue #2](../issue-notes/2.md) は、LLMが生成する多様なコード進行を認識するためのプリプロセッサ強化を検討していましたが、`easychord2mml` 側での解決が見込まれたため、クローズが予定されています。
 
 ## 次の一手候補
-1. [Issue #2](../issue-notes/2.md) のクローズ処理
-   - 最初の小さな一歩: `issue-notes/2.md` ファイルを更新し、Issueがクローズされた旨を明記した上で、GitHubのIssueをクローズする。
+1. [Issue #4](../issue-notes/4.md) のJekyllビルド問題の最終確認とクローズ
+   - 最初の小さな一歩: GitHub Pagesの最新デプロイログを確認し、Jekyllビルドが成功しており、`generated-docs`内のMarkdownファイルが正しく表示されていることを確認する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: `issue-notes/2.md`
+     対象ファイル: issue-notes/4.md, _config.yml, .github/actions-tmp/.github_automation/project_summary/scripts/shared/ProjectFileUtils.cjs, generated-docs/project-overview.md, generated-docs/development-status.md
 
-     実行内容: `issue-notes/2.md` の内容を更新し、Issueがクローズ済みであることを明確に記述してください。具体的には、ファイルの最後に「このIssueはeasychord2mml側で解決済みのため、クローズしました。」という文言を追加してください。
+     実行内容:
+     1. issue-notes/4.md の現在の状況（「test結果待ち」）を確認する。
+     2. GitHubリポジトリのActionsタブで、最新のGitHub Pagesデプロイワークフローが成功しているか、ビルドログにJekyllエラーがないかを確認する。
+     3. デプロイされたGitHub Pagesサイト（例: `https://<username>.github.io/<repo>/generated-docs/project-overview.md`）にアクセスし、`generated-docs` 配下のMarkdownファイルが正しく表示されているか、特にコードブロック内の `{% raw %}`/`{% endraw %}` が正しく処理されているかを目視で確認する。
+     4. 全て問題がなければ、issue-notes/4.md を更新し、Issueクローズのコメントを追加するための提案を作成する。
 
-     確認事項: 既存の内容を損なわないこと。GitHubの実際のIssueがクローズされているか、またはクローズする準備が整っているかを確認すること（このAgentはファイル更新のみを行う）。
+     確認事項:
+     - 最新のGitHub Pagesデプロイワークフローが成功していること。
+     - 実際にデプロイされたサイトで、`generated-docs/project-overview.md` や `generated-docs/development-status.md` が期待通りに表示されていること（Liquidタグがそのまま表示されたり、Jekyllのパースエラーが発生していないこと）。
 
-     期待する出力: 更新された `issue-notes/2.md` の内容をmarkdown形式で出力してください。
+     期待する出力: 問題が解消されている場合、issue-notes/4.md を更新し、Issueクローズのコメントを追加するPull Requestの作成を提案するMarkdown形式の出力。または、まだ問題が残っている場合、具体的な追加のデバッグステップを提案するMarkdown形式の出力。
      ```
 
-2. [Issue #3](../issue-notes/3.md) `easychord2mml` プリプロセッサ統合のための初期調査
-   - 最初の小さな一歩: `chord2mml` の `peggyjs/chord2mml_chord2ast.pegjs` と、`easychord2mml` のプリプロセッサが提供すると想定される柔軟な入力（例: 小文字表記のマイナーコード 'ii-vi'、ハイフン区切り）とのギャップを特定する。
+2. [Issue #3](../issue-notes/3.md) の詳細内容の明確化と次のアクション定義
+   - 最初の小さな一歩: `issue-notes/3.md` を開き、Issueのタイトル「obsidian-plugin-mmlabcに取り込まれるようにするため、easychord2mmlのプリプロセッサをchord2mmlに取り込む必要がある」に基づき、なぜこの統合が必要なのか、具体的にどのような機能を取り込むのか、どのファイルが影響を受けるのかといった概略を記述する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: `peggyjs/chord2mml_chord2ast.pegjs`
+     対象ファイル: issue-notes/3.md, src/chord2mml.ts, src/chord2mml_chord2ast.cjs, peggyjs/chord2mml_chord2ast.pegjs
 
-     実行内容: `chord2mml` プロジェクトの `peggyjs/chord2mml_chord2ast.pegjs` を詳細に分析し、現状で認識できるコード進行の表記（大文字I-VII、C-Gなど）と、LLMが生成しがちな柔軟な入力（例: 小文字表記のマイナーコード 'ii-vi'、ハイフン区切り、余分なスペースなど）とのギャップを特定してください。特に、現在のパーサーが対応していない記法を洗い出してください。
+     実行内容:
+     1. 現在空である issue-notes/3.md の内容を、[Issue #3](../issue-notes/3.md) のタイトル「obsidian-plugin-mmlabcに取り込まれるようにするため、easychord2mmlのプリプロセッサをchord2mmlに取り込む必要がある」に沿って記述する。
+     2. 具体的には、`easychord2mml` のプリプロセッサが `chord2mml` に統合されることで期待される機能（例: 特定の入力形式のサポート、コード進行の自動補完など）について仮説を立て、記述する。
+     3. その統合が `chord2mml` の `peggyjs/chord2mml_chord2ast.pegjs` や `src/chord2mml_ast2ast.ts` などにどのように影響しうるかについて、技術的な観点から簡単な分析を加える。
+     4. このIssueを進めるための最初の具体的な調査ステップ（例: easychord2mmlのソースコード調査、obsidian-plugin-mmlabcの要求仕様確認など）を提案する。
 
-     確認事項: `peggyjs/chord2mml_chord2ast.pegjs` の文法ルール (`ROOT_DEGREE`, `CHORD_SEPARATOR` など) を正確に理解し、既存のコードを変更せずに、どの部分に拡張が必要かを特定する。Issue #2で言及された`easychord2mml`の対応内容も考慮に入れてください。
+     確認事項:
+     - `issue-notes/3.md` が現在空であること。
+     - `easychord2mml` の具体的なコード実装は参照できないため、一般的なプリプロセッサの概念と本プロジェクトの構造に基づき、実現可能性のある仮説を立てること。
 
-     期待する出力: `chord2mml_chord2ast.pegjs` が現在処理できないが、統合時に処理が必要となる入力形式のリストと、それぞれの記法をサポートするために `chord2mml_chord2ast.pegjs` で必要となる可能性のある修正点（例: 新しいルール追加、既存ルールの変更）に関する初期分析をmarkdown形式で出力してください。
+     期待する出力: issue-notes/3.md を更新するためのMarkdown形式の提案。このIssueの目的、想定される統合内容、および最初の具体的な調査ステップを含む。
      ```
 
-3. `chord2mml_chord2ast.pegjs` のLLMコード認識能力向上に向けた具体的ステップの特定
-   - 最初の小さな一歩: `peggyjs/chord2mml_chord2ast.pegjs` を分析し、LLMが生成しがちなコード進行パターン（小文字表記、ハイフン区切りなど）が現在のパーサーでどのように扱われるかを具体的な例を挙げて文書化する。
+3. [Issue #2](../issue-notes/2.md) の最終的なクローズ
+   - 最初の小さな一歩: `issue-notes/2.md` を開き、「↑あとでやる」の記述を削除し、Issueが `easychord2mml` 側での対応により完了したことを明記する。
    - Agent実行プロンプト:
      ```
-     対象ファイル: `peggyjs/chord2mml_chord2ast.pegjs`
+     対象ファイル: issue-notes/2.md
 
-     実行内容: `peggyjs/chord2mml_chord2ast.pegjs` のパーシングルールを深く分析し、LLMが生成しがちな以下のパターンのコード進行が現在のパーサーでどのように扱われるかを評価してください。
-       - 小文字表記のマイナーコード (例: "ii" "vi")
-       - ハイフン区切り (例: "C-G-Am-F")
-       - 全体的に自由な書式 (例: 余分なスペース、句読点など)
-     現在のパーサーでこれらのパターンがエラーとなる場合、具体的なエラー箇所と、それを修正するために必要となる文法ルールの追加・変更のアイデアをブレインストーミングしてください。
+     実行内容:
+     1. issue-notes/2.md の内容を確認し、[Issue #2](../issue-notes/2.md) が `easychord2mml` 側での対応により解決済みであるという記述があることを確認する。
+     2. ノート内の「↑あとでやる」という記述を削除し、Issueがクローズされた状態を明確にする。
+     3. 最終的なクローズ理由を簡潔に追記する（例: "easychord2mml側で対応が完了したため、本Issueはクローズする"）。
 
-     確認事項: `ROOT_DEGREE` ルールや `CHORD_SEPARATOR` ルールが、これらのパターンにどのように影響するかを特に注意して確認してください。また、`easychord2mml` のプリプロセッサがどのようにこれらのパターンを正規化しているか、というIssue #2 の過去の記述も参考にしてください。
+     確認事項:
+     - `easychord2mml` での対応が完了しており、このIssueが不要になったという認識に誤りがないこと。
 
-     期待する出力:
-       1. 現在の `chord2mml_chord2ast.pegjs` が認識できないLLM生成パターンの具体的なコード例。
-       2. それぞれのパターンについて、現在のパーサーがどのルールで失敗するか。
-       3. 各パターンをサポートするための `peggyjs/chord2mml_chord2ast.pegjs` の文法ルールに対する変更アイデア（例: 新しい `ROOT_DEGREE` のバリアント、`CHORD_SEPARATOR` の拡張、プリプロセッサ層の追加など）。これをmarkdown形式でリストアップしてください。
+     期待する出力: issue-notes/2.md を更新し、Issueクローズの理由と完了を明確にするMarkdown形式の出力。
 
 ---
-Generated at: 2025-12-02 07:08:07 JST
+Generated at: 2025-12-03 07:08:45 JST

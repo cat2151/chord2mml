@@ -1,46 +1,42 @@
-Last updated: 2025-12-02
+Last updated: 2025-12-03
 
 # Project Overview
 
 ## プロジェクト概要
-- コード進行（Chord notation）をMML（Music Macro Language）に変換するJavaScriptライブラリです。
-- テキスト形式のコード入力を解析し、音楽再生可能なMML出力を生成します。
-- ブラウザやObsidianプラグインに組み込むことで、手軽にコード進行を試聴できます。
+- コード進行の表記（Chord notation）をMML（Music Macro Language）に変換するシンプルなJavaScriptライブラリです。
+- ブラウザやObsidianなどの環境で、コード進行を手軽に音として再生できるようにすることを目的としています。
+- 概念実証とシンプルさを優先し、作曲のアイデアスケッチに役立つツールを提供します。
 
 ## 技術スタック
-- フロントエンド: 
-  - **JavaScript**: ライブラリの主要言語であり、ブラウザでの動作を想定しています。
-  - **HTML**: デモページ（`dist/index.html`）の構造を定義しています。
-  - **Webpack**: JavaScriptモジュールのバンドルと最適化を行い、ブラウザで利用可能な形式に変換します。
-- 音楽・オーディオ: 
-  - **Chord notation**: コード進行の表記法（例: Cmaj7, G7sus4）を解析します。
-  - **Music Macro Language (MML)**: 音楽をテキストで記述するための言語で、最終的な出力形式です。
-  - **MIDI Program Change (PC000-PC127)**: MML生成時にMIDI音源のプログラムチェンジを指定する機能が含まれます。
-- 開発ツール: 
-  - **TypeScript**: 静的型付けを導入し、大規模なプロジェクトでの保守性とコード品質を向上させています。
-  - **Peggy.js**: コード進行テキストを抽象構文木（AST）に変換するためのパーサジェネレータです。
-  - **@babel/parser**: JavaScriptのコード解析（AST生成）を支援するツールです。
-  - **Webpack CLI**: Webpackのコマンドラインインターフェースです。
-  - **Webpack Dev Server**: 開発中にアプリケーションを高速でテストするためのローカルサーバーを提供します。
-  - **Chokidar-CLI**: ファイルの変更を監視し、自動でタスクを実行するために使用されます。
-- テスト: 
-  - **Jest**: JavaScriptプロジェクト向けの高速で機能豊富なテストフレームワークです。
-  - **@types/jest**: Jestの型定義を提供し、TypeScript環境での開発を支援します。
-  - **ts-jest**: JestでTypeScriptのテストを実行するためのプリセットです。
-  - **jest-environment-jsdom**: Jestテストをブラウザ環境（JSDOM）で実行します。
-- ビルドツール: 
-  - **Peggy**: コード進行パーサの生成に使用されます。
-  - **Webpack**: ソースコードをブラウザ向けにバンドルします。
-  - **ts-loader**: WebpackがTypeScriptファイルをJavaScriptにトランスパイルするためのローダーです。
-- 言語機能: 
-  - **TypeScript**: 型安全なコード記述を可能にし、開発効率と信頼性を高めます。
-  - **JavaScript**: ライブラリの実行環境となる基盤言語です。
-- 自動化・CI/CD: 
-  - **npm-run-all**: 複数のnpmスクリプトを並列または連続で実行するためのツールです。
-  - **GitHub Pages**: プロジェクトのデモサイト（`dist/index.html`）をホスティングするために利用されます。
-- 開発標準: 
-  - **tsconfig.json**: TypeScriptコンパイラの設定を定義し、プロジェクト全体のコード品質と一貫性を保証します。
-  - **package.json**: プロジェクトの依存関係、スクリプト、メタデータを管理し、開発標準の基盤となります。
+- フロントエンド:
+    -   **JavaScript**: ライブラリの主要な実装言語であり、ブラウザ環境での動作を想定しています。
+    -   **HTML**: デモページの構築に用いられています (`dist/index.html`)。
+    -   **webpack-dev-server**: 開発中にデモページをホストし、ライブリロード機能を提供します。
+- 音楽・オーディオ:
+    -   **MML (Music Macro Language)**: コード進行の最終出力形式として使用され、音楽再生エンジンで解釈されます。
+- 開発ツール:
+    -   **TypeScript**: プロジェクトのソースコードはTypeScriptで記述されており、型安全な開発を支援します。
+    -   **Peggy.js**: Chord表記の解析（パーシング）を行うためのパーサージェネレータです。文法定義ファイル (`.pegjs`) からパーサーコードを生成します。
+    -   **webpack**: JavaScriptモジュールをバンドルし、ブラウザで実行可能な形に変換するモジュールバンドラーです。
+    -   **webpack-cli**: webpackコマンドラインインターフェースを提供します。
+    -   **ts-loader**: webpackがTypeScriptファイルを処理するためのローダーです。
+    -   **@babel/parser**: JavaScriptのコードを解析し、抽象構文木 (AST) を生成するためのパーサーライブラリです。
+    -   **npm-run-all**: 複数のnpmスクリプトを並列または逐次実行するためのユーティリティです。
+    -   **chokidar-cli**: ファイルシステムの変更を監視し、特定のコマンドを実行するためのツールです。
+- テスト:
+    -   **Jest**: JavaScriptのテストフレームワークであり、コードの単体テストや統合テストを実行します。
+    -   **ts-jest**: JestがTypeScriptファイルをテストできるようにするためのプリセットです。
+    -   **jest-environment-jsdom**: Jestのテスト環境でDOM (Document Object Model) のシミュレーションを提供します。
+    -   **@types/jest**: Jestの型定義を提供し、TypeScript環境での開発を支援します。
+- ビルドツール:
+    -   **webpack**: モジュールバンドル。
+    -   **Peggy.js**: パーサー生成。
+- 言語機能:
+    -   **TypeScript**: 静的型付けと最新のJavaScript機能を利用して、堅牢なコードを記述します。
+- 自動化・CI/CD:
+    -   **npm-run-all**: 開発・ビルドスクリプトの連携に利用されます。
+- 開発標準:
+    -   特に明示的なコード品質ツールやリンターは記載されていませんが、TypeScriptの採用によりコードの品質が一定に保たれています。
 
 ## ファイル階層ツリー
 ```
@@ -56,7 +52,8 @@ Last updated: 2025-12-02
 ├── generated-docs/
 ├── googled947dc864c270e07.html
 ├── issue-notes/
-│   └── 2.md
+│   ├── 2.md
+│   └── 4.md
 ├── jest.config.js
 ├── package-lock.json
 ├── package.json
@@ -75,287 +72,228 @@ Last updated: 2025-12-02
 ```
 
 ## ファイル詳細説明
--   `.gitignore`: Gitのバージョン管理から除外するファイルやディレクトリを指定します。
--   `LICENSE`: プロジェクトのライセンス情報（通常はMITライセンスなど）を記載しています。
--   `README.ja.md`, `README.md`: プロジェクトの概要、機能、デモ、関連プロジェクト、開発方針などを説明するドキュメントファイルです。日本語版と英語版があります。
--   `_config.yml`: GitHub Pagesでデモサイトをホスティングする際の設定ファイル（Jekyll設定）です。
--   `dist/`: ビルド成果物が格納されるディレクトリです。
-    -   `dist/chord2mml.js`: TypeScriptとPeggy.jsで記述されたコードがバンドル・トランスパイルされた、ブラウザで実行可能なJavaScriptライブラリ本体です。
-    -   `dist/index.html`: プロジェクトのデモページです。このページでは、生成された`chord2mml.js`ライブラリを使用して、コード進行をMMLに変換し試聴できるシンプルなインターフェースを提供します。
--   `generated-docs/`: ドキュメント生成ツールによって生成されたドキュメントが格納されるディレクトリですが、現状は空であるか、使用されていません。
--   `googled947dc864c270e07.html`: Googleサイト認証のために使用されるファイルです。
--   `issue-notes/2.md`: 特定のIssue（問題）に関する開発メモや詳細な情報が記述されています。
--   `jest.config.js`: JavaScriptテストフレームワークであるJestの設定ファイルです。テスト環境や実行オプションが定義されています。
--   `package-lock.json`: `package.json`で定義された依存関係の正確なバージョンと依存ツリーを記録するファイルです。これにより、開発環境間での依存関係の一貫性が保たれます。
--   `package.json`: プロジェクトのメタデータ（名前、バージョン、説明など）、実行スクリプト、開発時および実行時の依存関係を定義するファイルです。
--   `peggyjs/`: Peggy.jsのパーサ定義ファイルが格納されるディレクトリです。
-    -   `peggyjs/chord2mml_chord2ast.pegjs`: コード進行の文字列を抽象構文木（AST）にパースするための文法ルールを定義したPeggy.jsファイルです。コードのルート、品質、テンポ、小節などの音楽的要素を詳細に解析します。
--   `src/`: プロジェクトのソースコードが格納されるディレクトリです。
-    -   `src/chord2mml.ts`: ライブラリのエントリーポイントとなるTypeScriptファイルです。コード進行の文字列を受け取り、それをMML文字列に変換するための一連の処理（パース、AST変換、ノート生成、MML生成）をオーケストレーションします。
-    -   `src/chord2mml_ast2ast.ts`: 抽象構文木（AST）を別のASTに変換する処理を定義するTypeScriptファイルです。主にASTの正規化や、小節情報からMMLの音長への変換などの中間処理を行います。
-    -   `src/chord2mml_ast2notes.ts`: 抽象構文木（AST）から、具体的な音符（ノート）の情報を生成する処理を定義するTypeScriptファイルです。コードの種類、転回形、オープンハーモニーなどを考慮して、MMLに変換可能な音符リストを作成します。
-    -   `src/chord2mml_chord2ast.cjs`: `peggyjs/chord2mml_chord2ast.pegjs`から生成された、コード文字列をASTに変換するJavaScriptパーサモジュールです。`src/chord2mml.ts`から利用されます。
-    -   `src/chord2mml_notes2mml.ts`: 生成された音符情報から、最終的なMML文字列を構築する処理を定義するTypeScriptファイルです。イオニアンスケールに基づいたシャープ/フラットの調整や、MMLフォーマットへの変換ルールを実装しています。
--   `test/`: プロジェクトのテストコードが格納されるディレクトリです。
-    -   `test/chord2mml.test.ts`: プロジェクトの主要な変換ロジック（コード→AST、AST→ノート、ノート→MML）に対する単体テストおよび統合テストを記述したTypeScriptファイルです。
--   `tsconfig.json`: TypeScriptコンパイラの設定ファイルです。コンパイルオプション、ターゲット、モジュール解決などを定義し、TypeScriptコードのビルド方法を管理します。
--   `webpack.config.js`: Webpackバンドラーの設定ファイルです。エントリポイント、出力ディレクトリ、ローダー、プラグインなどを定義し、プロジェクトをブラウザ向けにビルドする方法を指定します。
+-   **`.gitignore`**: Gitによるバージョン管理から除外するファイルやディレクトリを指定します。
+-   **`LICENSE`**: プロジェクトのライセンス情報（著作権や利用条件）を記載したファイルです。
+-   **`README.ja.md`**: プロジェクトの日本語での概要、使い方、機能などを説明するMarkdownファイルです。
+-   **`README.md`**: プロジェクトの英語での概要、使い方、機能などを説明するMarkdownファイルです。
+-   **`_config.yml`**: GitHub Pagesのビルド設定に使用される可能性のある設定ファイルです。
+-   **`dist/`**: ビルドされた成果物が格納されるディレクトリです。
+    -   **`dist/chord2mml.js`**: TypeScriptソースコードがwebpackによってバンドル・トランスパイルされた、実行可能なJavaScriptライブラリ本体です。
+    -   **`dist/index.html`**: ライブラリのデモページとして機能するHTMLファイルです。ブラウザでChord to MML変換を試すことができます。
+-   **`generated-docs/`**: 自動生成されたドキュメントなどが格納される可能性のあるディレクトリです（現在は空）。
+-   **`googled947dc864c270e07.html`**: Googleサイト認証用のファイルである可能性があります。
+-   **`issue-notes/`**: 開発中のメモや特定の問題に関する考察が記録されているMarkdownファイルのディレクトリです。
+-   **`jest.config.js`**: Jestテストフレームワークの設定ファイルです。
+-   **`package-lock.json`**: `package.json`で定義された依存関係の正確なバージョンと依存ツリーを記録します。
+-   **`package.json`**: プロジェクトのメタデータ（名前、バージョン、説明、スクリプト、依存関係など）を定義します。
+-   **`peggyjs/`**: Peggy.jsパーサージェネレータの関連ファイルが格納されるディレクトリです。
+    -   **`peggyjs/chord2mml_chord2ast.pegjs`**: Chord表記を抽象構文木 (AST) に変換するための文法ルールを定義したPeggy.jsファイルです。
+-   **`src/`**: プロジェクトの主要なTypeScriptソースコードが格納されるディレクトリです。
+    -   **`src/chord2mml.ts`**: ライブラリのエントリポイントとなるファイルです。Chord表記の入力からMML出力までの変換フロー全体を統合します。
+    -   **`src/chord2mml_ast2ast.ts`**: 抽象構文木 (AST) を別のASTに変換する処理を担います。例えば、コードの長さやテンポ情報に基づいて音符の長さを計算・調整します。
+    -   **`src/chord2mml_ast2notes.ts`**: ASTから具体的な音符情報（MIDIノート番号や長さなど）のリストを生成する処理を担います。和音の展開、転回、オープンハーモニーなどの複雑な音楽理論的変換を行います。
+    -   **`src/chord2mml_chord2ast.cjs`**: `peggyjs/chord2mml_chord2ast.pegjs` から生成されたJavaScriptパーサーのコードです。
+    -   **`src/chord2mml_notes2mml.ts`**: 音符情報のリストからMML文字列を最終的に生成する処理を担います。キーやスケールに基づいたシャープ/フラットの判定なども行います。
+-   **`test/`**: テストコードが格納されるディレクトリです。
+    -   **`test/chord2mml.test.ts`**: `chord2mml`ライブラリの機能を確認するためのテストコードです。
+-   **`tsconfig.json`**: TypeScriptコンパイラの設定ファイルです。
+-   **`webpack.config.js`**: webpackバンドラーの設定ファイルです。
 
 ## 関数詳細説明
+-   **`chord2mml` (src/chord2mml.ts)**:
+    -   **役割**: プロジェクトのメインエントリポイントとなる関数。Chord表記文字列を受け取り、MML文字列に変換する一連の処理を調整します。
+    -   **引数**: `chordNotationString` (string) - Chord表記の文字列。
+    -   **戻り値**: `mmlString` (string) - 生成されたMML文字列。
+    -   **機能**: 以下の変換ステージ（AST生成、AST変換、ノート生成、MML生成）を順番に呼び出し、最終的なMMLを生成します。
 
-**`peggyjs/chord2mml_chord2ast.pegjs` (パーサ定義ルール)**
--   `CHORDS`: コード進行全体をパースする最上位ルール。複数のコードやイベントを処理します。
--   `EVENT`: コード、テンポ変更、小節線など、個別の音楽イベントをパースするルール。
--   `CHORD`: 基本的なコード表記（例: `Cmaj7`）を解析し、ASTノードを生成します。
--   `SLASH_CHORD`: スラッシュコード表記（例: `C/G`）をパースするルール。
--   `ON_CHORD`: オンコードの基本形（例: `C on G`）をパースするルール。
--   `SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE`: スラッシュコードがコードとベース音の関係を示すモードを識別。
--   `SLASH_CHORD_MODE_INVERSION`: スラッシュコードが転回形を示すモードを識別。
--   `SLASH_CHORD_MODE_POLYCHORD`: スラッシュコードがポリコードを示すモードを識別。
--   `INLINE_MML`, `INLINE_MML_SUB`: コード進行中に直接MMLを埋め込む表記をパースするルール。
--   `INLINE_ABC`: コード進行中に直接ABC記法を埋め込む表記をパースするルール。
--   `INVERSION_MODE_ROOT_INV`, `INVERSION_MODE_1ST_INV`, `INVERSION_MODE_2ND_INV`, `INVERSION_MODE_3RD_INV`: コードの転回形（ルート、第1、第2、第3転回）を指定する表記をパース。
--   `OPEN_HARMONY_MODE_CLOSE`, `OPEN_HARMONY_MODE_DROP2`, `OPEN_HARMONY_MODE_DROP4`, `OPEN_HARMONY_MODE_DROP2AND4`: オープンハーモニーの種類（クローズ、ドロップ2、ドロップ4、ドロップ2&4）を指定する表記をパース。
--   `BASS_PLAY_MODE_NO_BASS`, `BASS_PLAY_MODE_ROOT`: ベース音の演奏方法を指定する表記をパース。
--   `TEMPO`: テンポ変更表記（例: `T=120`）をパースするルール。
--   `BAR`, `BAR_SLASH`: 小節線（`|`）やスラッシュ付き小節線（`|/`）をパースするルール。
--   `KEY`, `KEY_EVENT`: キー変更表記（例: `K=C`）をパースするルール。
--   `SCALE`: 使用するスケール（例: `ionian`）をパースするルール。
--   `OCTAVE_UP`, `OCTAVE_UP_UPPER`, `OCTAVE_UP_LOWER`: オクターブを上げる表記（例: `^`, `^^`）をパースするルール。
--   `OCTAVE_DOWN`, `OCTAVE_DOWN_UPPER`, `OCTAVE_DOWN_LOWER`: オクターブを下げる表記（例: `v`, `vv`）をパースするルール。
--   `ROOT`, `ROOT_CDEFGAB`, `ROOT_DEGREE`: コードのルート音（例: `C`, `G`）をパースするルール。
--   `SHARP`, `FLAT`: シャープ（`#`）やフラット（`b`）記号をパースするルール。
--   `CHORD_QUALITY`: コードの品質（例: `maj`, `min`, `dim`）をパースするルール。
--   `MAJ_LONG`, `MAJ_SHORT`, `MAJ7`, `MAJ9`, `MIN_LONG`, `MIN_SHORT`, `MIN7`, `SIXTH`, `SEVENTH`, `NINTH`, `ELEVENTH`, `THIRTEENTH`, `SUS2`, `SUS4`, `SEVENTH_SUS2`, `SEVENTH_SUS4`, `DIM_TRIAD`, `AUG`, `QUARTAL_HARMONY`, `FLATTED_FIFTH`, `AUGMENTED_FIFTH`, `OMIT_N`, `ADD_N`, `INVERSION`: 個々のコードの品質、テンション、修飾（例: `sus4`, `omit3`, `add9`）をパースするルール。
--   `OCTAVE_OFFSET`: オクターブオフセットの指定をパースするルール。
--   `WHITE_SPACE`, `HYPHEN`, `CHORD_SEPARATOR`: スペース、ハイフン、コード区切り文字をパースするルール。
--   `MIDI_PROGRAM_CHANGE`, `PC000` ~ `PC127`: MIDIプログラムチェンジ番号（例: `PC001`）をパースするルール。
+-   **`parse` (src/chord2mml_chord2ast.cjs より生成)**:
+    -   **役割**: Peggy.jsによって生成されたパーサーのメイン関数。Chord表記文字列を解析し、抽象構文木 (AST) を構築します。
+    -   **引数**: `input` (string) - Chord表記の文字列。
+    -   **戻り値**: `ast` (object) - 解析されたChord表記を表す抽象構文木。
+    -   **機能**: 定義された文法ルール（`peggyjs/chord2mml_chord2ast.pegjs`）に基づいて、入力文字列を構造化されたデータ（AST）に変換します。
 
-**`src/chord2mml.ts`**
--   (匿名関数):
-    -   役割: コード進行文字列をMML文字列に変換するライブラリのメインエントリーポイント。
-    -   引数: `chordString: string` - 変換対象のコード進行テキスト。
-    -   戻り値: `string` - 生成されたMML文字列。
-    -   機能: `chord2mml_chord2ast.cjs`でコードをASTにパースし、`chord2mml_ast2ast.ts`でASTを変換、`chord2mml_ast2notes.ts`で具体的な音符リストを生成し、最後に`chord2mml_notes2mml.ts`でMML文字列を生成します。
+-   **`astToAst` (src/chord2mml_ast2ast.ts)**:
+    -   **役割**: 抽象構文木 (AST) を受け取り、さらに加工されたASTを生成します。主に音符の長さに関する情報を調整します。
+    -   **引数**: `inputAst` (object) - 変換前の抽象構文木。
+    -   **戻り値**: `outputAst` (object) - 音符の長さ情報が更新された抽象構文木。
+    -   **機能**: `bar2noteLength` や `updateAstNoteLength` などの補助関数を使用して、入力されたASTの各イベントに適切な音符の長さを割り当てます。
 
-**`src/chord2mml_ast2ast.ts`**
--   `astToAst`:
-    -   役割: 抽象構文木（AST）を変換し、MML生成に必要な情報を追加・更新します。
-    -   引数: `ast: AstType` - 入力となる抽象構文木。
-    -   戻り値: `AstType` - 変換および情報が追加されたAST。
-    -   機能: 主に小節（バー）の情報を基にMMLでの音長を計算し、AST内の各音楽イベントに適用する処理を行います。
--   `bar2noteLength`:
-    -   役割: 小節数からMMLで表現される音長（例: `l4`の`4`）を計算します。
-    -   引数: `bar: number` - 小節の長さを示す数値。
-    -   戻り値: `number` - 計算されたMML音長。
--   `updateAstNoteLength`:
-    -   役割: AST内の各イベントに、計算されたMMLの音長情報を追加・更新します。
-    -   引数: `events: EventType[]` - ASTイベントの配列。
-    -   戻り値: `EventType[]` - 音長情報が更新されたイベントの配列。
+-   **`bar2noteLength` (src/chord2mml_ast2ast.ts)**:
+    -   **役割**: バー（小節）の構造に基づいて音符の基本的な長さを計算します。
+    -   **引数**: `barInfo` (object) - 小節に関する情報。
+    -   **戻り値**: `noteLength` (number) - 計算された音符の長さ。
+    -   **機能**: 小節のタイプ（例：`|`や`/`）を解析し、MMLで表現できる適切な音符の長さを決定します。
 
-**`src/chord2mml_ast2notes.ts`**
--   `astToNotes`:
-    -   役割: 抽象構文木（AST）から、MMLに変換可能な具体的な音符（ノート）の配列を生成します。
-    -   引数: `ast: AstType` - 入力となる抽象構文木。
-    -   戻り値: `Note[]` - 生成されたノートの配列。
-    -   機能: ASTの各イベントを詳細に解析し、コードの種類、転回形、オープンハーモニーなどの複雑な音楽的要素を考慮して音符リストを作成します。
--   `deleteProperties`:
-    -   役割: 指定されたオブジェクトから特定のプロパティを削除します。
-    -   引数: `obj: object` - 対象オブジェクト, `props: string[]` - 削除するプロパティ名の配列。
-    -   戻り値: `object` - プロパティ削除後のオブジェクト。
--   `getNotesByChord`:
-    -   役割: 基本的なコード（例: `Cmaj7`）から構成音のノートリストを生成します。
-    -   引数: `event: ChordEventType` - コードイベントのデータ。
-    -   戻り値: `Note[]` - コードを構成する音符の配列。
--   `getNotesByChordOverBassNote`:
-    -   役割: コード/ベース音形式（例: `C/G`）のノートリストを生成します。
-    -   引数: `event: ChordOverBassNoteEventType` - コードオンベースイベントのデータ。
-    -   戻り値: `Note[]` - 構成音のノート配列。
--   `concatLowerAndUpper`:
-    -   役割: 低音パートと高音パートのノートリストを結合します。
-    -   引数: `lowerNotes: Note[]` - 低音のノート配列, `upperNotes: Note[]` - 高音のノート配列。
-    -   戻り値: `Note[]` - 結合されたノート配列。
--   `keyShiftUpperNotes`:
-    -   役割: 高音パートのノートを指定されたキーに基づいてシフト（移調）します。
-    -   引数: `upperNotes: Note[]` - 高音のノート配列, `key: KeyType` - 移調の基準となるキー。
-    -   戻り値: `Note[]` - シフト後のノート配列。
--   `getNotesByInversionChord`:
-    -   役割: 転回形コード（例: `Cmaj7/E`）のノートリストを生成します。
-    -   引数: `event: InversionChordEventType` - 転回形コードイベントのデータ。
-    -   戻り値: `Note[]` - 構成音のノート配列。
--   `getNotesByPolychord`:
-    -   役割: ポリコード（例: `C/Gmaj7`）のノートリストを生成します。
-    -   引数: `event: PolychordEventType` - ポリコードイベントのデータ。
-    -   戻り値: `Note[]` - 構成音のノート配列。
--   `getNotes`:
-    -   役割: コードのルート音と品質情報から、基本的なノートの度数リストを生成します。
-    -   引数: `root: string` - ルート音名, `quality: ChordQualityType` - コードの品質。
-    -   戻り値: `number[]` - コードを構成する度数の配列。
--   `addNote`:
-    -   役割: 指定された度数とルート音に基づいてノートを生成し、リストに追加します。
-    -   引数: `notes: Note[]` - ノートの配列, `root: number` - ルート音のMIDI番号, `degree: number` - コード内の度数, `isBassNote: boolean` - ベース音であるかのフラグ。
-    -   戻り値: `void` (notes配列が直接更新されます)。
--   `inversionAndOpenHarmony`:
-    -   役割: ノートリストに対して転回形やオープンハーモニーのルールを適用します。
-    -   引数: `notes: Note[]` - 対象ノート配列, `inversionMode: InversionModeType` - 転回形モード, `openHarmonyMode: OpenHarmonyModeType` - オープンハーモニーモード, `targetNote: Note` - 転回形の基準となるノート。
-    -   戻り値: `Note[]` - 適用後のノート配列。
--   `keyShiftNotes`:
-    -   役割: ノートリストを指定されたキーに基づいてシフト（移調）します。
-    -   引数: `notes: Note[]` - 対象ノート配列, `key: KeyType` - 移調の基準となるキー。
-    -   戻り値: `Note[]` - シフト後のノート配列。
--   `inversionByTargetNote`:
-    -   役割: 指定されたターゲットノートに基づいてノートを転回させます。
-    -   引数: `notes: Note[]` - 対象ノート配列, `targetNote: Note` - 転回形の基準となるノート。
-    -   戻り値: `Note[]` - 転回後のノート配列。
--   `inversionByCount`:
-    -   役割: 指定された回数だけノートを転回させます。
-    -   引数: `notes: Note[]` - 対象ノート配列, `count: number` - 転回回数。
-    -   戻り値: `Note[]` - 転回後のノート配列。
--   `adjustNotesOctave`:
-    -   役割: ノートのオクターブを調整し、MMLに適した範囲に収めます。
-    -   引数: `notes: Note[]` - 対象ノート配列。
-    -   戻り値: `Note[]` - 調整後のノート配列。
--   `drop2`:
-    -   役割: ドロップ2ボイシングをノートリストに適用します。
-    -   引数: `notes: Note[]` - 対象ノート配列。
-    -   戻り値: `Note[]` - 適用後のノート配列。
--   `drop4`:
-    -   役割: ドロップ4ボイシングをノートリストに適用します。
-    -   引数: `notes: Note[]` - 対象ノート配列。
-    -   戻り値: `Note[]` - 適用後のノート配列。
--   `drop2and4`:
-    -   役割: ドロップ2&4ボイシングをノートリストに適用します。
-    -   引数: `notes: Note[]` - 対象ノート配列。
-    -   戻り値: `Note[]` - 適用後のノート配列。
+-   **`updateAstNoteLength` (src/chord2mml_ast2ast.ts)**:
+    -   **役割**: AST内の各イベントに対して、小節情報に基づいて音符の長さを更新します。
+    -   **引数**: `ast` (object) - 処理対象の抽象構文木。
+    -   **戻り値**: `updatedAst` (object) - 音符の長さが更新された抽象構文木。
+    -   **機能**: ASTを走査し、各イベントが属する小節のコンテキストに基づいて音符の長さを設定します。
 
-**`src/chord2mml_notes2mml.ts`**
--   `notesToMml`:
-    -   役割: ノートの配列からMML文字列を生成します。
-    -   引数: `notes: Note[]` - MMLに変換するノートの配列。
-    -   戻り値: `string` - 生成されたMML文字列。
-    -   機能: ノート情報をMMLの音符、オクターブ、音長、リズムに変換します。キーやスケールに基づいたシャープ/フラットの適切な表現も行います。
--   `create12ionians`:
-    -   役割: 12種類のルート音それぞれに対するイオニアンスケール（長音階）を生成し、保持します。
-    -   引数: なし。
-    -   戻り値: `IoniansType` - 12のイオニアンスケールを格納したオブジェクト。
--   `generateIonians`:
-    -   役割: 指定された開始ノートとオクターブに基づいて、イオニアンスケール内のノートを生成します。
-    -   引数: `startNote: number` - スケールの開始MIDIノート番号, `octave: number` - 開始オクターブ。
-    -   戻り値: `number[]` - イオニアンスケールを構成するノートのMIDI番号配列。
--   `normalizeArrays`:
-    -   役割: 複数の配列を特定の基準に基づいて正規化します。（詳細な機能は文脈による）
-    -   引数: `arr1: number[]`, `arr2: number[]` - 正規化する配列。
-    -   戻り値: `number[][]` - 正規化された2つの配列。
--   `isSharpByKeyAndScale`:
-    -   役割: 指定されたキーとスケールにおいて、特定のノートがシャープ（`#`）として表現されるべきかを判定します。
-    -   引数: `note: number` - MIDIノート番号, `key: KeyType` - 現在のキー, `scale: ScaleType` - 現在のスケール。
-    -   戻り値: `boolean` - シャープとして表現されるべきなら`true`、そうでなければ`false`。
--   `searchIonians`:
-    -   役割: 指定されたノートがどのイオニアンスケールに属するかを検索し、そのノートに関する情報を提供します。
-    -   引数: `note: number` - 検索対象のMIDIノート番号。
-    -   戻り値: `NoteInfoType` - ノート情報オブジェクト（ルート、オクターブ、スケール内の位置など）。
+-   **`astToNotes` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 抽象構文木 (AST) を受け取り、個々のノート（音符）の具体的な情報（キー、オクターブ、長さなど）のリストに変換します。
+    -   **引数**: `inputAst` (object) - 変換対象の抽象構文木。
+    -   **戻り値**: `notesList` (array) - 各ノートの詳細情報を含むオブジェクトの配列。
+    -   **機能**: コードの種類（メジャー、マイナー、セブンスなど）、転回形、オンコード、テンポ、キーなどの情報に基づいて、実際に鳴らすべき音符の集合を生成します。`getNotesByChord`、`inversionAndOpenHarmony`などの多くの補助関数を内部で呼び出します。
+
+-   **`deleteProperties` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 特定のオブジェクトから指定されたプロパティを削除します。
+    -   **引数**: `obj` (object) - プロパティを削除する対象のオブジェクト, `properties` (array<string>) - 削除するプロパティ名の配列。
+    -   **戻り値**: `obj` (object) - プロパティが削除されたオブジェクト。
+    -   **機能**: 不要な中間プロパティをクリーンアップするために使用されます。
+
+-   **`getNotesByChord` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 基本的なコードの構成音を決定します。
+    -   **引数**: `chordInfo` (object) - コードのルート、クオリティ、テンションなどの情報。
+    -   **戻り値**: `notes` (array<number>) - コードを構成する音符のMIDIノート番号。
+    -   **機能**: コードのルート音とクオリティ（例: Maj7, min9, sus4）に基づいて、そのコードに含まれる音を生成します。
+
+-   **`getNotesByChordOverBassNote` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: オンコード（例: C/G）の構成音を決定します。
+    -   **引数**: `chordOverBassInfo` (object) - オンコードの情報。
+    -   **戻り値**: `notes` (array<number>) - オンコードの構成音。
+    -   **機能**: 分母のベース音と分子のコード情報を組み合わせて、オンコードの音符リストを生成します。
+
+-   **`concatLowerAndUpper` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 低音部と高音部の音符リストを結合します。
+    -   **引数**: `lowerNotes` (array<number>), `upperNotes` (array<number>).
+    -   **戻り値**: `combinedNotes` (array<number>).
+    -   **機能**: ベース音と和音の音を組み合わせて一つの音符リストにします。
+
+-   **`keyShiftUpperNotes` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: キー変更イベントに基づいて高音部の音符をシフトします。
+    -   **引数**: `notes` (array<number>), `keyShift` (number).
+    -   **戻り値**: `shiftedNotes` (array<number>).
+    -   **機能**: 指定されたキーシフト量に基づいて、音符のMIDIノート番号を増減させます。
+
+-   **`getNotesByInversionChord` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 転回形コードの構成音を決定します。
+    -   **引数**: `inversionChordInfo` (object) - 転回形コードの情報。
+    -   **戻り値**: `notes` (array<number>) - 転回形コードの構成音。
+    -   **機能**: 指定された転回モード（ルート転回、第1転回など）に基づいて、コードの構成音を適切なオクターブに配置し直します。
+
+-   **`getNotesByPolychord` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: ポリコード（例: C/Am）の構成音を決定します。
+    -   **引数**: `polychordInfo` (object) - ポリコードの情報。
+    -   **戻り値**: `notes` (array<number>) - ポリコードの構成音。
+    -   **機能**: 複数のコードを組み合わせたポリコードの音符リストを生成します。
+
+-   **`getNotes` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: Chord、On-Chord、Inversion Chord、Polychordのいずれかのタイプに基づいて音符リストを取得する汎用関数です。
+    -   **引数**: `event` (object) - コードイベントのオブジェクト。
+    -   **戻り値**: `notes` (array<number>) - 生成された音符のリスト。
+    -   **機能**: イベントのタイプを判別し、適切な `getNotesBy...` 関数を呼び出します。
+
+-   **`addNote` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 特定の条件に基づいてノートのリストに音を追加します。
+    -   **引数**: `notes` (array<number>), `rootNote` (number), `interval` (number), `offset` (number).
+    -   **戻り値**: `notes` (array<number>) - 新しいノートが追加されたリスト。
+    -   **機能**: ルート音とインターバルからノートを計算し、必要に応じてリストに追加します。
+
+-   **`inversionAndOpenHarmony` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 音符リストに対し、転回形とオープンハーモニーの処理を適用します。
+    -   **引数**: `notes` (array<number>), `inversion` (object), `openHarmony` (object).
+    -   **戻り値**: `processedNotes` (array<number>) - 処理後の音符リスト。
+    -   **機能**: コードの転回形（Inversion）や、ドロップボイシングなどのオープンハーモニー処理を適用し、より豊かな響きの和音を生成します。
+
+-   **`keyShiftNotes` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 現在のキーに基づいて音符をシフトします。
+    -   **引数**: `notes` (array<number>), `currentKey` (string).
+    -   **戻り値**: `shiftedNotes` (array<number>).
+    -   **機能**: 指定されたキーに基づいて、音符の絶対音高を調整します。
+
+-   **`inversionByTargetNote` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 特定の目標音をベースとして音符を転回します。
+    -   **引数**: `notes` (array<number>), `targetNote` (number).
+    -   **戻り値**: `invertedNotes` (array<number>).
+    -   **機能**: 和音の中から特定の音を基準として転回形を作成します。
+
+-   **`inversionByCount` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 指定された回数だけ音符を転回します。
+    -   **引数**: `notes` (array<number>), `count` (number).
+    -   **戻り値**: `invertedNotes` (array<number>).
+    -   **機能**: 音符リストをn回転回させます。
+
+-   **`adjustNotesOctave` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: 音符のオクターブを調整し、特定の範囲に収めるか、聞きやすいように配置します。
+    -   **引数**: `notes` (array<number>).
+    -   **戻り値**: `adjustedNotes` (array<number>).
+    -   **機能**: 音符の集合が不自然に高い/低いオクターブにならないように調整します。
+
+-   **`drop2`, `drop4`, `drop2and4` (src/chord2mml_ast2notes.ts)**:
+    -   **役割**: それぞれDrop 2、Drop 4、Drop 2 & 4ボイシングを音符リストに適用します。
+    -   **引数**: `notes` (array<number>).
+    -   **戻り値**: `processedNotes` (array<number>).
+    -   **機能**: オープンハーモニーの手法で、和音の構成音の配置を調整し、より広がりのある響きを作り出します。
+
+-   **`notesToMml` (src/chord2mml_notes2mml.ts)**:
+    -   **役割**: 個々のノート情報のリストを受け取り、最終的なMML文字列を生成します。
+    -   **引数**: `notesList` (array) - 各ノートの詳細情報を含むオブジェクトの配列。
+    -   **戻り値**: `mmlString` (string) - 生成されたMML文字列。
+    -   **機能**: ノートのキー、オクターブ、長さ、テンポなどの情報を使って、MMLの文法に従った文字列を組み立てます。`create12ionians`や`isSharpByKeyAndScale`などの補助関数を呼び出します。
+
+-   **`create12ionians` (src/chord2mml_notes2mml.ts)**:
+    -   **役割**: 12種類のイオニアンスケール（長音階）の音階情報を生成します。
+    -   **引数**: なし。
+    -   **戻り値**: `ionianScales` (object) - 各キーのイオニアンスケール情報。
+    -   **機能**: MML生成時に、どの音がシャープ/フラットされるべきかを判断するための基礎データを提供します。
+
+-   **`generateIonians` (src/chord2mml_notes2mml.ts)**:
+    -   **役割**: 特定のルート音からイオニアンスケールを生成します。
+    -   **引数**: `rootNote` (number) - スケールのルートとなるMIDIノート番号。
+    -   **戻り値**: `ionianScale` (array<number>) - イオニアンスケールを構成するノート番号の配列。
+    -   **機能**: ルート音から長音階のパターンに従ってノートを生成します。
+
+-   **`normalizeArrays` (src/chord2mml_notes2mml.ts)**:
+    -   **役割**: 複数の配列を正規化し、操作しやすい形式に変換します。
+    -   **引数**: `arrays` (array<array>).
+    -   **戻り値**: `normalizedArrays` (array<array>).
+    -   **機能**: スケールなどの配列データをMML生成に適した形に整形します。
+
+-   **`isSharpByKeyAndScale` (src/chord2mml_notes2mml.ts)**:
+    -   **役割**: 特定のキーとスケールにおいて、ある音符がシャープとして表現されるべきかを判定します。
+    -   **引数**: `note` (number) - 判定対象のMIDIノート番号, `keyInfo` (object), `scaleInfo` (object).
+    -   **戻り値**: `isSharp` (boolean) - シャープであればtrue。
+    -   **機能**: MML表記における臨時記号の有無を決定するために、音楽理論に基づいた判定を行います。
+
+-   **`searchIonians` (src/chord2mml_notes2mml.ts)**:
+    -   **役割**: イオニアンスケールの中から特定の音符を検索します。
+    -   **引数**: `note` (number) - 検索対象のMIDIノート番号, `ionianScales` (object).
+    -   **戻り値**: `foundNoteInfo` (object) - 検索結果の情報。
+    -   **機能**: 指定された音がどのスケールに属し、どのように表現されるかを特定します。
 
 ## 関数呼び出し階層ツリー
 ```
-- chord2mml.ts (メイン処理フロー)
-  - パーサ生成物 (src/chord2mml_chord2ast.cjs)
-    - CHORDS (peggyjs/chord2mml_chord2ast.pegjs)
-    - EVENT (peggyjs/chord2mml_chord2ast.pegjs)
-    - CHORD (peggyjs/chord2mml_chord2ast.pegjs)
-    - SLASH_CHORD (peggyjs/chord2mml_chord2ast.pegjs)
-    - ON_CHORD (peggyjs/chord2mml_chord2ast.pegjs)
-    - SLASH_CHORD_MODE_CHORD_OVER_BASS_NOTE (peggyjs/chord2mml_chord2ast.pegjs)
-    - SLASH_CHORD_MODE_INVERSION (peggyjs/chord2mml_chord2ast.pegjs)
-    - SLASH_CHORD_MODE_POLYCHORD (peggyjs/chord2mml_chord2ast.pegjs)
-    - INLINE_MML (peggyjs/chord2mml_chord2ast.pegjs)
-    - INLINE_MML_SUB (peggyjs/chord2mml_chord2ast.pegjs)
-    - INLINE_ABC (peggyjs/chord2mml_chord2ast.pegjs)
-    - INVERSION_MODE_ROOT_INV (peggyjs/chord2mml_chord2ast.pegjs)
-    - INVERSION_MODE_1ST_INV (peggyjs/chord2mml_chord2ast.pegjs)
-    - INVERSION_MODE_2ND_INV (peggyjs/chord2mml_chord2ast.pegjs)
-    - INVERSION_MODE_3RD_INV (peggyjs/chord2mml_chord2ast.pegjs)
-    - OPEN_HARMONY_MODE_CLOSE (peggyjs/chord2mml_chord2ast.pegjs)
-    - OPEN_HARMONY_MODE_DROP2 (peggyjs/chord2mml_chord2ast.pegjs)
-    - OPEN_HARMONY_MODE_DROP4 (peggyjs/chord2mml_chord2ast.pegjs)
-    - OPEN_HARMONY_MODE_DROP2AND4 (peggyjs/chord2mml_chord2ast.pegjs)
-    - BASS_PLAY_MODE_NO_BASS (peggyjs/chord2mml_chord2ast.pegjs)
-    - BASS_PLAY_MODE_ROOT (peggyjs/chord2mml_chord2ast.pegjs)
-    - TEMPO (peggyjs/chord2mml_chord2ast.pegjs)
-    - BAR (peggyjs/chord2mml_chord2ast.pegjs)
-    - BAR_SLASH (peggyjs/chord2mml_chord2ast.pegjs)
-    - KEY (peggyjs/chord2mml_chord2ast.pegjs)
-    - KEY_EVENT (peggyjs/chord2mml_chord2ast.pegjs)
-    - SCALE (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_UP (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_UP_UPPER (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_UP_LOWER (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_DOWN (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_DOWN_UPPER (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_DOWN_LOWER (peggyjs/chord2mml_chord2ast.pegjs)
-    - ROOT (peggyjs/chord2mml_chord2ast.pegjs)
-    - ROOT_CDEFGAB (peggyjs/chord2mml_chord2ast.pegjs)
-    - ROOT_DEGREE (peggyjs/chord2mml_chord2ast.pegjs)
-    - SHARP (peggyjs/chord2mml_chord2ast.pegjs)
-    - FLAT (peggyjs/chord2mml_chord2ast.pegjs)
-    - CHORD_QUALITY (peggyjs/chord2mml_chord2ast.pegjs)
-    - MAJ_LONG (peggyjs/chord2mml_chord2ast.pegjs)
-    - MAJ_SHORT (peggyjs/chord2mml_chord2ast.pegjs)
-    - MAJ7 (peggyjs/chord2mml_chord2ast.pegjs)
-    - MAJ9 (peggyjs/chord2mml_chord2ast.pegjs)
-    - MIN_LONG (peggyjs/chord2mml_chord2ast.pegjs)
-    - MIN_SHORT (peggyjs/chord2mml_chord2ast.pegjs)
-    - MIN7 (peggyjs/chord2mml_chord2ast.pegjs)
-    - SIXTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - SEVENTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - NINTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - ELEVENTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - THIRTEENTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - SUS2 (peggyjs/chord2mml_chord2ast.pegjs)
-    - SUS4 (peggyjs/chord2mml_chord2ast.pegjs)
-    - SEVENTH_SUS2 (peggyjs/chord2mml_chord2ast.pegjs)
-    - SEVENTH_SUS4 (peggyjs/chord2mml_chord2ast.pegjs)
-    - DIM_TRIAD (peggyjs/chord2mml_chord2ast.pegjs)
-    - AUG (peggyjs/chord2mml_chord2ast.pegjs)
-    - QUARTAL_HARMONY (peggyjs/chord2mml_chord2ast.pegjs)
-    - FLATTED_FIFTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - AUGMENTED_FIFTH (peggyjs/chord2mml_chord2ast.pegjs)
-    - OMIT_N (peggyjs/chord2mml_chord2ast.pegjs)
-    - ADD_N (peggyjs/chord2mml_chord2ast.pegjs)
-    - INVERSION (peggyjs/chord2mml_chord2ast.pegjs)
-    - OCTAVE_OFFSET (peggyjs/chord2mml_chord2ast.pegjs)
-    - WHITE_SPACE (peggyjs/chord2mml_chord2ast.pegjs)
-    - HYPHEN (peggyjs/chord2mml_chord2ast.pegjs)
-    - CHORD_SEPARATOR (peggyjs/chord2mml_chord2ast.pegjs)
-    - MIDI_PROGRAM_CHANGE (peggyjs/chord2mml_chord2ast.pegjs)
-    - PC000 ... PC127 (peggyjs/chord2mml_chord2ast.pegjs)
-  - astToAst (src/chord2mml_ast2ast.ts)
-    - updateAstNoteLength (src/chord2mml_ast2ast.ts)
-      - bar2noteLength (src/chord2mml_ast2ast.ts)
-  - astToNotes (src/chord2mml_ast2notes.ts)
-    - deleteProperties (src/chord2mml_ast2notes.ts)
-    - getNotesByChord (src/chord2mml_ast2notes.ts)
-    - getNotesByChordOverBassNote (src/chord2mml_ast2notes.ts)
-    - concatLowerAndUpper (src/chord2mml_ast2notes.ts)
-    - keyShiftUpperNotes (src/chord2mml_ast2notes.ts)
-    - getNotesByInversionChord (src/chord2mml_ast2notes.ts)
-    - getNotesByPolychord (src/chord2mml_ast2notes.ts)
-    - getNotes (src/chord2mml_ast2notes.ts)
-    - addNote (src/chord2mml_ast2notes.ts)
-    - inversionAndOpenHarmony (src/chord2mml_ast2notes.ts)
-      - inversionByTargetNote (src/chord2mml_ast2notes.ts)
-      - inversionByCount (src/chord2mml_ast2notes.ts)
-      - adjustNotesOctave (src/chord2mml_ast2notes.ts)
-      - drop2 (src/chord2mml_ast2notes.ts)
-      - drop4 (src/chord2mml_ast2notes.ts)
-      - drop2and4 (src/chord2mml_ast2notes.ts)
-    - keyShiftNotes (src/chord2mml_ast2notes.ts)
-    - adjustNotesOctave (src/chord2mml_ast2notes.ts)
-  - notesToMml (src/chord2mml_notes2mml.ts)
-    - create12ionians (src/chord2mml_notes2mml.ts)
-      - generateIonians (src/chord2mml_notes2mml.ts)
-    - normalizeArrays (src/chord2mml_notes2mml.ts)
-    - isSharpByKeyAndScale (src/chord2mml_notes2mml.ts)
-    - searchIonians (src/chord2mml_notes2mml.ts)
+chord2mml (src/chord2mml.ts)
+└── parse (src/chord2mml_chord2ast.cjs - Peggy.js生成パーサー)
+└── astToAst (src/chord2mml_ast2ast.ts)
+    ├── bar2noteLength
+    └── updateAstNoteLength
+└── astToNotes (src/chord2mml_ast2notes.ts)
+    ├── deleteProperties
+    ├── getNotesByChord
+    ├── getNotesByChordOverBassNote
+    ├── concatLowerAndUpper
+    ├── keyShiftUpperNotes
+    ├── getNotesByInversionChord
+    ├── getNotesByPolychord
+    ├── getNotes
+    ├── addNote
+    ├── inversionAndOpenHarmony
+    │   ├── inversionByTargetNote
+    │   ├── inversionByCount
+    │   ├── adjustNotesOctave
+    │   ├── drop2
+    │   ├── drop4
+    │   └── drop2and4
+    ├── keyShiftNotes
+    └── adjustNotesOctave
+└── notesToMml (src/chord2mml_notes2mml.ts)
+    ├── create12ionians
+    │   └── generateIonians
+    │       └── normalizeArrays
+    ├── isSharpByKeyAndScale
+    └── searchIonians
 
 ---
-Generated at: 2025-12-02 07:08:48 JST
+Generated at: 2025-12-03 07:08:57 JST
