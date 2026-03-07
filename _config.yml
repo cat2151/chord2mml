@@ -6,3 +6,6 @@ github:
   repository_url: https://github.com/cat2151/chord2mml
 plugins:
   - jekyll-sitemap
+exclude:
+  - generated-docs/development-status-generated-prompt.md
+  - generated-docs/project-overview-generated-prompt.md
