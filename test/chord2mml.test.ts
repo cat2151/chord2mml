@@ -2,7 +2,7 @@ import { parse } from "../src/chord2mml_chord2ast.cjs";
 import { astToAst as a2a } from "../src/chord2mml_ast2ast";
 import { astToNotes as toNotes } from "../src/chord2mml_ast2notes";
 import { notesToMml as toMml } from "../src/chord2mml_notes2mml";
-import { chord2mml } from "../src/chord2mml";
+import { chord2mml, preprocessChord } from "../src/chord2mml";
 describe("chord2ast", () => {
     test("Cmaj", () => {
         expect(parse("C")).toEqual([{event: "chord", quality: "maj", root: 0, inversion: null, octaveOffset: 0}]);
@@ -453,5 +453,23 @@ describe("chord2mml", () => {
         expect(() => {
             expect(chord2mml.parse("11"))
         }).toThrow();
+    });
+    test("ハイフン区切りのdegree表記：1-3はスペース区切りの1 3と同じ結果", () => {
+        expect(chord2mml.parse("1-3")).toEqual(chord2mml.parse("1 3"));
+    });
+    test("ハイフン区切りのdegree表記：I-IV-VはスペースのI IV Vと同じ結果", () => {
+        expect(chord2mml.parse("I-IV-V")).toEqual(chord2mml.parse("I IV V"));
+    });
+    test("C-7はCm7と同じ結果（ハイフンがmin7の意味として機能する）", () => {
+        expect(chord2mml.parse("C-7")).toEqual(chord2mml.parse("Cm7"));
+    });
+    test("ローマ数字マイナー表記：ii-V-IはIIm V Iと同じ結果", () => {
+        expect(chord2mml.parse("ii-V-I")).toEqual(chord2mml.parse("IIm V I"));
+    });
+    test("preprocessChord：1-3はハイフンをdotに変換", () => {
+        expect(preprocessChord("1-3")).toEqual("1・3");
+    });
+    test("preprocessChord：C-7はそのまま（min7として解釈可能）", () => {
+        expect(preprocessChord("C-7")).toEqual("C-7");
     });
 });
