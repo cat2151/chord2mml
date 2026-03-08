@@ -472,4 +472,10 @@ describe("chord2mml", () => {
     test("preprocessChord：C-7はそのまま（min7として解釈可能）", () => {
         expect(preprocessChord("C-7")).toEqual("C-7");
     });
+    test("ハイフン区切りと-7品質の混在：C-7-D-7はスペース区切りのC-7 D-7と同じ結果", () => {
+        expect(chord2mml.parse("C-7-D-7")).toEqual(chord2mml.parse("C-7 D-7"));
+    });
+    test("preprocessChord：C-7-D-7の中間ハイフンのみ区切りとしてdotに変換", () => {
+        expect(preprocessChord("C-7-D-7")).toEqual("C-7・D-7");
+    });
 });
