@@ -117,13 +117,16 @@ function deleteProperties(ast) {
 
 // 基本chord用
 function getNotesByChord(root: number, quality: string, inversionMode: string, openHarmonyMode:string, octaveOffset: number): number[] {
-  let notes = getNotes(root, quality);
+  let notes = getNotesWithoutOmit(root, quality);
 
   // 転回形 & drop2等
   notes = inversionAndOpenHarmony(notes, inversionMode, openHarmonyMode);
 
   // octave offset
   notes = keyShiftNotes(notes, octaveOffset * 12);
+
+  // omit
+  notes = applyOmit(notes, quality, root);
 
   return notes;
 }
@@ -134,11 +137,13 @@ function getNotesByChordOverBassNote(upperRoot: number, upperQuality:string, low
   let lowerNotes = [lowerRoot];
 
   // upper
-  let upperNotes = getNotes(upperRoot, upperQuality);
+  let upperNotes = getNotesWithoutOmit(upperRoot, upperQuality);
   // 転回形 & drop2等
   upperNotes = inversionAndOpenHarmony(upperNotes, inversionMode, openHarmonyMode);
   // lowerの上にupperを重ねる
   upperNotes = keyShiftUpperNotes(upperNotes, lowerNotes);
+  // omit
+  upperNotes = applyOmit(upperNotes, upperQuality, upperRoot);
 
   // lower + upper
   let notes = concatLowerAndUpper(upperNotes, octaveOffsetUpper, lowerNotes, octaveOffsetLower);
@@ -155,7 +160,7 @@ function concatLowerAndUpper(upperNotes: number[], octaveOffsetUpper:number, low
   upperNotes = keyShiftNotes(upperNotes, octaveOffsetUpper * 12);
 
   // lower vs upper 衝突したか？
-  if (upperNotes[0] <= lowerNotes[lowerNotes.length - 1]) throw new Error(`ERROR : lowerとupperが衝突しました lowerNotes:${lowerNotes} upperNotes:${upperNotes}`);
+  if (upperNotes.length && lowerNotes.length && upperNotes[0] <= lowerNotes[lowerNotes.length - 1]) throw new Error(`ERROR : lowerとupperが衝突しました lowerNotes:${lowerNotes} upperNotes:${upperNotes}`);
 
   // 結合
   let notes = [];
@@ -166,6 +171,7 @@ function concatLowerAndUpper(upperNotes: number[], octaveOffsetUpper:number, low
 
 function keyShiftUpperNotes(upperNotes: number[], lowerNotes: number[]): number[] {
   // lowerの上にupperを積み重ねる用
+  if (!upperNotes.length || !lowerNotes.length) return upperNotes;
   while (upperNotes[0] <= lowerNotes[lowerNotes.length - 1]) {
     upperNotes = keyShiftNotes(upperNotes, 12);
   }
@@ -178,8 +184,9 @@ function getNotesByInversionChord(upperRoot: number, upperQuality: string, lower
     let lowerNotes = [upperRoot]; // bass is root時は、upper部に記述されたものをrootつまりここではlowerNotesとして扱う
 
     // chord inversion
-    let upperNotes = getNotes(upperRoot, upperQuality);
+    let upperNotes = getNotesWithoutOmit(upperRoot, upperQuality);
     upperNotes = inversionByTargetNote(upperNotes, lowerRoot);
+    upperNotes = applyOmit(upperNotes, upperQuality, upperRoot);
 
     // lower + upper
     let notes = concatLowerAndUpper(upperNotes, octaveOffset, lowerNotes, /*octaveOffsetLower=*/octaveOffset); // 備忘、ここはbass is rootかつ、slashなしchord時である。よって臨時octave指定はupper lower共通でかかる、とする。
@@ -189,11 +196,12 @@ function getNotesByInversionChord(upperRoot: number, upperQuality: string, lower
 
     return notes;
   } else {
-    let notes = getNotes(upperRoot, upperQuality);
+    let notes = getNotesWithoutOmit(upperRoot, upperQuality);
     // octave offset
     notes = keyShiftNotes(notes, octaveOffset * 12);
     // inversion
     notes = inversionByTargetNote(notes, lowerRoot);
+    notes = applyOmit(notes, upperQuality, upperRoot);
 
     return notes;
   }
@@ -201,8 +209,8 @@ function getNotesByInversionChord(upperRoot: number, upperQuality: string, lower
 
 function getNotesByPolychord(upperRoot: number, upperQuality: string, upperInversion: string,
     lowerRoot: number, lowerQuality: string, lowerInversion: string, octaveOffsetUpper: number, octaveOffsetLower: number): number[] {
-  let upperNotes = getNotes(upperRoot, upperQuality);
-  let lowerNotes = getNotes(lowerRoot, lowerQuality);
+  let upperNotes = getNotesWithoutOmit(upperRoot, upperQuality);
+  let lowerNotes = getNotesWithoutOmit(lowerRoot, lowerQuality);
 
   // inversion
   upperNotes = inversionAndOpenHarmony(upperNotes, upperInversion, /*openHarmonyMode = */"");
@@ -210,6 +218,8 @@ function getNotesByPolychord(upperRoot: number, upperQuality: string, upperInver
 
   // lowerNotesの最高音より、upperNotesの最低音のほうが高い音とする用
   upperNotes = keyShiftUpperNotes(upperNotes, lowerNotes);
+  upperNotes = applyOmit(upperNotes, upperQuality, upperRoot);
+  lowerNotes = applyOmit(lowerNotes, lowerQuality, lowerRoot);
 
   // lower + upper
   let notes = concatLowerAndUpper(upperNotes, octaveOffsetUpper, lowerNotes, octaveOffsetLower);
@@ -221,6 +231,12 @@ function getNotesByPolychord(upperRoot: number, upperQuality: string, upperInver
 }
 
 function getNotes(root: number, quality: string): number[] {
+  let notes = getNotesWithoutOmit(root, quality);
+  notes = applyOmit(notes, quality, root);
+  return notes;
+}
+
+function getNotesWithoutOmit(root: number, quality: string): number[] {
   const q = quality.split(",");
 
   let notes = [];
@@ -253,9 +269,6 @@ function getNotes(root: number, quality: string): number[] {
 
   for (let o of q) {
     switch (o) {
-      case "omit1": notes = notes.filter(e => e !== 0); break;
-      case "omit3": notes = notes.filter(e => ![3,4].includes(e)); break; // 短三度と長三度を削除
-      case "omit5": notes = notes.filter(e => e !== 7); break;
       case "add2":  notes = addNote(notes, 2);      break;
       case "add9":  notes = addNote(notes, 2 + 12); break;
       case "add4":  notes = addNote(notes, 5);      break;
@@ -272,6 +285,26 @@ function getNotes(root: number, quality: string): number[] {
   notes = keyShiftNotes(notes, root);
 
   return notes;
+}
+
+function applyOmit(notes: number[], quality: string, root: number): number[] {
+  const q = quality.split(",");
+  for (let o of q) {
+    switch (o) {
+      case "omit1": notes = omitIntervals(notes, root, [0]); break;
+      case "omit3": notes = omitIntervals(notes, root, [3,4]); break; // 短三度と長三度を削除
+      case "omit5": notes = omitIntervals(notes, root, [7]); break;
+    }
+  }
+  return notes;
+}
+
+function omitIntervals(notes: number[], root: number, intervals: number[]): number[] {
+  return notes.filter(note => !intervals.includes(normalizeMod(note - root, 12)));
+}
+
+function normalizeMod(n: number, modulo: number): number {
+  return ((n % modulo) + modulo) % modulo;
 }
 
 function addNote(notes: number[], n: number): number[] {

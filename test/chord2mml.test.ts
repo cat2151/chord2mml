@@ -414,6 +414,12 @@ describe("chord2mml", () => {
     test("omit5 etc.", () => {
         expect(chord2mml.parse("C(omit5) C(omit1) C(omit3) Comit5")).toEqual(prefix + "'c1e''e1g''c1g''c1e'");
     });
+    test("omit1 は bass 追加後の積み上がりを基準に適用する", () => {
+        expect(chord2mml.parse("bass is root C(omit1) C(omit1)/C")).toEqual(prefix + "'>c1<eg''>c1<eg'");
+    });
+    test("omit1 は転回後に適用する", () => {
+        expect(chord2mml.parse("1st inv C(omit1) 2nd inv C(omit1)")).toEqual(prefix + "'e1g''g1<e'");
+    });
     test("add2 etc.", () => {
         expect(chord2mml.parse("C(add2) Cadd9 Cadd4 Cadd11 Cadd6 Cadd13")).toEqual(prefix + "'c1deg''c1eg<d''c1efg''c1eg<f''c1ega''c1eg<a'");
     });
