@@ -74,3 +74,4 @@ jspm_packages/
 # etc.
 b.bat
 *.lnk
+src/.chord2mml_chord2ast.generated.cjs

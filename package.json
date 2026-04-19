@@ -21,7 +21,7 @@
   "scripts": {
     "build": "run-p build:**",
     "build:web": "webpack",
-    "build:peggy-commonjs": "peggy ./peggyjs/chord2mml_chord2ast.pegjs --output ./src/chord2mml_chord2ast.cjs",
+    "build:peggy-commonjs": "peggy ./peggyjs/chord2mml_chord2ast.pegjs --output ./src/.chord2mml_chord2ast.generated.cjs && esbuild ./src/.chord2mml_chord2ast.generated.cjs --minify --format=cjs --platform=node --outfile=./src/chord2mml_chord2ast.cjs && rm ./src/.chord2mml_chord2ast.generated.cjs",
     "build:esm": "npm run gen:peggy-esm && node esbuild.esm.mjs",
     "gen:peggy-esm": "peggy ./peggyjs/chord2mml_chord2ast.pegjs --output ./src/chord2mml_chord2ast.mjs --format es",
     "watch": "run-p watch:**",
